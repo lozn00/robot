@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="50dp"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="请确保本操作是您本人手动发起的、且通过情迁的产品软件的功能发起的\n如果是其它不知名同意授权将导致账号数据损失、积分被盗、通讯数据被滥用等。" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:id="@+id/tv_descript"
+        android:textSize="16sp"
+        android:layout_marginBottom="20dp"
+        android:text="请、通讯数据被滥用等。"
+        android:textColor="#000" />
+
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btn_submit"
+        android:layout_gravity="center_horizontal"
+        android:text="我已知晓、同意授权" />
+
+</LinearLayout>

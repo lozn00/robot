@@ -1,0 +1,80 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.MainActivity">
+    <item
+        android:id="@+id/action_run"
+        android:icon="@drawable/ic_menu_run"
+        android:orderInCategory="100"
+        android:title="运行"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_undo"
+        android:icon="@drawable/ic_menu_undo"
+        android:iconTint="#ffffff"
+        android:orderInCategory="100"
+        android:title="撤销"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_simulation"
+        android:iconTint="#ffffff"
+        android:orderInCategory="100"
+        android:title="模拟"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_reload"
+        android:orderInCategory="100"
+        android:title="重载(电脑开发)"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_menu_save"
+        android:iconTint="#ffffff"
+        android:orderInCategory="100"
+        android:title="保存"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/action_insert"
+        android:icon="@drawable/ic_menu_add"
+        android:orderInCategory="100"
+        android:title="插入"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_jiqiao"
+        android:icon="@drawable/ic_menu_add"
+        android:orderInCategory="100"
+        android:title="技巧"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_rename"
+        android:orderInCategory="100"
+        android:title="重命名"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_open_log"
+        android:orderInCategory="100"
+        android:title="打开日志"
+        app:showAsAction="ifRoom" />
+
+
+    <item
+        android:id="@+id/action_as_plugin_parse"
+        android:orderInCategory="100"
+        android:title="作为Lua脚本解析"
+        android:visible="false"
+        app:showAsAction="never" />
+
+     <item
+        android:id="@+id/action_format"
+        android:orderInCategory="100"
+        android:title="格式化代码"
+        android:visible="true"
+        app:showAsAction="never" />
+</menu>

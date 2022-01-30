@@ -1,0 +1,482 @@
+<resources>
+    <string-array name="musicoptions">
+        <item>酷狗音乐</item>
+        <item>网易云音乐</item>
+        <item>QQ音乐</item>
+    </string-array>
+    <string-array name="musicoptions_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+    <string name="engine_process_name">:x</string>
+    <string name="app_name">情迁机器人</string>
+    <string name="pluginname">插件名:%s</string>
+    <string name="author">作者:%s</string>
+    <string name="version">版本:%s</string>
+    <string name="path">路径:%s</string>
+    <string name="title_activity_settings">基础设置</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- Example General settings -->
+    <string name="pref_header_general">群设置</string>
+
+    <string name="pref_title_social_recommendations">开启群消息回复</string>
+    <string name="pref_description_group_no_reply">开启后不会影响禁言功能
+    </string>
+
+    <string name="pref_title_display_name">Display name</string>
+    <string name="pref_default_display_name">John Smith</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
+    <!-- Example settings for Data & Sync -->
+    <string name="pref_header_data_sync">有想开发本地词库ai学习能力的的欢迎联系我探讨技术问题...</string>
+
+    <string name="pref_title_sync_frequency">情迁聊天机器人是免费的,但是功能绝不会是low 只能聊天的机器人,我会慢慢完善,让它成为一个实惠实用的QQ群管机器人,对于从事违法信息的群管机器人,我会采取手段停止使用!</string>
+    <string-array name="pref_sync_frequency_titles">
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>1 hour</item>
+        <item>3 hours</item>
+        <item>6 hours</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_sync_frequency_values">
+        <item>15</item>
+        <item>30</item>
+        <item>60</item>
+        <item>180</item>
+
+
+        <item>360</item>
+        <item>-1</item>
+    </string-array>
+
+    <string-array name="list_preference_entries">
+        <item>Entry 1</item>
+        <item>Entry 2</item>
+        <item>Entry 3</item>
+    </string-array>
+
+    <string-array name="list_preference_entry_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+
+    <string-array name="multi_select_list_preference_default_value" />
+
+    <string name="pref_title_system_sync_settings">有了机器人 ,孩子 你不再孤单</string>
+
+    <!-- Example settings for Notifications -->
+    <string name="pref_header_notifications">Notifications</string>
+
+    <string name="pref_title_wrang_message_notifications">关键字铃声提醒</string>
+
+    <string name="pref_key_wrod_title_ringtone">警告声音</string>
+    <string name="pref_ringtone_silent">Silent</string>
+
+    <string name="pref_title_vibrate">震动提醒</string>
+    <string name="key_group_no_draw">key_group_not_draw</string>
+    <string name="key_group_wellcome_word">key_group_wellcome_word</string>
+    <string name="key_group_only_draw_group">key_group_only_draw_group</string>
+    <string name="key_group_only_draw_group_number">key_group_only_draw_group_number</string>
+    <string name="key_group_not_draw_group_number">key_group_not_draw_group_number</string>
+    <string name="key_group_not_draw_group">key_group_not_draw_group</string>
+    <string name="pref_only_draw_group_number_title">填写只对指定群回复的群号</string>
+    <string name="pref_group_only_draw_group_title">白名单模式</string>
+    <string name="pref_not_draw_group_number_title">填写不回复的群群号</string>
+    <string name="pref_group_not_draw_group_title">屏蔽指定群</string>
+    <string name="multi_douhao_split">多个用,分割</string>
+    <string name="pref_base_setting">基础设置</string>
+    <string name="pref_advance_setting">高级设置</string>
+    <string name="pref_title_key_wrod_notification_title">关键字提醒</string>
+    <string name="key_base_key_keywrod_value">艹,傻逼,弱智,脑残,加我,私聊,代挂,兼职,出售</string>
+    <string name="key_base_key_keywrod">key_base_key_keywrod</string>
+    <string name="default_qqgroup">159138735</string>
+    <string name="key_base_key_ring_enable">key_base_key_ring_enable</string>
+    <string name="key_base_key_ring_path">key_base_setting_ring_path</string>
+    <string name="key_base_reply_show_nickname">key_base_show_nickname</string>
+    <string name="key_base_aite_me_reply">key_base_aite_me_repl1y</string>
+    <string name="key_base_enable_plugin">key_base_enable_plugin</string>
+    <string name="key_base_allow_intercept_robot_not_aite_final_callmsg">key_base_allow_intercept_robot_not_aite_final_callmsg</string>
+    <string name="key_base_white_name_aite_not_need">key_base_black_name_aite_not_need1</string>
+    <string name="key_base_ifnotkey_not_reply">key_base_ifnotkey_not_reply1</string>
+    <string name="key_base_key_listener_enable">key_base_key_listener_enabl1e</string>
+    <string name="key_base_key_keywrod_reply_value">key_base_key_keywrod_reply_value1</string>
+    <string name="key_base_aite_me_reply_not_whitename_affect">key_base_aite_me_reply_not_whitename_affect</string>
+    <string name="key_base_key_vibrateg_enable">key_base_key_vibrateg_enable</string>
+    <string name="key_base_private_reply">key_base_private_reply</string>
+    <string name="key_base_robot_self_response_enable_command">key_base_robot_self_response_enable_command</string>
+    <string name="key_base_enable_nickname_save_db">key_base_enable_nickname_save_db</string>
+    <string name="key_base_private_not_reply_person">key_base_private_not_reply_person</string>
+    <string name="key_base_local_var_robot_name">key_base_local_var_robot_name</string>
+    <string name="key_base_enable_net_robot_private">key_base_enable_net_robot_private</string>
+    <string name="key_base_enable_net_robot_group">key_base_enable_net_robot_group</string>
+    <string name="key_base_enable_local_reply">key_base_enable_local_reply</string>
+    <string name="key_base_use_multi_thread_do_msg">key_base_use_multi_thread_do_msg</string>
+    <string name="prompt_key">请输入关键字 多个用分隔符分割(建议点击复制分隔符)</string>
+    <string name="prompt_value">输入回复语</string>
+    <string name="pref_title_join_group_reply">加群回复语设置</string>
+    <string name="key_base_robot_postfix_word">key_base_robot_postfix_word</string>
+    <string name="key_base_short_url_interface">key_base_short_url_interface</string>
+    <string name="key_group_join_reply_word">key_group_join_reply_word</string>
+    <string name="default_join_word"> 基佬群欢迎你的加入,要多多活跃哦!</string>
+    <string name="key_base_ignore_than_second_msg">key_base_ignore_than_second_msg</string>
+    <string name="key_base_ignore_second_history_msg">key_base_ignore_second_history_msg</string>
+    <string name="key_base_ignore_second_statup_time">key_base_ignore_second_statup_time</string>
+
+
+    <string name="customactivityoncrash_error_activity_error_occurred_explanation">╮(╯Д╰)╭ APP出了点小情况\n可爱的小虫说翻就翻</string>
+    <string name="customactivityoncrash_error_activity_unknown_exception">未知异常</string>
+    <string name="customactivityoncrash_error_activity_restart_app">重启应用</string>
+    <string name="customactivityoncrash_error_activity_close_app">关闭应用</string>
+    <string name="customactivityoncrash_error_activity_error_details">错误详情</string>
+    <string name="customactivityoncrash_error_activity_error_details_title">异常处理</string>
+    <string name="customactivityoncrash_error_activity_error_details_close">关闭</string>
+    <string name="customactivityoncrash_error_activity_error_details_copy">复制</string>
+    <string name="customactivityoncrash_error_activity_error_details_copied">已复制</string>
+    <string name="customactivityoncrash_error_activity_error_details_clipboard_label">堆栈跟踪信息</string>
+    <string name="key_base_group_ignore_less_second_msg">key_base_group_ignore_less_second_msg</string>
+    <string name="loading">loadding</string>
+    <string name="key_base_aite_disible_aite">key_base_aite_disible_aite</string>
+    <string name="key_base_gag_disible_gag">key_base_gag_disible_gag</string>
+    <string name="key_base_gag_disible_netword_reply_error_not_warn">key_base_gag_disible_netword_reply_error_not_warn</string>
+    <string name="key_base_gag_disible_stuct_msg">key_base_gag_disible_stuct_msg</string>
+    <string name="key_base_gag_enable_check_msg">key_base_gag_enable_check_msg</string>
+    <string name="empty_value" />
+    <string name="key_base_robot_music_engine">key_base_robot_music_engine</string>
+    <string name="key_base_private_reply_ignore_manager">key_base_private_reply_ignore_manager</string>
+    <string name="google_app_id_">ca-app-pub-6391307239504132~6124388718</string>
+    <string name="banner_ad_unit_id">ca-app-pub-6391307239504132/8306864775</string>
+    <string name="banner_ad_unit_id1">ca-app-pub-6391307239504132/6102840431</string>
+    <string name="banner_ad_unit_id_adpage">ca-app-pub-6391307239504132/7568496547</string>
+    <string name="insertscreen_ad_unit_id1">ca-app-pub-6391307239504132/3345224279</string>
+    <string name="banner_ad_unit_id_test">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="ad_appid_test">ca-app-pub-3940256099942544~3347511713</string>
+    <string name="test_read">成功加载情迁聊天机器人</string>
+    <string name="insertscreen_ad_unit_id_watch_ad">ca-app-pub-6391307239504132/7030398355</string>
+    <string name="key_base_word_split" >key_base_word_split</string>
+
+    <string name="templete_code_insert_function_lua" ><![CDATA[
+\n
+\n    function myFunction()
+\n\t print(\"函数执行了..\");
+\n \treturn;
+\nend
+\nmyFunction();
+\n    function addCalc(value1,value2)
+\n\t return value1+value2;
+\n end
+\na=1;b=3;
+\n print(string.format(\"%d +%d 得结果是=%d\",a,b,addCalc(a,b)));
+
+\n
+\n      ]]></string>
+
+
+<string name="templete_code_insert_function_js" ><![CDATA[
+\nfunction myFunction() {
+\n\t\t  log.w(\"函数执行了..\");
+\n}
+\nmyFunction();
+\nfunction addCalc(value1, value2) {
+\n\t\t return value1 + value2;
+\n}
+\nvar a = 1; b = 3;
+\nlog.w(java.lang.String.format(\"%f + %f 得结果是=%f \", Number(a), Number(b), Number(addCalc(a,b))));
+\n
+\n      ]]></string>
+
+    <string name="templete_code_insert_import_package_lua" ><![CDATA[
+\n
+\n require \"cn.qssq666.robot.sdk\" --sdk请参考java文档。
+\n
+\n      ]]></string>
+
+        <string name="templete_code_insert_if_lua" ><![CDATA[
+\n
+\n\ntemp=\"aa\";\n
+    if(temp==\"aa\") then
+\n print(\"相 等\");
+    else
+    \n\t print(\"不相等\");
+    \n\t end
+\n
+\n
+
+\nvalue1=30;
+\nif (value1 > 10) then
+\n\t    print(\"值大于10\")
+\n\t    if (value1 == 80) then
+\n\t\t\t       print(\"内循环,等于80\")
+\n\t   else
+\n\t\t\t      print(\"不是80，但是肯定>10\")
+\n\t   end
+\n elseif (value1 == 100) then
+\n\t print(\"等于100\")
+\n else
+\n\t    print(\"不知道等于多少了\")
+\n end
+\n]]></string>
+
+
+ <string name="templete_code_insert_if_js" ><![CDATA[
+\n
+\n\tvar i=10;
+\n\tif(i<5){
+\n\t    log.i(\"<5\");
+\n\t}else if(i>=5&&i<=10){
+\n\t\t\t    log.i(\">=5<=10\");
+\n\t}else if(i>1000){
+\n\t    log.i(\">1000\");
+\n\t}else{
+\n\t    log.i(\"unknown value :\"+i);
+\n\t}
+\n]]></string>
+
+
+ <string name="templete_code_insert_where_lua" ><![CDATA[\n temp=1
+\n while (temp < 10) do
+\n\t     temp = temp + 1
+\n\t     print(\"result:\" .. tostring(temp)) -- 循环遍历
+\n end
+\n
+
+\n for i = 1, 6, 2 do
+ \n \t\t  print(\"高级用法 当前:\" .. tostring(i) .. \",我每下次执行将跳动2次，如果当前为1那么为1,下次则为3，i>6跳出循环\")
+\n end
+
+\n ]]></string>
+
+    <string name="templete_code_insert_on_receive_msg_lua" ><![CDATA[
+\n       --收到消息后进行回调 AUTO INSERT
+\n    function onReceiveMsgIsNeedIntercept(msgitem, aiteList, hasAite, hasAiteMe)
+\n      \t\t log(\"收到消息\");
+\n return false --返回false表示不拦截收到的消息
+\n end
+\n
+\n      ]]></string>
+    <string name="templete_code_insert_on_receive_msg_js" ><![CDATA[
+\n\t//收到消息后进行回调 AUTO INSERT
+\n\tfunction onReceiveMsgIsNeedIntercept(msgitem, aiteList, hasAite, hasAiteMe){
+\n\t\t\t    log.w(\"收到消息\");
+\n\t\t\t    return false//返回false表示不拦截收到的消息
+\n\t}
+        ]]></string>
+
+    <string name="templete_code_insert_toast_lua" ><![CDATA[
+
+\n
+\n   toast(\"你好我是toast,能在界面直接弹出的提示日志\")
+\n
+        ]]></string>
+
+        <string name="templete_code_insert_toast_js" ><![CDATA[
+
+\n
+\n   log.toast(\"你好我是toast,能在界面直接弹出的提示日志\")
+\n
+        ]]></string>
+
+
+    <string name="templete_code_insert_on_receive_final_msg_lua" ><![CDATA[
+\n
+\n --表示机器人最终处理的消息，即将发送的消息，是否拦截 AUTO INSERT
+\n function onReceiveRobotFinalCallMsgIsNeedIntercept(item, list, aite, haisaiteme)
+\n \t\treturn false
+\n end
+
+        ]]></string>
+    <string name="templete_code_insert_on_receive_final_msg_js" ><![CDATA[
+
+\n//表示机器人最终处理的消息，即将发送的消息，是否拦截 AUTO INSERT
+\nfunction onReceiveRobotFinalCallMsgIsNeedIntercept(item, list, aite, haisaiteme) {
+\n\t\t\t    return false;
+\n}
+\n end
+
+        ]]></string>
+
+
+    <string name="templete_code_define_plugin_author_lua" ><![CDATA[
+\n\n function getAuthorName()
+\n\t return \"散仙\"
+\n end
+\n\n      ]]></string>
+
+
+      <string name="templete_code_define_plugin_author_js" ><![CDATA[
+\nfunction getAuthorName() {
+\n\t    return \"情迁2018\"
+\n}
+\n\n      ]]></string>
+
+
+
+
+    <string name="templete_code_define_plugin_name_lua" ><![CDATA[
+\n//返回插件名称，再插件管理列表可以显示
+\nfunction getPluginName() {
+\n\t    return \"test plugin\"
+\n}   ]]></string>
+  <string name="templete_code_define_plugin_name_js" ><![CDATA[
+\n\n function getPluginName()
+\n\t return \"牛逼插件\"
+\n end
+\n\n      ]]></string>
+
+
+
+    <string name="templete_code_define_plugin_version_name_lua" ><![CDATA[
+\n\n function getVersionName()
+\n\t return \"1.0\"
+\n end
+\n\n      ]]></string>
+
+    <string name="templete_code_define_plugin_version_name_js" ><![CDATA[
+\n//返回本插件的版本号
+\nfunction getVersionName() {
+\n\t\t    return \"1.0\" //返回机器人的版本号
+\n}
+\n\n      ]]></string>
+
+
+    <string name="templete_code_define_plugin_version_code_lua" ><![CDATA[
+\n\n function getVersionCode()
+\n\t return 1
+\n end
+\n\n      ]]></string>
+
+    <string name="templete_code_define_plugin_version_code_js" ><![CDATA[
+\n//返回本插件的版本号 数字标识 整数
+\nfunction getVersionCode() {
+\n\r    return parseInt(1);
+\n}   ]]></string>
+
+\t\t\t<string name="templete_code_new_file_lua" >
+        <![CDATA[
+\n
+\n require \"cn.qssq666.robot.sdk\"
+\n print(\"Hello World\");--请运行查看效果....
+
+        ]]></string>
+
+
+         <string name="templete_code_new_file_auto_reply" >
+        <![CDATA[
+\n
+\n require "cn.qssq666.robot.sdk"
+\n print(\"Hello World\");--请运行查看效果.... 本方法需要插入到指定位置
+\n \t\treturn false
+\n
+
+        ]]>
+    </string>
+    <string name="templete_code_insert_reply_msg_code_lua" ><![CDATA[
+\n require \"cn.qssq666.robot.sdk\"
+\nprint(\"本方法需要点击[模拟]方可调试...否则只能检查常规语法错误\");
+\nfunction onReceiveMsgIsNeedIntercept(msgitem, aiteList, hasAite, hasAiteMe)
+\n\t local text = msgitem:getMessage()
+\n\t local qq = msgitem:getSenderuin()
+\n\t toast(\"收到\"..qq ..\"发送的消息\".. text)
+\n\t local str=\"模仿:\"..text;
+\n\t msgitem:setMessage(str)
+\n\t api:sendMsg(msgitem)
+\n\t --toast(\"收到了消息:\" .. msgitem:toString())
+\n\t  -- true 拦截不让机器人内部出理 false 不拦截。
+\n\t return true
+\nend
+
+   ]]></string>
+
+     <string name="templete_code_insert_reply_msg_code_js" ><![CDATA[
+\nlog.w(\"本方法需要点击[模拟]方可调试+.否则只能检查常规语法错误\");
+\nfunction onReceiveMsgIsNeedIntercept(msgitem, aiteList, hasAite, hasAiteMe) {
+\n\t var text = msgitem.getMessage()
+\n\t msgitem=msgitem.clone();//if return false  and has modify text ,must use clone obj!
+\n\t var qq = msgitem.getSenderuin()
+\n\t log.toast("receive msg from \" + qq + \",content:" + text);
+\n\t var str =\"模仿:\"+text;
+\n\t msgitem: setMessage(str)
+\n\t api: sendMsg(msgitem)
+\n\t \/\/log.toast(\"收到了消息:\" + msgitem.toString())
+\n\t \/\/ true 拦截不让机器人内部出理 false 不拦截。
+\n\t return true
+\n
+\n}
+   ]]></string>
+
+      <string name="templete_code_new_file_js" >
+        <![CDATA[
+\nlog.w(\"本方法需要点击[模拟]方可调试+.否则只能检查常规语法错误\");
+\nlog.i(\"Hello World\");//请运行查看效果....
+\nlog.w(\"wran\");
+
+        ]]></string>
+      <string name="templete_code_impl_class_js" >
+        <![CDATA[
+\n   var apiCallBackclass = {
+\n\t\t\tonSucc: function (bytes) {
+\n\t\t\t\t\t    msgitem = msgitem.clone();
+\n\t\t\t\t\t    log.info(\"queryWebSite result: \" +new  java.lang.String(bytes));
+\n\t\t\t\t\t    var str = \"data.\" + new java.lang.String(bytes)
+\n\t\t\t\t\t    msgitem.setMessage(str)
+\n\t\t\t\t\t    api.sendMsg(msgitem);
+\n\t\t\t},
+\n\t\t\tonFail: function (code, exception) {
+\n\t\t\t\t\t    log.e(\"error,code=\"+code+\",exception:\"+exception);//or
+\n\t\t\t\t\t    log.e(\"error,code=\"+code+\",exception:\",exception);//print stackflow
+\n\t\t\t}\t\t
+\n      };
+\n      api.sendAsyncGetRequest(\"http://lojunX.github.io/update/update.json\", apiCallBackclass);
+
+        ]]></string>
+
+    <string name="templete_code_impl_class_lua" >
+\n        <![CDATA[
+\n        local apiCallBackclass = {}
+\n        function apiCallBackclass.onSucc(bytes)
+\n\t\t          msgitem=msgitem:clone();
+\n\t\t          debug(\"receivedata is:\"..tostring(luajava. bytes));
+\n\t\t          local str=\"data:\"..tostring(bytes)
+\n\t\t          msgitem:setMessage(str)
+\n\t\t          api:sendMsg(msgitem)
+\n        end
+\n        function apiCallBackclass.onFail(code,exception)
+\n\t\t          msgitem=msgitem:clone();
+\n\t\t          msgitem:setMessage(\"query fail!\")
+\n\t\t          api:sendMsg(msgitem)
+\n\t\t          error(\"queryfail:\"..tostring(exception)..\",code:\"..tostring(code));
+\n        end
+\n        proxyImpl = luajava.createProxy(\"cn.qssq666.robot.plugin.sdk.interfaces.IApiCallBack\",  apiCallBackclass);
+\n        api:sendAsyncGetRequest(\"http://lojunX.github.io/update/update.json\",proxyImpl);
+\n        print(\"exec over test\");
+
+        ]]></string>
+    <string name="error_invalid_username">用户名不能为空</string>
+    <string name="error_invalid_password">密码不能为空</string>
+    <string name="error_invalid_phone">无效的手机号</string>
+    <string name="error_invalid_email">无效的邮箱</string>
+    <string name="prompt_username">请输入用户名</string>
+    <string name="prompt_password">请输入密码</string>
+
+    <string-array name="root_chat_api">
+     <item>茉莉机器人</item>
+    <item>图灵机器人</item>
+    </string-array>
+
+</resources>

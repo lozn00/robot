@@ -1,0 +1,42 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.MainActivity">
+
+    <item android:id="@+id/action_add"
+        android:title="添加"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"/>
+
+
+    <item android:id="@+id/action_import"
+        android:title="导入"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"/>
+
+
+
+    <item android:id="@+id/action_delete"
+        android:title="删除"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"/>
+
+    <item android:id="@+id/action_search"
+        android:title="搜索"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"/>
+
+
+    <item android:id="@+id/action_remove_repeat"
+        android:title="去重"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"/>
+
+
+    <item android:id="@+id/action_split_replace"
+        android:title="批量替换分隔符"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"/>
+
+
+</menu>

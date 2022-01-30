@@ -1,0 +1,15 @@
+apply plugin: 'com.android.library'
+android {
+    compileSdkVersion 29
+    buildToolsVersion '28.0.3'
+    resourcePrefix 'customactivityoncrash_'
+
+    defaultConfig {
+        minSdkVersion 4
+        targetSdkVersion 29
+        versionCode 7
+        versionName "1.5.0"
+    }
+}
+dependencies {
+}

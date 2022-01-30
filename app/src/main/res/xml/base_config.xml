@@ -1,0 +1,257 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- A 'parent' preference, which enables/disables child preferences (below)
+         when checked/unchecked. -->
+
+    <PreferenceCategory
+        android:key="msg_body_settings"
+        android:title="基本设置">
+
+        <EditTextPreference
+            android:defaultValue="小冰的朋友"
+            android:hint=""
+            android:key="@string/key_base_private_not_reply_person"
+            android:summary="变量为$robotname，这里为$robotname对应的值"
+            android:title="本地词库机器人变量名"></EditTextPreference>
+
+
+        <EditTextPreference
+            android:defaultValue="‖"
+            android:hint=""
+            android:key="@string/key_base_word_split"
+            android:summary="词库以及问与答分隔符不推荐用|可以用多个中文代替。"
+            android:title="词库/禁言数据等分隔符设置" />
+
+
+        <ListPreference
+
+            android:defaultValue="0"
+            android:dialogTitle="点歌音乐引擎"
+            android:entries="@array/musicoptions"
+            android:entryValues="@array/musicoptions_value"
+            android:key="@string/key_base_robot_music_engine"
+            android:title="点歌引擎切换(QQ音乐/网易云/酷狗音乐)" />
+
+        <!--        <EditTextPreference
+                    android:capitalize="words"
+
+                    android:defaultValue="@string/default_join_word"
+                    android:hint="加群回复语"
+                    android:inputType="textCapWords"
+                    android:key="@string/key_group_join_reply_word"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="false"
+                    android:summary="输入加群回复语多个用,分割"
+                    android:title="@string/pref_title_join_group_reply" />
+                -->
+
+        <EditTextPreference
+            android:capitalize="words"
+            android:defaultValue="@string/empty_value"
+            android:hint="加群回复语"
+            android:inputType="textCapWords"
+            android:key="@string/key_base_robot_postfix_word"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="false"
+            android:summary="意思就是机器人回复的词后面自动加上1句话(白名单模式下单独设置了尾巴将会和这里的尾巴设置冲突)(白名单模式下此功能已设置作废)"
+            android:title="机器人回复全局尾巴设置" />
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_base_private_reply"
+            android:summary="私聊自动回复"
+            android:title="私聊自动回复" />
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_base_robot_self_response_enable_command"
+            android:summary="机器人自己发送禁言等管理命令也可以进行相应,但是开启网络词库的时候会存在权限漏洞，如网友直接发送英文单词管理员即可直接查询管理员列表,如果关闭你此功能,网络词库默认会携带一个特殊字符避免权限漏洞"
+            android:title="响应机器人自身管理命令" />
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_base_private_reply_ignore_manager"
+            android:summary="私聊未开启时依然可以回复"
+            android:title="管理员不受私聊开关限制" />
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_base_enable_local_reply"
+            android:summary="如果取消勾选，将不再读取本地词库"
+
+            android:title="私聊启用本地词库" />
+
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_base_use_multi_thread_do_msg"
+            android:summary="开启可能导致崩溃，或者出现并发问题，请谨慎使用,如果开启绑定机器人服务导致经常无响应可以尝试开启。"
+            android:title="使用子线程处理消息" />
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_base_enable_net_robot_private"
+            android:summary="默认为茉莉机器人"
+
+            android:title="私聊启用网络回复" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_base_gag_disible_netword_reply_error_not_warn"
+            android:summary="当回复网络词库出现了一些错误，不会把错误结果收集然后进行回复,(有时候没有必要反而导致刷屏,不过方便用户定位不回复的问题。)"
+
+            android:title="网络词库出现故障不回复" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_base_enable_nickname_save_db"
+            android:summary="感觉不推荐这么做，这样会导致机器人速度变慢"
+            android:title="持久化缓存昵称数据" />
+
+
+        <EditTextPreference
+            android:defaultValue="153016267"
+            android:hint="设置私聊不回复的人,分割多个"
+            android:key="@string/key_base_private_not_reply_person"
+            android:summary="情迁内置自带此功能,您也可以在这里设置不回复的人"
+            android:title="指定QQ不回复"></EditTextPreference>
+
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_base_aite_disible_aite"
+
+            android:summary="如果你的QQ总是崩溃，请尝试勾选禁用艾特"
+            android:title="禁用艾特" />
+
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_base_gag_disible_gag"
+            android:summary="禁用后将不会发起禁言请求"
+            android:title="禁用禁言功能" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_base_gag_disible_stuct_msg"
+            android:summary="如果你无法屏蔽点歌功能，可以尝试屏蔽这里"
+            android:title="禁用结构体消息(点歌)" />
+        <cn.qssq666.robot.ui.NumberPerference
+            android:defaultValue="@integer/default_startup_time_distance_ms"
+            android:key="@string/key_base_ignore_second_statup_time"
+            android:summary="用于设置 当前收到的时间小于机器人启动时间间隔忽略(秒)，刚开始登陆QQ会收到大量消息，可能会导致刷屏因此需要稍微设置一下!(当时启动QQ进行登录之前,切换QQ时,请先关闭机器人)可能出现的问题是机器人被杀死了但是QQ正常运行的,被恢复启动后指定秒时间又会重新计算(所以建议适当调整下)"
+            android:title="小于启动时间间隔忽略(毫秒)" />
+
+
+        <cn.qssq666.robot.ui.NumberPerference
+
+
+            android:defaultValue="@integer/key_base_ignore_second_history_msg_duration_second"
+            android:key="@string/key_base_ignore_second_history_msg"
+            android:summary="当重新登录可能拉取到很久以前的消息，设置忽略(数值不宜太小)"
+            android:title="忽略大于指定秒历史消息" />
+
+
+        <cn.qssq666.robot.ui.NumberPerference
+            android:defaultValue="@integer/key_base_ignore_than_second_msg_duration"
+            android:inputType="number"
+            android:key="@string/key_base_ignore_than_second_msg"
+            android:summary="用户屏蔽 在瞬间发送多条消息 或者机器人互相KO问题"
+            android:title="重复消息小于指定(秒)忽略" />
+
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:enabled="false"
+            android:key="@string/key_base_reply_show_nickname"
+
+            android:summary="需要最新版插件1.5.0或最新版内置1.3.2(白名单模式下此功能已设置作废)"
+            android:title="回复时艾特提问人" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/key_base_allow_intercept_robot_not_aite_final_callmsg"
+            android:summary="机器人内部结果消息允许插件拦截，(机器人内部消息处理完毕之后的回调消息，如果开启艾特回复则不会回调)不建议开启，影响性能"
+            android:title="插件是否可监听拦截结果消息" />
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_base_enable_plugin"
+            android:summary="让更多开发者一起打造一款功能强大的情迁聊天机器人(支持扩展插件实现禁言等功能)"
+            android:title="启用插件功能" />
+
+<!--
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:enabled="false"
+            android:key="@string/key_base_reply_show_nickname"
+
+            android:summary="需要最新版插件1.5.0或最新版内置1.3.2(白名单模式下此功能已设置作废)"
+            android:title="回复时艾特提问人" />
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+
+            android:enabled="false"
+            android:key="@string/key_base_enable_net_robot_group"
+            android:summary="默认为图灵机器人(白名单模式下此功能已设置作废)"
+            android:title="群聊启用网络回复" />
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:enabled="false"
+            android:key="@string/key_base_gag_enable_check_msg"
+            android:summary="开启群违规检测将对此群人员的聊天记录进行监控，如果发现违规将直接禁言或者踢人(白名单模式下此功能已设置作废)"
+            android:title="群违规检测" />
+
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:enabled="false"
+            android:key="@string/key_base_aite_me_reply"
+            android:summary="必须艾特才能回复(白名单模式下此功能已设置作废)"
+            android:title="艾特我模式" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:enabled="false"
+            android:key="@string/key_base_aite_me_reply_not_whitename_affect"
+            android:summary="开启只回复白名单模式群后非白名单群艾特我也可以回复(白名单模式下此功能已设置作废)"
+            android:title="白名单模式忽略" />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:enabled="false"
+            android:key="@string/key_base_white_name_aite_not_need"
+            android:summary="白名单无需艾特也可以自动回复发言"
+            android:title="白名单无需艾特(白名单模式下此功能已设置作废)" />
+-->
+
+
+        <EditTextPreference
+            android:capitalize="words"
+            android:defaultValue="@string/empty_value"
+            android:hint="数据库查询结果短网址api文本接口"
+            android:inputType="textCapWords"
+            android:key="@string/key_base_short_url_interface"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+
+            android:singleLine="false"
+            android:summary="当使用配置SQL命令查询数据库的时候,如果数据非常大,那么可能无法用web端浏览,建议使用短链接文本api接口配置,不过短链接接口目前我还没找到一个能承载超大字符串地址的，没有服务器没办法,所以实在不行就手机端查询吧"
+            android:title="查询地址短连接设置" />
+
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

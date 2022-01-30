@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="5dp"
+    android:layout_height="match_parent">
+
+    <TextView
+
+        android:textColor="@android:color/holo_red_dark"
+        android:layout_width="wrap_content"
+        android:text="情迁聊天机器人有两种方式启动,一种是让机器人运行在后台，提供服务给机器人，
+        另外一种是把机器人软件作为插件加载到内存中,你能看到本界面，说明这是后者 ，也就是加载到内存中来了，\n,前者的优势是不会互不影响 也不会引发宿主崩溃,缺点明显,当后台被杀死导致无法使用,如果用户不会添加后台白名单,那么机器人程序会反复被情迁红包插件调用启动,中间肯定会损失部分数据的,后者的优势是动态加载,控制能力强,机器人软件无需后台运行,稳定,可以开发出更多便捷的API,你能看到本界面就要知道有多么便捷了。\n"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

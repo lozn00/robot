@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--     本xml必须放到clor文件夹才会有智能提示  默认颜色是黑色  选中 获取焦点 或者是按下都是某个颜色   下面的是正常的黑色-->
+    <item android:drawable="@drawable/ic_tab3_select" android:state_focused="true"></item>
+    <item android:drawable="@drawable/ic_tab3_select" android:state_checked="true"></item>
+    <item android:drawable="@drawable/ic_tab3_select" android:state_pressed="true"></item>
+    <item android:drawable="@drawable/ic_tab3"></item>
+</selector>

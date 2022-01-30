@@ -1,0 +1,19 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.MainActivity">
+
+    <item android:id="@+id/action_help_install_plugin"
+        android:title="帮助"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"/>
+
+
+    <item android:id="@+id/action_suggest"
+        android:title="词库建议"
+        android:orderInCategory="100"
+        app:showAsAction="ifRoom"/>
+
+
+
+</menu>

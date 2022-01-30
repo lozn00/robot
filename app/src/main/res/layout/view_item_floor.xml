@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="handler"
+            type="cn.qssq666.robot.handler.AccountClickHandler" />
+
+
+        <variable
+            name="model"
+            type="cn.qssq666.robot.bean.FloorBean" />
+
+    </data>
+
+    <!--http://blog.csdn.net/zhixuan322145/article/details/51817207-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="10dp">
+
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tv_id"
+            android:orientation="horizontal"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+
+                    android:text="楼层"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:text="@{`群号:`+model.account}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+
+                    android:text="35068264"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:text="@{`楼层数据:`+model.data}" />
+
+
+            </LinearLayout>
+
+
+            <!--        <ImageView
+                        android:id="@+id/btn_check"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="@{(theview) -> handler.onClick(theview, model)}"
+                        android:padding="@dimen/theme_margin"
+
+                        android:src="@drawable/checkbox_unchecked_red"
+                        app:src="@{model.disable?@drawable/checkbox_unchecked_red:@drawable/checkbox_checked_red}" />
+        -->
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</layout>

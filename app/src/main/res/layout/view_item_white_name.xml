@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="model"
+            type="cn.qssq666.robot.bean.AccountBean" />
+
+
+        <variable
+            name="handler"
+            type="cn.qssq666.robot.handler.AccountClickHandler" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/tv_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:hint="1"
+            android:paddingLeft="@dimen/padding_left"
+            android:paddingRight="@dimen/padding_left"
+            android:text="@{String.valueOf(model.id)}"
+            android:textColorHint="@color/colorAccent" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tv_id"
+            android:orientation="horizontal"
+
+            >
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:text="白名单"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:text="@{model.getDisplayValue()??``}" />
+
+            <ImageView
+                android:id="@+id/btn_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:onClick="@{(theview) -> handler.onClick(theview, model)}"
+                android:padding="@dimen/theme_margin"
+                android:src="@drawable/checkbox_unchecked_red"
+                app:src="@{model.disable?@drawable/checkbox_unchecked_red:@drawable/checkbox_checked_red}" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</layout>

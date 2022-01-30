@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="left"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:text="！\n\n\n下面是支持的命令
+            \n\n这里的命令并不代表是最新的命令,用户可以直接输入命令打印更多支持的命令.
+        \n\n和私聊和某人聊天的相关命令
+        \n命令 查看所有命令(比我这里列出来的全多了)
+        \n屏蔽
+        \n将对你发给消息的这个人不进行机器人回复处理(本次有效)
+        \n解除屏蔽
+        \n将对你设置的人解除屏蔽
+        \n清空屏蔽
+        \n管理员  查看管理员
+        \n群白名单
+        \n违规记录 [查看|清空]  如【违规记录 查看 qq号码】  清空不填写则默认清除所有群所有人，填写则填写群所在qq, 或者违规记录清空本群 则把本群所有记录清空
+        \n艾特 1-5 艾特最近发言的几个人
+        \n点歌 说散就散  点说散就散主题曲 可艾特点歌(最新版同时需要艾特机器人(当时设计是为了避免其他机器人也响应点歌所设计的逻辑)) 点10曲  【点歌 老男孩 10】 给指定人点歌 【点歌 歌名 艾特人】 或者【点歌 showcount】或者来首 说散就散 下载地址
+        \n禁言|gag 1天2小时3分钟
+        \n踢|kick qq
+        \nfloor 查看最近发言人楼层
+        \n添加群白名单 群号 群号不填写默认为当前
+        \n移除群白名单 群号 群号不填写默认为当前
+        \n添加词库 您好,xx Hello,xxx    空格隔开问题和回答逗号隔开一个问题对于多个答案
+        \n删除词库 您好  将删除您好的问题
+        \n更新词库 您好  您好您好，欢迎搞基  那么将修改您好的问题 对应的答案为您好欢迎搞基
+        \n将清空所有QQ,群屏蔽
+        \n状态:显示所有配置信息
+        \n\n\n 有激情的 ，我会慢慢完善的!说实话没多大动力弄这个，我自己对机器人也没多大兴趣了，曾经已经是过去式了。上面的多个参数命令 只对机器人自身发起有效，暂时不支持其他人发上面的命令给机器人\n上面的添加词库等命令 多个参数的命令第一个参数后面切记补上空格 。 " />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_marginTop="10dp"
+            android:id="@+id/tv_update_commend"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+
+</ScrollView>

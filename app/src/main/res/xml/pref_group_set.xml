@@ -1,0 +1,126 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <PreferenceCategory
+        android:key="msg_body_settings"
+        android:title="基本设置">
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/key_group_no_draw"
+            android:summary="@string/pref_description_group_no_reply"
+            android:title="@string/pref_title_social_recommendations" />
+
+
+        <cn.qssq666.robot.ui.NumberPerference
+            android:defaultValue="@integer/default_group_repeat_msg_distance_ignore_ms"
+            android:inputType="number"
+            android:key="@string/key_base_group_ignore_less_second_msg"
+            android:summary="群消息重复回复小于小于指定毫秒不再回复可以解决关键字刷屏问题"
+            android:title="重复群回复小于指定毫秒忽略" />
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:dependency="@string/key_group_no_draw"
+            android:enabled="false"
+            android:key="@string/key_group_only_draw_group"
+            android:summary="(1.6.3之后版本强制开启群白名单模式，免得用户不知所措)这是群白名单模式,也是本软件推荐的模式,其他模式包括黑名单模式不再维护，,本模式开启后,不在设定的名单中将会被无视，不会回复,温馨提示:进入白名单管理(群管理)界面后选择白名单条目长按可以编辑进行更多的设置包括指定群开启管理功能，指定群不开启管理功能等等。"
+            android:title="@string/pref_group_only_draw_group_title" />
+
+
+        <!--
+
+
+
+
+                <SwitchPreference
+                    android:defaultValue="false"
+                    android:enabled="false"
+                    android:dependency="@string/key_group_no_draw"
+                    android:key="@string/key_group_not_draw_group"
+                    android:summary="黑名单功能,被列入的群将不会回复"
+                    android:title="@string/pref_group_not_draw_group_title" />
+
+
+
+                <EditTextPreference
+                    android:capitalize="words"
+                    android:enabled="false"
+                    android:dependency="@string/key_group_not_draw_group"
+                    android:hint="@string/pref_not_draw_group_number_title"
+                    android:inputType="textCapWords"
+                    android:key="@string/key_group_not_draw_group_number"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="false"
+                    android:summary="@string/multi_douhao_split"
+                    android:title="@string/pref_not_draw_group_number_title" />
+
+
+
+                <EditTextPreference
+                    android:capitalize="words"
+                    android:defaultValue="@string/default_join_word"
+                    android:dependency="@string/key_group_no_draw"
+                    android:hint="加群回复语"
+                    android:enabled="false"
+                    android:inputType="textCapWords"
+                    android:key="@string/key_group_join_reply_word"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="false"
+                    android:summary="输入加群回复语多个用,分割"
+                    android:title="@string/pref_title_join_group_reply" />
+
+
+                <SwitchPreference
+                    android:enabled="false"
+                    android:defaultValue="false"
+                    android:dependency="@string/key_group_no_draw"
+
+
+                    android:key="@string/key_group_not_draw_group"
+                    android:summary="黑名单功能,被列入的群将不会回复"
+                    android:title="@string/pref_group_not_draw_group_title" />-->
+
+        <!--
+                <EditTextPreference
+                    android:enabled="false"
+                    android:capitalize="words"
+                    android:dependency="@string/key_group_not_draw_group"
+                    android:hint="@string/pref_not_draw_group_number_title"
+                    android:inputType="textCapWords"
+                    android:key="@string/key_group_not_draw_group_number"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="false"
+                    android:summary="@string/multi_douhao_split"
+                    android:title="@string/pref_not_draw_group_number_title" />
+
+                <EditTextPreference
+                    android:capitalize="words"
+                    android:defaultValue="@string/default_join_word"
+                    android:dependency="@string/key_group_no_draw"
+                    android:enabled="false"
+                    android:hint="加群回复语"
+                    android:inputType="textCapWords"
+                    android:key="@string/key_group_join_reply_word"
+                    android:maxLines="1"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="false"
+                    android:summary="输入加群回复语多个用,分割"
+                    android:title="@string/pref_title_join_group_reply" />
+                <ListPreference
+                    andrnicknameitle="@string/pref_title_add_friends_to_messages"
+                    android:enabled="false"
+
+                    android:defaultValue="-1"
+                    android:entries="@array/pref_example_list_titles"
+                    android:entryValues="@array/pref_example_list_values"
+                    android:key="example_list2"
+                    android:negativeButtonText="@null"
+                    android:positiveButtonText="@null" />-->
+    </PreferenceCategory>
+</PreferenceScreen>

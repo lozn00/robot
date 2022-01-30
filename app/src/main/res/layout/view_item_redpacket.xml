@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="model"
+            type="cn.qssq666.robot.bean.RedPacketBean" />
+
+        <import type="cn.qssq666.robot.utils.DateUtils" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tv_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:hint="1"
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp"
+            android:text="@{String.valueOf(model.id)}"
+            android:textColorHint="@color/colorAccent" />
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/tv_id"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:text="QQ/Group"
+                        android:textIsSelectable="true"
+                        app:visibility="@{model.istroop==1?View.VISIBLE:View.GONE}" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="QQ"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        app:text="@{model.qq}" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="/"
+                        app:visibility="@{model.istroop==1?View.VISIBLE:View.GONE}" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="QQGROUP"
+                        android:textColor="@color/colorPrimary"
+                        android:textIsSelectable="true"
+
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:visibility="visible"
+                        app:text="@{model.qqgroup}"
+                        app:visibility="@{model.istroop==1?View.VISIBLE:View.GONE}" />
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:text="succ"
+                    android:textColor="@color/colorRed"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+
+                    app:text="@{model.getResultMsg()}"
+                    app:textColor="@{model.result==200?@color/colorRed:@color/colorGray}" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="情"
+                    android:textColor="@color/colorGray"
+
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    app:text="@{model.nickname}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="/"
+                    app:visibility="@{model.istroop==1?View.VISIBLE:View.GONE}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="群昵称"
+                    android:textColor="@color/colorGray"
+                    android:textIsSelectable="true"
+
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    android:visibility="visible"
+                    app:text="@{model.groupnickname}"
+                    app:visibility="@{model.istroop==1?View.VISIBLE:View.GONE}" />
+
+            </LinearLayout>
+
+
+            <cn.qssq666.robot.ui.ScrollingTextView
+                android:id="@+id/tv_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="left"
+                android:maxLines="2"
+                android:text="@string/loading"
+                android:textColor="@color/colorGray"
+                android:textColorHint="@color/colorGray"
+                android:textSize="12sp"
+                app:text="@{model.message}" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingBottom="2dp">
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+
+                    android:text="0.01元"
+                    android:textColor="@color/colorRed"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:text="@{model.money+`元`}"
+                    app:textColor="@{model.result==200?@color/colorRed:@color/colorGray}" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|center_vertical"
+                    android:text="2017-9-27 21:36:20"
+                    android:textColor="@color/colorGray"
+
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    app:text="@{DateUtils.getTime(model.createdAt)}" />
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!--app:text="@{DateUtils.getAboutTimeDistance(model.createdAt)}"-->
+
+    </LinearLayout>
+
+</layout>

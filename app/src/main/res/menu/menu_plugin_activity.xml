@@ -1,0 +1,55 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.MainActivity">
+
+    <item
+        android:id="@+id/action_add"
+        android:orderInCategory="100"
+        android:title="安装插件"
+        app:showAsAction="ifRoom" />
+
+
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="100"
+        android:title="刷新内部(非本列表)"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_plugin_dir"
+        android:orderInCategory="100"
+        android:title="插件目录"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_delete_all"
+        android:orderInCategory="100"
+        android:title="删除所有"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_download_plugin_sdk"
+        android:orderInCategory="100"
+        android:title="下载插件SDK"
+        app:showAsAction="never" />
+   <item
+        android:id="@+id/action_download_plugin"
+        android:orderInCategory="100"
+        android:title="下载插件"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_sdk_help"
+        android:orderInCategory="100"
+        android:title="插件SDK开发向导"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_help_install_plugin"
+        android:orderInCategory="100"
+        android:title="如何安装插件"
+        app:showAsAction="never" />
+
+
+
+
+</menu>

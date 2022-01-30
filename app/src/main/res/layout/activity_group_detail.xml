@@ -1,0 +1,1115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data>
+
+        <variable
+            name="model"
+            type="cn.qssq666.robot.bean.GroupWhiteNameBean" />
+
+        <variable
+            name="handler"
+            type="cn.qssq666.robot.handler.GroupConfigHandler" />
+    </data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="10dp"
+                android:paddingTop="10dp"
+                android:paddingRight="10dp"
+                android:paddingBottom="10dp">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:checked="@={model.disable}"
+                        android:text="禁用"
+                        android:textSize="12sp" />
+
+
+                    <TextView xmlns:tools="http://schemas.android.com/tools"
+                        android:id="@+id/btn_account"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="10dp"
+                        android:textIsSelectable="true"
+                        android:textSize="12sp"
+                        app:text="@{`群号:`+model.account+` `}" />
+
+
+                    <EditText
+                        android:id="@+id/ev_group_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="请输入群名称"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.remark}" />
+
+                    <Button
+
+                        android:id="@+id/btn_fetch_current_group_name"
+                        style="@style/theme_btn"
+                        android:text="获取群名称" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    style="@style/setting_title"
+                    android:text="权限分配" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="本群管理员名单(用半角英文逗号,分割),真实管理员也具备禁言/踢人权限，除此之外,群管理员配置如果配置了本群也具备此权限,但是权限都低于超级管理员，真实管理员临时添加后可能不会马上刷新，需要机器人自身手动进入群成员列表刷新。"
+                        android:textColor="@color/colorAccent" />
+
+                    <EditText xmlns:tools="http://schemas.android.com/tools"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="输入如:35068264,153016267"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.admins}" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+
+                            android:id="@+id/btn_fetch_current_group_admins"
+                            style="@style/theme_btn"
+                            android:text="获取当前群管理员以及群主" />
+
+
+                        <Button
+
+                            android:id="@+id/btn_admins_help"
+                            style="@style/theme_btn"
+                            android:text="了解更多" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <TextView
+                    style="@style/setting_title"
+                    android:text="常规配置开关" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cb_enable_local_word"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.localword}"
+                        android:text="启用本地词库" />
+
+
+                    <CheckBox
+                        android:id="@+id/cb_enable_net_word"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.netword}"
+                        android:text="启用网络词库" />
+
+                    <CheckBox
+                        android:id="@+id/cb_has_permission"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.admin}"
+                        android:text="是否有管理权限" />
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.needaite}"
+                        android:text="回复需要艾特" />
+
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.selfcmdnotneedaite}"
+                        android:text="自身命令不需要艾特" />
+
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.replayatperson}"
+                        android:text="回复艾特发言人" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.cmdsilent}"
+                        android:text="指令静默(非管理有效)" />
+
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.revokemsg}"
+                        android:text="撤回违规" />
+
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.bannedaite}"
+                        android:text="群成员违规提示强制艾特" />
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.fitercommand}"
+                        android:text="群网络词库过滤包含命令词回复(防止再次触发回复)" />
+
+
+                </LinearLayout>
+
+
+                <CheckBox
+                    style="@style/style_checkbox_group_config"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="@={model.breaklogic}"
+                    android:text="触发群关键词违规后其他逻辑是否继续执行" />
+
+
+                <CheckBox
+                    style="@style/style_checkbox_group_config"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="@={model.accumlativegagdata}"
+                    android:text="记录违规次数(违规次数超出监控踢出)" />
+
+                <CheckBox
+                    style="@style/style_checkbox_group_config"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:checked="@={model.onlyrecordwordgagcount}"
+                    android:text="只计算发言违规次数（忽略发图片语音昵称等违规）" />
+
+
+                <TextView
+                    style="@style/setting_title"
+                    android:text="群员娱乐交互开关" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.allowmusic}"
+                        android:text="允许点歌" />
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.allowsearchpic}"
+                        android:text="允许搜图" />
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.allowtext2pic}"
+                        android:text="允许文字转图" />
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.allowTranslate}"
+                        android:text="允许翻译" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.allowGenerateCardMsg}"
+                        android:text="接收制作卡片消息" />
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.allowModifyCard}"
+                        android:text="接收修改群名片指令" />
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.allowMenu}"
+                        android:text="接收菜单指令" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.allowzan}"
+                        android:text="接受点赞指令" />
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.allowqrcode}"
+                        android:text="接受二维码指令" />
+
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.replyTranslate}"
+                        android:text="词库回复翻译" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.englishdialogue}"
+                        android:text="英语自动翻译并对话" />
+
+
+                </LinearLayout>
+
+
+                <TextView
+                    style="@style/setting_title"
+                    android:text="群管监控配置开关" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cb_bannedword"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.bannedword}"
+                        android:text="违禁词监控" />
+
+
+                    <CheckBox
+                        android:id="@+id/cb_nicknameban"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.nicknameban}"
+
+                        android:text="昵称敏感词禁言" />
+
+                    <CheckBox
+                        android:id="@+id/cb_illegalnickname"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.illegalnickname}"
+                        android:text="不合法昵称禁言" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cb_frequentmsg"
+
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.frequentmsg}"
+                        android:text="刷屏监控" />
+
+                    <CheckBox
+                        android:id="@+id/cb_redpackettitlebanedword"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.redpackettitlebanedword}"
+                        android:text="红包标题监控" />
+
+                    <CheckBox
+                        android:id="@+id/cb_banpasswordredpacket"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.banpasswordredpacket}"
+                        android:text="禁发口令红包" />
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.banvoiceredpacket}"
+                        android:text="禁发语音红包" />
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.bannormalredpacket}"
+                        android:text="禁发普通红包" />
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.banexclusiveredpacket}"
+                        android:text="禁发专属红包" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cb_bancall"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.bancall}"
+                        android:text="发起通话禁言"
+                        android:visibility="gone" />
+
+                    <CheckBox
+                        android:id="@+id/cb_banvoice"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+
+                        android:checked="@={model.banvoice}"
+                        android:text="发语音禁言" />
+
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.bancardmsg}"
+                        android:text="发卡片消息禁言" />
+
+                    <CheckBox
+                        android:id="@+id/cb_banpic"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.banpic}"
+                        android:text="发图片禁言" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cb_bannedvideo"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.bannevideo}"
+                        android:text="发起视频禁言"
+                        android:visibility="visible" />
+
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.autornamecard}"
+                        android:text="群名片不匹配启用模板修改"
+                        android:visibility="visible" />
+
+
+                </LinearLayout>
+
+
+                <TextView
+                    style="@style/setting_title"
+                    android:text="参数设置" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="在" />
+
+                    <EditText
+                        android:id="@+id/ev_frequentmsgduratiion"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberSigned"
+                        android:minWidth="10dp"
+                        android:text="30"
+                        app:text="@={model.frequentmsgduratiion}" />
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="秒内发言" />
+
+                    <EditText
+                        android:id="@+id/ev_frequentmsgcount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberSigned"
+                        android:minWidth="10dp"
+                        android:text="100"
+                        app:text="@={model.frequentmsgcount}" />
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="条禁言"></TextView>
+
+                    <EditText
+                        android:id="@+id/ev_frequentmsggagtime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberSigned"
+                        android:minWidth="10dp"
+                        android:text="1"
+                        app:text="@={model.frequentmsggagtime}" />
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="分钟"></TextView>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="当昵称格式不匹配下面的正则表达式则禁言" />
+
+
+                    <EditText
+                        android:id="@+id/ev_groupnickanmegagtime"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberSigned"
+                        android:minWidth="10dp"
+                        android:text="1"
+                        app:text="@={model.groupnickanmegagtime}" />
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="分钟" />
+
+                </LinearLayout>
+
+
+                <EditText xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/ev_groupnickanmekeyword"
+                    style="@style/style_checkbox_group_config"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:hint="输入群名片格式正则表达式，不懂得可以慢慢填写然后点击测试"
+                    android:minWidth="10dp"
+                    app:text="@={model.groupnickanmekeyword}"
+                    tools:text="" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="不合法昵称提示用户词:" />
+
+                    <TextView
+                        android:id="@+id/btn_test"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:background="#f00"
+                        android:padding="5dp"
+                        android:text="测试正则表达式"
+                        android:textColor="@android:color/white"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
+
+
+                <EditText
+                    style="@style/style_checkbox_group_config"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="输入不合法昵称禁言提示语"
+
+                    app:text="@={model.groupnicknamegagtip}" />
+
+
+                <EditText
+                    style="@style/style_checkbox_group_config"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="群员名片不合格读取的默认模板"
+
+                    app:text="@={model.nameCardvarTemplete}" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        android:id="@+id/cb_join_join_reply"
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="5dp"
+                        android:checked="@={model.joingroupreply}"
+                        android:text="加群启用欢迎词" />
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="加群回复语" />
+
+                    <EditText xmlns:tools="http://schemas.android.com/tools"
+                        android:id="@+id/ev_join_group_word"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="请输入加群回复语"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.joingroupword}" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="发群图片禁言分钟"
+                        android:textColor="@color/colorAccent" />
+
+                    <EditText xmlns:tools="http://schemas.android.com/tools"
+                        android:id="@+id/pic_gag_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="禁言分钟"
+                        android:inputType="numberSigned"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.picgagsecond}" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="发图片禁言提示"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.picgagsecondtip}" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="默认禁言不带时间参数禁言分钟"
+                        android:textColor="@color/colorAccent" />
+
+                    <EditText xmlns:tools="http://schemas.android.com/tools"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="禁言分钟"
+                        android:inputType="numberSigned"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.notparamgagminute}" />
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="发视频禁言分钟"
+                        android:textColor="@color/colorAccent" />
+
+                    <EditText xmlns:tools="http://schemas.android.com/tools"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="禁言分钟"
+                        android:inputType="numberSigned"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.videogagminute}" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="发视频禁言提示"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.videogagtip}" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="违规发红包禁言分钟"
+                        android:textColor="@color/colorAccent" />
+
+                    <EditText xmlns:tools="http://schemas.android.com/tools"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="禁言分钟"
+                        android:inputType="numberSigned"
+                        android:textSize="12sp"
+                        app:text="@={model.banredpacketminute}" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="发某种类型红包禁言提示"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.banredpackettip}" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="语音消息禁言分钟"
+                        android:textColor="@color/colorAccent" />
+
+                    <EditText xmlns:tools="http://schemas.android.com/tools"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="禁言分钟"
+                        android:inputType="numberSigned"
+                        android:textSize="12sp"
+                        app:text="@={model.voicegagminute}" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="发语音禁言提示"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.voicegagtip}" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="卡片消息禁言分钟"
+                        android:textColor="@color/colorAccent" />
+
+
+                    <EditText xmlns:tools="http://schemas.android.com/tools"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="禁言分钟"
+                        android:inputType="numberSigned"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.cardmsgminute}" />
+
+                    <EditText
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="提示内容"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+
+                        app:text="@={model.cardmsggagtip}" />
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="违规次数超出提示语"
+                        android:textColor="@color/colorAccent" />
+
+                    <EditText xmlns:tools="http://schemas.android.com/tools"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="违规提示语一定要填写哈"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.countthantip}" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="本群回复自动加签名(尾巴)"
+                        android:textColor="@color/colorAccent" />
+
+                    <EditText xmlns:tools="http://schemas.android.com/tools"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="请输入本群携带的尾巴，设置后之后自动加尾巴"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.postfix}" />
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="违规超过"
+                        android:textColor="@color/colorAccent" />
+
+                    <EditText xmlns:tools="http://schemas.android.com/tools"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="违规次数"
+                        android:inputType="numberSigned"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.mistakethanwarncount}" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="10dp"
+                        android:text="次提示用户注意剩余违规次数。"
+                        android:textSize="12sp"
+
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <TextView
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="违规超过"
+                        android:textColor="@color/colorAccent" />
+
+                    <EditText xmlns:tools="http://schemas.android.com/tools"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:hint="最大违规次数"
+                        android:inputType="numberSigned"
+                        android:minWidth="10dp"
+                        android:textSize="12sp"
+                        app:text="@={model.mistakecount}" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:minWidth="10dp"
+                        android:text="次则直接踢出"
+                        android:textSize="12sp"
+
+                        />
+
+                </LinearLayout>
+
+
+                <TextView
+                    style="@style/setting_title"
+                    android:text="拦截全局设置" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.kickviolations}"
+                        android:text="敏感词违规由禁言改为踢出" />
+
+
+                    <CheckBox
+                        style="@style/style_checkbox_group_config"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:checked="@={model.kickviolationsforver}"
+                        android:text="敏感词直接踢出是否永久" />
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
+</layout>

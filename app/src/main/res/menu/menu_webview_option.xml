@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_menu_refresh"
+        android:icon="@android:drawable/ic_popup_sync"
+        android:title="刷新" />
+
+    <item
+        android:id="@+id/action_menu_debug"
+        android:title="调试" />
+</menu>

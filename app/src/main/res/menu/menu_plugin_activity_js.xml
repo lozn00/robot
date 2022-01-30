@@ -1,0 +1,56 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.MainActivity">
+
+
+    <item
+        android:id="@+id/action_refresh"
+        android:orderInCategory="100"
+        android:title="刷新"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_download_plugin"
+        android:orderInCategory="100"
+        android:title="市场"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_download_new_file"
+        android:orderInCategory="100"
+        android:title="新建(学习语法)"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_download_new_file_contain_code"
+        android:orderInCategory="100"
+        android:title="新建(自动回复消息)"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_download_plugin_sdk"
+        android:orderInCategory="100"
+        android:title="Java插件sdk(可参考)"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_delete_all"
+        android:orderInCategory="100"
+        android:title="删除所有"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_sdk_help"
+        android:orderInCategory="100"
+        android:title="插件SDK开发向导"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_help_install_plugin"
+        android:orderInCategory="100"
+        android:title="如何安装插件"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_help_switch_ide"
+        android:orderInCategory="100"
+        android:title="切换IDE内核"
+        app:showAsAction="never" />
+
+</menu>

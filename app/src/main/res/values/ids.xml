@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<item type="id" name="btn_set"/>
+<item type="id" name="btn_group_white_names"/>
+<item type="id" name="btn_ignore_uncheck_qq"/>
+<item type="id" name="btn_key_redpacket_record"/>
+<item type="id" name="btn_nickname"/>
+<item type="id" name="btn_ignore_qq"/>
+<item type="id" name="btn_key_manager"/>
+<item type="id" name="btn_group_admin"/>
+<item type="id" name="btn_floor_manager"/>
+<item type="id" name="btn_gag_word"/>
+<item type="id" name="btn_lua_execute"/>
+<item type="id" name="btn_lua_plugin_manager"/>
+<item type="id" name="btn_js_plugin_manager"/>
+<item type="id" name="btn_super_manager"/>
+<item type="id" name="btn_daemon_app"/>
+<item type="id" name="btn_win_money"/>
+<item type="id" name="btn_download_url"/>
+<item type="id" name="btn_var_manager"/>
+<item type="id" name="btn_self_comd"/>
+<item type="id" name="btn_view_Log"/>
+<item type="id" name="btn_about"/>
+<item type="id" name="btn_join_group"/>
+<item type="id" name="btn_debug_robot"/>
+<item type="id" name="btn_plugin_manager"/>
+<item type="id" name="btn_clock_task"/>
+<item type="id" name="btn_group_illegal_record"/>
+<item type="id" name="watch_ad"/>
+<item type="id" name="plugin_to_install"/>
+
+
+</resources>

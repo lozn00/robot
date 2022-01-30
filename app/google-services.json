@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "113048366384",
+    "firebase_url": "https://robot-3df01.firebaseio.com",
+    "project_id": "robot-3df01",
+    "storage_bucket": "robot-3df01.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113048366384:android:9c93e1177c12f618",
+        "android_client_info": {
+          "package_name": "cn.qssq666.robot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "113048366384-6ejgptc3j93a2v0qvm05kcqqm0j9fnl6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMKV4YSyJp_Jq0eHaoCY0i_8V5fq_2KgA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

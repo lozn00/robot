@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+
+
+    <root-path path="" name="root"/>
+
+
+
+    <external-path path="Android/data/cn.qssq666.robot/" name="files_root" />
+    <external-path path="." name="external_storage_root" />
+
+    <!--https://www.jianshu.com/p/522d3e15f23e-->
+    <!--<external-files-path name="" path="Download"/>-->
+    <!--&lt;!&ndash;tExternalStorageDirectory()&ndash;&gt;-->
+    <!--<external-path path="" name="external-path" />-->
+    <!--<files-path path="" name="files_path" />-->
+    <!--<cache-path path="" name="cache-path" />-->
+</paths>

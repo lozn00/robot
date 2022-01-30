@@ -1,0 +1,376 @@
+plugins {
+    id 'com.android.application'
+    id 'kotlin-android'
+}
+
+//apply plugin: 'com.android.application'
+
+//apply plugin: 'kotlin-android'
+//apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'kotlin-kapt'
+import java.text.SimpleDateFormat
+
+//def appId = rootProject.ext.appId
+def asPlugin = false
+android {
+
+
+    defaultConfig {
+
+        manifestPlaceholders = [
+                JPUSH_APPKEY : "9aa2ceb5e7816d06beb8e596", //JPush 上注册的包名对应的 Appkey.
+                JPUSH_CHANNEL: "default", //暂时填写默认值即可.
+        ]
+        applicationId "cn.qssq666.robot"
+    compileSdkVersion 29
+        minSdkVersion 15
+
+        targetSdkVersion 29
+        multiDexEnabled asPlugin ? false : true
+        buildConfigField "long", "BUILD_TIME", System.currentTimeMillis() + "L"
+        buildConfigField "boolean", "AS_PLUGIN", "" + asPlugin
+        buildConfigField "boolean", "DEBUG_APP", "" + false
+        buildConfigField "String", "BUILD_TIME_STR", "\"" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis()) + "\""
+
+
+        versionCode 97
+        versionName "4.0.3"
+        archivesBaseName = "${versionCode}_robot${versionName}".replace(' ', '_')
+
+        defaultConfig.manifestPlaceholders = [
+                JPUSH_PKGNAME: applicationId,
+                JPUSH_APPKEY : "f9b15882247e7a3f05a5c3d7", //JPush 上注册的包名对应的 Appkey.
+                JPUSH_CHANNEL: "default", //暂时填写默认值即可.
+
+
+        ]
+
+        ndk {
+
+            abiFilters 'armeabi-v7a', "x86", "arm64-v8a"
+        }
+
+        /*     packagingOptions {
+                 exclude "lib/arm64-v8a/**"
+                 exclude "lib/x86/**"
+                 exclude "lib/x86_64/**"
+                 exclude "lib/armeabi/**"
+                 exclude "lib/mips/**"
+                 exclude "lib/mips64/**"
+             }
+     */
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        vectorDrawables.useSupportLibrary = true
+    }
+
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+
+
+    buildFeatures{
+        dataBinding {
+            enabled = true
+        }
+    }
+
+/*
+    dexOptions {
+        preDexLibraries = false
+//        additionalParameters=['--core-library']
+    }*/
+
+    /*   project.tasks.withType(com.android.build.gradle.tasks.Dex) {
+           additionalParameters=['--core-library']
+       }*/
+
+    /*      release {
+              minifyEnabled true
+              proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+          }
+          debug {
+              minifyEnabled true d
+              proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+          }*/
+    signingConfigs {
+
+
+ /*       debug {
+
+            Properties properties = new Properties()
+            properties.load(project.rootProject.file(System.getenv("qssqsignfile")).newDataInputStream())
+            def keyPwd = properties.getProperty("signingConfigs.keyPwd")
+            def keyName = properties.getProperty("signingConfigs.keyName")
+            def keyPath = properties.getProperty("signingConfigs.path")
+            storeFile file(keyPath)
+            storePassword keyPwd
+            keyAlias keyName
+            keyPassword keyPwd
+        }*/
+
+        release {
+
+            Properties properties = new Properties()
+            def confile=System.getenv("qssqsignfile")
+            properties.load(project.rootProject.file(confile).newDataInputStream())
+            def keyPwd = properties.getProperty("signingConfigs.keyPwd")
+            def keyName = properties.getProperty("signingConfigs.keyName")
+            def keyPath = properties.getProperty("signingConfigs.path")
+            storeFile file(keyPath.contains(":")?keyPath:new File(new File(confile).getParentFile().absolutePath,keyPath).absolutePath)
+            storePassword keyPwd
+            keyAlias keyName
+            keyPassword keyPwd
+        }
+    }
+    buildTypes {
+
+        def date = new Date()
+        def formattedDate = "\"" + new String(date.format('yyyy-MM-dd hh:mm:ss')) + "\"";
+
+
+        release
+                {
+                    signingConfig signingConfigs.release
+                    buildConfigField "String", "build", formattedDate
+                    minifyEnabled true
+                    zipAlignEnabled false
+                    // 移除无用的resource文件
+                    shrinkResources false
+                    proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+                }
+        debug {
+            signingConfig signingConfigs.release
+            buildConfigField "String", "build", formattedDate
+            minifyEnabled false
+            zipAlignEnabled false
+            // 移除无用的resource文件
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+//            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+
+    }
+
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+/*    sourceSets {
+        main {
+//            aidl.srcDirs = ['src/main/aidl']
+//            java.srcDirs = ['src/main/java']
+            jniLibs.srcDirs = ['libs']
+        }
+    }
+    productFlavors {
+    }*/
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
+    if (ENCRYPT_STR) {
+        println "已开启加密"
+
+//libraryVariants.all { variant ->
+        applicationVariants.all { variant ->
+            variant.javaCompile.doLast {
+                println("start classes obfuscation " + "${variant.javaCompile.destinationDir}")
+
+                try {
+
+                    javaexec {
+                        setDefaultCharacterEncoding("utf-8")
+//                        systemProperty("file.encoding","-utf-8")
+//                        syystemProperties()
+                        main("-jar")
+                        args(
+                                "${rootProject.projectDir.absolutePath}/encrypt/obfuseStringGradle.jar",
+                                project.name,
+                                variant.javaCompile.destinationDir,
+                                "${rootProject.projectDir.absolutePath}/encrypt/ignore_class.txt",
+                                ENCRYPT_CONFIG_JSON
+                        )
+                    }
+                } catch (e) {
+                    println("执行失败.. " + "${e.getMessage()}")
+                }
+            }
+        }
+    } else {
+        println "没有开启加密"
+    }
+}
+
+
+android {
+    lintOptions {
+        abortOnError false
+    }
+}
+
+//kapt {
+//    generateStubs = true
+//}
+def dbflow_version = "4.8"
+dependencies {
+    implementation 'cn.jiguang.sdk:jpush:3.1.6'
+
+    // 此处以JPush 3.1.6 版本为例。
+    implementation 'cn.jiguang.sdk:jcore:1.2.5'
+
+    // 此处以JCore 1.2.5 版本为例。
+
+    implementation 'com.loopj.android:android-async-http:1.4.9'
+    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation 'org.greenrobot:eventbus:3.0.0'
+
+    //    compile project(':childgit/customcrashlibrary')
+
+    //noinspection GradleCompatible
+    implementation 'com.google.android.material:material:1.0.0'
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+//    implementation 'com.android.support:appcompat-v7:28.0.0'
+
+    //    compile 'com.squareup.okhttp3:okhttp:3.6.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.vectordrawable:vectordrawable:1.0.0'
+    implementation project(':customcrashlibrary')
+
+    //    implementation project(':robotbiz')
+
+    implementation 'xyz.danoz:recyclerviewfastscroller:0.1.3'
+
+
+    implementation  'com.umeng.umsdk:common:9.3.8'// 必选
+    implementation  'com.umeng.umsdk:asms:1.2.2'// 必选
+
+    implementation  'com.umeng.umsdk:abtest:1.0.0'//可选（使用U-App中ABTest能力）
+/*    // Use if Kotlin user.
+    kapt "com.github.agrosner.dbflow:processor:${dbflow_version}"
+
+    // Annotation Processor
+    // if only using Java, use this. If using Kotlin do NOT use this.
+    annotationProcessor "com.github.agrosner.dbflow:processor:${dbflow_version}"
+
+
+    // core set of libraries
+    implementation "com.github.agrosner.dbflow:core:${dbflow_version}"
+    implementation "com.github.agrosner.dbflow:lib:${dbflow_version}"
+
+    // sql-cipher database encryption (optional)
+ *//*   implementation "com.github.agrosner.dbflow:sqlcipher:${dbflow_version}"
+    implementation "net.zetetic:android-database-sqlcipher:1.0"
+*//*
+    // RXJava 2 support
+    implementation "com.github.agrosner.dbflow:reactive-streams:${dbflow_version}"
+
+    // Kotlin Coroutines
+    implementation "com.github.agrosner.dbflow:coroutines:${dbflow_version}"
+
+    // Android Architecture Components Paging Library Support
+    implementation "com.github.agrosner.dbflow:paging:${dbflow_version}"
+
+    // adds generated content provider annotations + support.
+    implementation "com.github.agrosner.dbflow:contentprovider:${dbflow_version}"*/
+
+    //    implementation 'io.reactivex.rxj
+
+    //
+
+    //
+
+    //
+
+    // ava2:rxandroid:2.0.2'
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation files('libs/fastjson-1.1.34.android.jar')
+
+    //https://github.com/kbiakov/CodeView-android
+    implementation project(':codeview')
+
+    //    implementation 'com.github.kbiakov:CodeView-android:1.3.1'
+//    implementation 'com.github.rovo89:XposedBridge:Tag'
+    compileOnly 'de.robv.android.xposed:api:82'
+//    compileOnly 'de.robv.android.xposed:api:82'
+
+    compileOnly 'de.robv.android.xposed:api:82:sources'
+    debugApi 'com.squareup.leakcanary:leakcanary-android:1.5'
+    releaseApi 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+
+    implementation 'com.google.android.gms:play-services-ads:17.1.2'
+
+    implementation 'androidx.cardview:cardview:1.0.0'
+
+    //    implementation project(':robot_sdk')
+//    implementation 'cn.qssq666:robot_sdk:2.6'
+//    implementation files('libs/RobotSdk.jar')
+
+    //zhey bimian chongfu
+    implementation files('libs/commons-lang3-3.8.jar')
+    implementation project(':LuaJava')
+
+    // https://mvnrepository.com/artifact/org.mozilla/rhino
+    implementation 'org.mozilla:rhino:1.7.10'
+    implementation project(':editor')
+    implementation 'org.jdeferred:jdeferred-android-aar:1.2.4'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.4'
+    api 'com.squareup.retrofit2:retrofit:2.5.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.5.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.12.0'
+    implementation 'androidx.multidex:multidex:2.0.0'
+    //    api 'com.squareup.retrofit2:adapter-rxjava:2.5.0'//包含了1.5的rx Executing tasks: [dependencies]
+    api 'com.squareup.retrofit2:converter-scalars:2.5.0'
+
+    //    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
+//    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.3'
+//    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.3'
+  //  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    api 'com.google.dagger:dagger-android:2.35.1'
+    api 'com.google.dagger:dagger-android-support:2.16'
+
+    // if you use the support libraries
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.16'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.16'
+//    kapt 'com.google.dagger:dagger-android-processor:2.15'
+//    kapt 'com.google.dagger:dagger-compiler:2.15'
+ //   implementation 'org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.4-3'
+
+    //test
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
+    /* androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+         exclude group: 'com.android.support', module: 'support-annotations'
+     })*/
+    androidTestImplementation 'androidx.test.espresso:espresso-core:' + rootProject.espressoVersion;
+    implementation 'androidx.annotation:annotation:' + rootProject.androidxLibVersion;
+    implementation 'com.google.guava:guava:' + rootProject.guavaVersion
+    // Testing-only dependencies
+    androidTestImplementation 'androidx.test:core:' + rootProject.coreVersion;
+    androidTestImplementation 'androidx.test.ext:junit:' + rootProject.extJUnitVersion;
+    androidTestImplementation 'androidx.test:runner:' + rootProject.runnerVersion;
+    androidTestImplementation 'androidx.test:rules:' + rootProject.rulesVersion;
+    androidTestImplementation 'androidx.test.espresso:espresso-core:' + rootProject.espressoVersion;
+
+    // 添加这两行
+    implementation 'com.google.zxing:core:3.2.1'      //zxing核心依赖
+    implementation 'com.journeyapps:zxing-android-embedded:3.3.0'  //生成二维码依赖
+    implementation 'androidx.core:core-ktx:1.3.2'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+
+
+}
+
+
+apply plugin: 'com.google.gms.google-services'

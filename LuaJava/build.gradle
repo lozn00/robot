@@ -1,0 +1,11 @@
+apply plugin: 'java-library'
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // https://mvnrepository.com/artifact/org.apache.bcel/bcel
+    implementation group: 'org.apache.bcel', name: 'bcel', version: '5.2'
+
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"

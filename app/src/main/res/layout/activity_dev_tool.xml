@@ -1,0 +1,497 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <data></data>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/setting_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="数据库管理" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/ev_table_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:hint="输入数据库表名"
+                            android:imeActionLabel=""
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textSize="12sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/btn_delete"
+                        style="@style/theme_btn"
+                        android:layout_width="wrap_content"
+                        android:text="删除" />
+
+                    <Button
+                        android:id="@+id/btn_modify"
+                        style="@style/theme_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="修改" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_db_path_current"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:text="dbpath:\n" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <Button
+                        android:id="@+id/btn_backup_database"
+                        style="@style/theme_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="导出老数据库" />
+
+                    <Button
+                        android:id="@+id/btn_restore_database"
+                        style="@style/theme_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="还原数据库" />
+
+                    <Button
+                        android:id="@+id/btn_share_database"
+                        style="@style/theme_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="分享数据库" />
+
+
+                </LinearLayout>
+
+
+                <TextView
+                    style="@style/setting_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="调试机器人" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/textinputLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/ev_selfuin"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="输入机器人自身QQ"
+                            android:imeActionLabel="机器人自身QQ"
+                            android:inputType="numberSigned"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:textSize="12sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <Button
+                        android:id="@+id/btn_fetch_current_qq"
+                        style="@style/theme_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="获取" />
+
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/ev_senderuin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="发送消息的人QQ"
+                        android:imeActionLabel="发送消息给机器人的QQ"
+                        android:inputType="numberSigned"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="12sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <AutoCompleteTextView
+                            android:id="@+id/ev_nickname"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="测试发消息的人的昵称"
+                            android:imeActionLabel="发送消息给机器人的QQ昵称"
+                            android:inputType="text"
+                            android:maxLines="1"
+                            android:singleLine="true"
+                            android:text="情随事迁"
+                            android:textSize="12sp" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+
+
+                    <Button
+                        android:id="@+id/btn_fetch_senderuin_nickname"
+                        style="@style/theme_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="获取" />
+
+
+                </LinearLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/ev_frienduin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="输入群号(私聊消息不用管)"
+                        android:imeActionLabel="发送给谁(QQ/群号)"
+                        android:inputType="numberSigned"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="12sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <AutoCompleteTextView
+                        android:id="@+id/ev_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="发送什么内容呢??"
+                        android:imeActionLabel="发送内容"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:textSize="12sp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="类型:" />
+
+                    <RadioGroup
+                        android:id="@+id/radiogroup"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+
+                        <RadioButton
+                            android:id="@+id/rgtype_private"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="朋友" />
+
+                        <RadioButton
+                            android:id="@+id/rgtype_group"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="群聊" />
+
+                        <RadioButton
+                            android:id="@+id/rgtype_join"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="入群" />
+
+                        <RadioButton
+                            android:id="@+id/rgtype_redpacket"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="红包" />
+
+
+                    </RadioGroup>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/btn_query_send_msg"
+                        style="@style/theme_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="模拟用户发消息" />
+
+
+                    <Button
+                        android:id="@+id/btn_test_speed"
+                        style="@style/theme_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="测消息延迟" />
+
+                    <Button
+                        android:id="@+id/btn_open_log"
+                        style="@style/theme_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="打开日志" />
+
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/ev_result"
+                    android:layout_width="match_parent"
+
+                    android:layout_height="wrap_content"
+                    android:gravity="top"
+                    android:hint="这里显示输出结果必须点击注册回调监听才能看到具体情况"
+                    android:maxLines="30"
+                    android:minLines="3"
+                    android:text=""
+                    android:textSize="8sp" />
+
+                <EditText
+                    android:id="@+id/ev_result_log"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:layout_marginTop="4dp"
+                    android:gravity="top"
+                    android:hint="这里显示处理后的消息最近的几条"
+                    android:maxLines="15"
+                    android:minLines="10"
+
+                    android:text=""
+                    android:textSize="8sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:text="注册或取消监听" />
+
+                    <Button
+                        android:id="@+id/btn_regmsg_listener"
+                        style="@style/theme_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="注册" />
+
+                    <Button
+                        android:id="@+id/btn_unregmsg_listener"
+                        style="@style/theme_btn"
+                        android:layout_width="wrap_content"
+                        android:enabled="false"
+                        android:visibility="gone"
+                        android:layout_height="wrap_content"
+                        android:text="反注册" />
+                </LinearLayout>
+
+                <TextView
+                    style="@style/setting_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="网络词库" />
+
+                    <Spinner
+                        android:id="@+id/btn_dropdownlist"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/root_chat_api">
+
+
+                    </Spinner>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+
+                    <EditText
+                        android:id="@+id/ev_tuting_key"
+                        style="@style/Widget.AppCompat.EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="请输入Key"
+                        android:textSize="12sp" />
+
+
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/ev_reply_secret"
+                    style="@style/Widget.AppCompat.EditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:hint="请输入Sercet"
+                    android:textSize="12sp" />
+
+                <Button
+
+                    android:id="@+id/btn_save"
+                    style="@style/theme_btn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="保存更新" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/ev_db_path"
+                        style="@style/Widget.AppCompat.EditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="自定义数据库目录,不填写则为/sdcard/qssq666/目录"
+                        android:textSize="12sp" />
+
+
+                    <Button
+
+                        android:id="@+id/btn_select_db_path"
+                        style="@style/theme_btn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="选择数据库位置" />
+
+                </LinearLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:text="数据库存储在内部存储目录，无需Root也可以分享，导出到电脑编辑。" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#000000" />
+
+                <TextView
+                    style="@style/setting_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="正则测试" />
+
+                <EditText
+                    android:id="@+id/ev_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="输入内容" />
+
+                <EditText
+                    android:id="@+id/ev_content_reg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="输入正则表达式" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <Button
+                        android:id="@+id/btn_test_reg"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="测正则" />
+
+                    <Button
+                        android:id="@+id/btn_test_simulator_gag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="禁言模拟" />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="800dp"></LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+        </ScrollView>
+
+
+    </LinearLayout>
+</layout>

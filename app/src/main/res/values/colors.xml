@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#101624</color>
+    <!--<color name="colorPrimary">#3F51B5</color>-->
+    <color name="colorPrimaryDark">#0d111c</color>
+    <color name="colorPrimaryBlack">#05060a</color>
+    <color name="colorPrimaryDarkContent">#0d111c</color>
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <color name="colorAccent">#FF4081</color>
+    <color name="colorGray">#acaeb0</color>
+    <color name="colorRed">#f00</color>
+    <color name="itemLineColor">#F0F0F0</color>
+    <color name="white">#ffffff</color>
+    <color name="selector_gray">#707070</color>
+</resources>

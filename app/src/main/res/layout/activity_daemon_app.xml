@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:autoLink="all"
+            android:padding="10dp"
+            android:text="由于机器人的特殊性,因此必须保持机器人稳定运行才能发挥他的价值,而且大部分时候人可能是和运行机器人的手机、或者电脑是不再同一个地方，那么稳定性就变得非常重要了,下面是我提供的几个建议\n为了提高稳定性，和避免断网，可以尝试做如下操作
+    \n1.给wifi设置用不断网
+   \n2.给QQ,机器人添加后台白名单,通常在android 6.0会自动提示添加电量优化白名单
+   \n3.禁止手机锁屏,这个可能就比较耗电了,不过这是提高稳定性的比较好的方法
+   \n4.使用电脑模拟器代替手机,电脑之所以稳定是因为电脑可以设置屏幕锁屏，但是模拟器程序不锁屏，不受环境等影响,而且选择4.4.夜神模拟器还是比较靠谱的,抢红包速度也是很快的。
+   \n5.机器人软件开启死亡监控模式(检测到QQ被杀死后自动打开),检测到断网记录日志,等等。目前已经开发了一个 java机器人插件，会间隔10分钟就启动一次QQ.各位想下载的去更新入口找吧。
+   \n6.弄一个配置稍微高一点的手机,因为有些低内存手机会反反复复的杀死后台的机器人程序,搞得体验很不好,比如红米4a换成红米note4x之后稳定性强多了,每天都在线，天天挂机，不需要电脑,我的机器人已经挂机几个月了，哈哈。-------
+   \n
+   \n"
+            android:textSize="10sp" />
+
+
+    </LinearLayout>
+
+</ScrollView>

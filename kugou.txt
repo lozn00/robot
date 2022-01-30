@@ -1,0 +1,163 @@
+{"status":1,"error_code":0,"data":{"page":1,"tab":"全部","lists":[{"SongName":"说散就散","OwnerCount":111755,"MvType":2,"TopicRemark":"","SQFailProcess":4,"Source":"","Bitrate":128,"HQExtName":"mp3","SQFileSize":27219789,"ResFileSize":0,"AudioCdn":100,"MvTrac":3,"SQDuration":242,"ExtName":"mp3","Auxiliary":"《前任3：再见前任》电影片尾曲","SongLabel":"","Scid":35683944,"OriSongName":"说散就散","FailProcess":4,"SQBitrate":897,"HQBitrate":320,"Audioid":35683944,"HiFiQuality":2,"Grp":{},"OriOtherName":"","AlbumPrivilege":8,"TopicUrl":"","SuperFileHash":"","ASQPrivilege":10,"M4aSize":996106,"IsOriginal":0,"Privilege":8,"ResBitrate":0,"FileHash":"1543CB6EEBB01A574FB2957481445C9D","SQPayType":3,"HQPrice":200,"trans_param":{"roaming_astrict":0,"pay_block_tpl":1,"musicpack_advance":0,"display_rate":0,"display":0,"cid":30525938},"Type":"audio","FoldType":0,"SourceID":0,"A320Privilege":10,"FileName":"袁娅维 - 说散就散","AlbumID":"8025931","ID":"103880178","SuperFileSize":0,"QualityLevel":3,"SQFileHash":"BFFFF05F6BB9F13EBDBE06ED4E6D8B4E","AlbumName":"说散就散","HQPrivilege":10,"SuperBitrate":0,"SuperDuration":0,"MixSongID":"103880178","ResFileHash":"","PublishAge":255,"SuperExtName":"","HQFileHash":"19763630BB46158040692D7395BCDA3D","HQPkgPrice":1,"Duration":242,"FileSize":3882101,"OtherName":"","SQPkgPrice":1,"PkgPrice":1,"HQFileSize":9707219,"HQFailProcess":4,"OldCpy":0,"SQPrivilege":10,"SQPrice":200,"ResDuration":0,"SingerId":[6792],"Price":200,"HQPayType":3,"SingerName":"袁娅维","Publish":1,"MvHash":"0BB8D1C6BFE07C1F370AD3C2F1A09D1F","SQExtName":"flac","HQDuration":242,"PayType":3,"HasAlbum":1,"mvTotal":0,"Accompany":1}],"chinesecount":4,"searchfull":1,"correctiontype":0,"subjecttype":0,"aggregation":[{"key":"DJ","count":0},{"key":"现场","count":0},{"key":"广场舞","count":0},{"key":"伴奏","count":0},{"key":"铃声","count":0}],"allowerr":0,"correctionsubject":"","correctionforce":0,"total":463,"istagresult":0,"istag":0,"correctiontip":"","pagesize":1}}
+
+
+
+
+
+
+
+
+
+
+[{"A320Privilege":10,"ASQPrivilege":10,"Accompany":1,"AlbumID":"8025931","AlbumName":"说散就散","AlbumPrivilege":8,"AudioCdn":100,"Audioid":35683944,"Auxiliary":"《前任3：再见前任》电影片尾曲","Bitrate":128,"Duration":242,"ExtName":"mp3","FailProcess":4,"FileHash":"1543CB6EEBB01A574FB2957481445C9D","FileName":"袁娅维 - 说散就散","FileSize":3882101,"FoldType":0,"Grp":{},"HQBitrate":320,"HQDuration":242,"HQExtName":"mp3","HQFailProcess":4,"HQFileHash":"19763630BB46158040692D7395BCDA3D","HQFileSize":9707219,"HQPayType":3,"HQPkgPrice":1,"HQPrice":200,"HQPrivilege":10,"HasAlbum":1,"HiFiQuality":2,"ID":"103880178","IsOriginal":0,"M4aSize":996106,"MixSongID":"103880178","MvHash":"0BB8D1C6BFE07C1F370AD3C2F1A09D1F","MvTrac":3,"MvType":2,"OldCpy":0,"OriOtherName":"","OriSongName":"说散就散","OtherName":"","OwnerCount":111755,"PayType":3,"PkgPrice":1,"Price":200,"Privilege":8,"Publish":1,"PublishAge":255,"QualityLevel":3,"ResBitrate":0,"ResDuration":0,"ResFileHash":"","ResFileSize":0,"SQBitrate":897,"SQDuration":242,"SQExtName":"flac","SQFailProcess":4,"SQFileHash":"BFFFF05F6BB9F13EBDBE06ED4E6D8B4E","SQFileSize":27219789,"SQPayType":3,"SQPkgPrice":1,"SQPrice":200,"SQPrivilege":10,"Scid":35683944,"SingerId":[6792],"SingerName":"袁娅维","SongLabel":"","SongName":"说散就散","Source":"","SourceID":0,"SuperBitrate":0,"SuperDuration":0,"SuperExtName":"","SuperFileHash":"","SuperFileSize":0,"TopicRemark":"","TopicUrl":"","Type":"audio","mvTotal":0,"trans_param":{"cid":30525938,"display":0,"display_rate":0,"musicpack_advance":0,"pay_block_tpl":1,"roaming_astrict":0}}]
+
+
+
+
+
+
+http://songsearch.kugou.com/song_search_v2?&keyword=%E8%80%81%E7%94%B7%E5%AD%A9&page=1&pagesize=1&iscorrection=1&platform=WebFilter&showtype=0&author=bwn
+
+
+
+
+
+https://blog.csdn.net/qiuxy23/article/details/81266030
+
+
+
+{
+status: 1,
+error_code: 0,
+data: {
+page: 1,
+tab: "全部",
+lists: [
+{
+SongName: "老男孩",
+OwnerCount: 28938,
+MvType: 2,
+TopicRemark: "",
+SQFailProcess: 4,
+Source: "",
+Bitrate: 128,
+HQExtName: "mp3",
+SQFileSize: 34990085,
+ResFileSize: 0,
+AudioCdn: 100,
+MvTrac: 3,
+SQDuration: 304,
+ExtName: "mp3",
+Auxiliary: "《老男孩》电影片尾曲",
+SongLabel: "",
+Scid: 331465,
+OriSongName: "老男孩",
+FailProcess: 4,
+SQBitrate: 920,
+HQBitrate: 320,
+Audioid: 331465,
+HiFiQuality: 2,
+Grp: { },
+OriOtherName: "",
+AlbumPrivilege: 8,
+TopicUrl: "",
+SuperFileHash: "",
+ASQPrivilege: 10,
+M4aSize: 1257286,
+IsOriginal: 0,
+Privilege: 8,
+ResBitrate: 0,
+FileHash: "F8010EA4A8BC0E1F5FB11F2E233EBB30",
+SQPayType: 3,
+HQPrice: 200,
+trans_param: {
+roaming_astrict: 0,
+pay_block_tpl: 1,
+musicpack_advance: 0,
+display_rate: 0,
+display: 0,
+cid: 7218063
+},
+Type: "audio",
+FoldType: 0,
+SourceID: 0,
+A320Privilege: 10,
+FileName: "筷子兄弟 - 老男孩",
+AlbumID: "970624",
+ID: "32134258",
+SuperFileSize: 0,
+QualityLevel: 3,
+SQFileHash: "A6437D8FE54AAEDDAC1E1C8D0D82CC60",
+AlbumName: "父亲",
+HQPrivilege: 10,
+SuperBitrate: 0,
+SuperDuration: 0,
+MixSongID: "32134258",
+ResFileHash: "",
+PublishAge: 255,
+SuperExtName: "",
+HQFileHash: "EDAD7C4DF0748AEBCEBD7648D4AEB7A6",
+HQPkgPrice: 1,
+Duration: 300,
+FileSize: 4864554,
+OtherName: "",
+SQPkgPrice: 1,
+PkgPrice: 1,
+HQFileSize: 12162656,
+HQFailProcess: 4,
+OldCpy: 1,
+SQPrivilege: 10,
+SQPrice: 200,
+ResDuration: 0,
+SingerId: [
+8071
+],
+Price: 200,
+HQPayType: 3,
+SingerName: "筷子兄弟",
+Publish: 1,
+MvHash: "9B0347855DE73CC4D94B77EABB3DAC87",
+SQExtName: "flac",
+HQDuration: 304,
+PayType: 3,
+HasAlbum: 1,
+mvTotal: 0,
+Accompany: 1
+}
+],
+chinesecount: 3,
+searchfull: 1,
+correctiontype: 0,
+subjecttype: 0,
+aggregation: [
+{
+key: "DJ",
+count: 0
+},
+{
+key: "现场",
+count: 0
+},
+{
+key: "广场舞",
+count: 0
+},
+{
+key: "伴奏",
+count: 0
+},
+{
+key: "铃声",
+count: 0
+}
+],
+allowerr: 0,
+correctionsubject: "",
+correctionforce: 0,
+total: 415,
+istagresult: 0,
+istag: 0,
+correctiontip: "",
+pagesize: 1
+}
+}

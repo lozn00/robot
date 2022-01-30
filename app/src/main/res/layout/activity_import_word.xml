@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"></androidx.appcompat.widget.Toolbar>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/ev_split_flag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="问答与问答分隔符 如 问题|答案,问题|答案则为, "
+                android:imeActionLabel="问答总分隔符 问题|答案,问题|答案"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textSize="12sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <AutoCompleteTextView
+                android:id="@+id/ev_ask_split_flag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="问与答分隔符 如你好|不好 则分隔符为|"
+                android:imeActionLabel="问题与答案分隔符"
+                android:inputType="text"
+                android:singleLine="true"
+                android:textSize="12sp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/ev_path"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <AutoCompleteTextView
+                android:id="@+id/ev_wordtext_path"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:imeActionLabel="当前词库路径"
+                android:textSize="12sp"
+                android:hint="当前词库路径"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_select_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="选择词库" />
+            <Button
+                android:id="@+id/btn_smart_read_flag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="智能识别" />
+
+            <Button
+                android:id="@+id/btn_tab_path"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tab" />
+            <Button
+                android:id="@+id/btn_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="开始导入" />
+
+        </LinearLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+                android:id="@+id/scrollView"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_log_view"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content"></TextView>
+        </androidx.core.widget.NestedScrollView>
+    </LinearLayout>
+</layout>

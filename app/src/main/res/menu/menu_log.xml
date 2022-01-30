@@ -1,0 +1,65 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.MainActivity">
+
+    <item
+        android:id="@+id/action_search_tag"
+        android:icon="@drawable/ic_menu_tag"
+        android:title="标签"
+        android:visible="true"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_search_content"
+        android:icon="@drawable/ic_menu_search"
+        android:title="关键词"
+        android:visible="true"
+        app:actionViewClass="androidx.appcompat.widget.SearchView"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_pause"
+        android:icon="@drawable/ic_menu_pause"
+        android:iconTint="#ffffff"
+        android:orderInCategory="100"
+        android:title="暂停"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_info"
+        android:orderInCategory="100"
+        android:title="信息"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_switch_pic_center_pic"
+        android:orderInCategory="100"
+        android:title="切换画中画"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_level"
+        android:orderInCategory="100"
+        android:title="级别"
+        app:showAsAction="ifRoom">
+        <group
+            android:id="@+id/group_menu_1"
+            android:checkableBehavior="single">
+            <item
+                android:id="@+id/group_menu_item_all"
+                android:checked="true"
+                android:title="所有级别" />
+            <item
+                android:id="@+id/group_menu_item_wran"
+                android:title="警告级别" />
+            <item
+                android:id="@+id/group_menu_item_error"
+                android:title="错误级别" />
+            <item
+                android:id="@+id/group_menu_item_debug"
+                android:title="调试级别" />
+            <item
+                android:id="@+id/group_menu_item_info"
+                android:title="信息级别" />
+        </group>
+    </item>
+</menu>

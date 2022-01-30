@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="handler"
+            type="cn.qssq666.robot.handler.AccountClickHandler" />
+
+
+        <variable
+            name="model"
+            type="cn.qssq666.robot.bean.PluginBean" />
+
+    </data>
+
+    <!--http://blog.csdn.net/zhixuan322145/article/details/51817207-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="10dp"
+        android:paddingLeft="5dp"
+        android:paddingTop="10dp">
+
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+
+                    app:textColor="@{model.isError()?@color/colorRed:@color/colorPrimary}"
+                    android:text="@string/loading"
+                    android:textColor="@color/colorPrimary"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:text="@{model.getPluginName()}" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="@string/loading"
+                    android:textColor="@color/colorGray"
+                    app:textColor="@{model.isError()?@color/colorRed:@color/colorGray}"
+                    android:textSize="13sp"
+                    android:textStyle="bold"
+                    app:text="@{model.isError()?`加载失败，长按查看错误详情`:``+model.getDescript()}" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="@dimen/theme_margin"
+                        android:text="@string/loading"
+                        android:textColor="@color/colorGray"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:text="@{@string/version(model.getVersionName())}" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="@dimen/theme_margin"
+                        android:text="@string/loading"
+                        android:textColor="@color/colorGray"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:text="@{`build`+String.valueOf(model.getVersionCode())}" />
+
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:text="@string/loading"
+                        android:textColor="@color/colorGray"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:text="@{@string/author(model.getAuthorName())}" />
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:ellipsize="middle"
+                    android:singleLine="true"
+                    android:text="@string/loading"
+                    android:textColor="@color/colorGray"
+                    android:textSize="15sp"
+                    android:textStyle="bold"
+                    app:text="@{@string/path(model.path)}" />
+
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/btn_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:onClick="@{(theview) -> handler.onClick(theview, model)}"
+                android:padding="@dimen/theme_margin"
+                android:src="@drawable/checkbox_unchecked_red"
+                app:src="@{model.disable?@drawable/checkbox_unchecked_red:@drawable/checkbox_checked_red}" />
+
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
+</layout>

@@ -1,0 +1,68 @@
+ECLIPSE ANDROID PROJECT IMPORT SUMMARY
+======================================
+
+Ignored Files:
+--------------
+The following files were *not* copied into the new Gradle project; you
+should evaluate whether these are still needed in your project and if
+so manually move them:
+
+* .travis.yml
+* LICENSE.txt
+* README.md
+* build.xml
+* proguard.cfg
+
+Moved Files:
+------------
+Android Gradle projects use a different directory structure than ADT
+Eclipse projects. Here's how the projects were restructured:
+
+* AndroidManifest.xml => androlua\src\main\AndroidManifest.xml
+* assets\ => androlua\src\main\assets\
+* jni\ => androlua\src\main\jni\
+* res\ => androlua\src\main\res\
+* src\ => androlua\src\main\java\
+* src\android\widget\package.html => androlua\src\main\resources\android\widget\package.html
+* src\com\luajava\package.html => androlua\src\main\resources\com\luajava\package.html
+* src\lua\autotheme.lua => androlua\src\main\resources\lua\autotheme.lua
+* src\lua\base64.lua => androlua\src\main\resources\lua\base64.lua
+* src\lua\bmob.lua => androlua\src\main\resources\lua\bmob.lua
+* src\lua\console.lua => androlua\src\main\resources\lua\console.lua
+* src\lua\ftp.lua => androlua\src\main\resources\lua\ftp.lua
+* src\lua\hex.lua => androlua\src\main\resources\lua\hex.lua
+* src\lua\http.lua => androlua\src\main\resources\lua\http.lua
+* src\lua\import.lua => androlua\src\main\resources\lua\import.lua
+* src\lua\json.lua => androlua\src\main\resources\lua\json.lua
+* src\lua\loadbitmap.lua => androlua\src\main\resources\lua\loadbitmap.lua
+* src\lua\loadlayout.lua => androlua\src\main\resources\lua\loadlayout.lua
+* src\lua\loadmenu.lua => androlua\src\main\resources\lua\loadmenu.lua
+* src\lua\logcat.lua => androlua\src\main\resources\lua\logcat.lua
+* src\lua\ltn12.lua => androlua\src\main\resources\lua\ltn12.lua
+* src\lua\mbox.lua => androlua\src\main\resources\lua\mbox.lua
+* src\lua\mime.lua => androlua\src\main\resources\lua\mime.lua
+* src\lua\options.lua => androlua\src\main\resources\lua\options.lua
+* src\lua\permission.lua => androlua\src\main\resources\lua\permission.lua
+* src\lua\smtp.lua => androlua\src\main\resources\lua\smtp.lua
+* src\lua\socket.lua => androlua\src\main\resources\lua\socket.lua
+* src\lua\socket\headers.lua => androlua\src\main\resources\lua\socket\headers.lua
+* src\lua\socket\tp.lua => androlua\src\main\resources\lua\socket\tp.lua
+* src\lua\socket\url.lua => androlua\src\main\resources\lua\socket\url.lua
+* src\lua\su.lua => androlua\src\main\resources\lua\su.lua
+* src\lua\test.lua => androlua\src\main\resources\lua\test.lua
+* src\lua\xml.lua => androlua\src\main\resources\lua\xml.lua
+
+Next Steps:
+-----------
+You can now build the project. The Gradle project needs network
+connectivity to download dependencies.
+
+Bugs:
+-----
+If for some reason your project does not build, and you determine that
+it is due to a bug or limitation of the Eclipse to Gradle importer,
+please file a bug at http://b.android.com with category
+Component-Tools.
+
+(This import summary is for your information only, and can be deleted
+after import once you are satisfied with the results.)

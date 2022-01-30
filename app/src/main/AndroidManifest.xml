@@ -1,0 +1,627 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="cn.qssq666.robot"
+    xmlns:dist="http://schemas.android.com/apk/distribution">
+
+    <dist:module dist:instant="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <uses-permission android:name="android.permission.DEVICE_POWER" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <!-- 在SDCard中创建与删除文件权限 -->
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
+    <!--28需要下面的权限-->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION"/>
+
+
+    <!--为了插件需要增加更多权限-->
+
+    <uses-feature android:name="android.hardware.camera" android:required="true"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="com.aicoin.phone.permission.JPUSH_MESSAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.GET_TASKS"/>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"/>
+    <uses-permission android:name="android.permission.BLUETOOTH"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.READ_SETTINGS"/>
+
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+    <application
+android:requestLegacyExternalStorage="true"
+        android:name=".app.AppContext"
+        android:icon="@mipmap/ic_launcher"
+        android:label="情迁聊天机器人"
+        android:networkSecurityConfig="@xml/network_security_config_qssq"
+        android:theme="@style/AppTheme"
+        tools:replace="android:appComponentFactory,android:label"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+        >
+        <activity
+            android:name="cn.qssq666.robot.activity.MainActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="cn.qssq666.robot.business.RobotContentProvider"
+            android:authorities="cn.qssq666.robot"
+            android:exported="true" />
+        <!--        <provider
+                    android:name="android.support.v4.content.FileProvider"
+                    android:authorities="${applicationId}.fileprovider"
+                    android:exported="false"
+                    android:grantUriPermissions="true">
+                    <meta-data
+                        android:name="android.support.FILE_PROVIDER_PATHS"
+                        android:resource="@xml/file_provider_paths" />
+                </provider>
+                　-->
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_provider_paths" />
+        </provider>
+
+
+        <activity
+            android:name="cn.qssq666.robot.activity.SettingsActivity"
+
+
+            android:label="@string/title_activity_settings"
+            android:windowSoftInputMode="stateAlwaysHidden">
+
+            <meta-data
+                android:name="android.preference"
+                android:resource="@xml/base_config" />
+        </activity>
+        <activity
+            android:name="cn.qssq666.robot.activity.LogActivity"
+            android:launchMode="singleInstance"
+            android:resizeableActivity="true"
+            android:supportsPictureInPicture="true"
+            android:theme="@style/Toolbar">
+            <layout
+                android:defaultWidth="800dp"
+                android:defaultHeight="800dp"
+                android:gravity="top|end"
+                android:minWidth="150dp"
+                android:minHeight="100dp" />
+
+        </activity>
+        <activity
+            android:name="cn.qssq666.robot.activity.KeyWordActivity"
+            android:theme="@style/Toolbar"></activity>
+        <activity
+            android:name="cn.qssq666.robot.activity.RedPacketRecordActivity"
+            android:theme="@style/Toolbar"></activity>
+
+
+        <activity
+            android:name="cn.qssq666.robot.activity.AboutActivity"
+            android:theme="@style/AppTheme"></activity>
+
+        <activity
+            android:name="cn.qssq666.robot.activity.AuthActivity"
+            android:exported="true"
+            android:theme="@style/AppTheme">
+
+            <intent-filter>
+                <action android:name="cn.qssq666.robot.auth"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="cn.qssq666.robot.activity.WatchAdActivity"
+            android:theme="@style/AppTheme"></activity>
+
+
+        <activity
+            android:name="cn.qssq666.robot.activity.datamanager.FloorManagerActivity"
+            android:theme="@style/Toolbar"></activity>
+
+        <activity
+            android:name="cn.qssq666.robot.activity.GroupDetailConfigActivity"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name="cn.qssq666.robot.activity.DaemonAppActivity"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name="cn.qssq666.robot.activity.datamanager.GroupAdminActivity"
+            android:theme="@style/Toolbar"></activity>
+
+
+        <activity
+            android:name=".activity.datamanager.GagKeyWordActivity"
+            android:exported="true"
+            android:hardwareAccelerated="true"
+            android:supportsPictureInPicture="true"
+            android:theme="@style/Toolbar">
+            <intent-filter>
+                <action android:name="wifi.intent.action.BROWSER" />
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="file" />
+                <data android:scheme="http" />
+                <data android:scheme="https" />
+                <data android:scheme="wkb" />
+                <data android:scheme="/" />
+            </intent-filter>
+
+
+        </activity>
+
+        <activity
+            android:name="cn.qssq666.robot.activity.datamanager.GroupWhiteNamesActivity"
+            android:theme="@style/Toolbar"></activity>
+
+        <activity
+            android:name="cn.qssq666.robot.activity.datamanager.QQIgnoresActivity"
+            android:theme="@style/Toolbar"></activity>
+
+        <activity
+            android:name="cn.qssq666.robot.activity.datamanager.QQIgnoresGagActivity"
+            android:theme="@style/Toolbar"></activity>
+
+        <activity
+            android:name="cn.qssq666.robot.activity.datamanager.VarManagerActivity"
+            android:theme="@style/Toolbar"></activity>
+
+
+        <activity
+            android:name="cn.qssq666.robot.activity.datamanager.QQSuperManagerActivity"
+            android:theme="@style/Toolbar"></activity>
+        <activity
+            android:name=".activity.datamanager.NickNameManagerActivity"
+            android:theme="@style/Toolbar"></activity>
+
+
+        <activity
+            android:name="cn.qssq666.robot.activity.CmdHelpActivity"
+            android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name=".webview.WebViewActivity"
+            android:theme="@style/AppTheme"></activity>
+
+
+        <activity
+
+            android:name="cn.qssq666.robot.activity.DevToolActivity"
+            android:launchMode="singleInstance"
+            android:supportsPictureInPicture="true"
+            android:theme="@style/AppTheme"></activity>
+
+
+
+
+        <activity
+
+
+            android:name="cn.qssq666.robot.activity.LuaPluginManagerActivity"
+
+            android:theme="@style/Toolbar"></activity>
+
+
+        <activity
+
+
+            android:name="cn.qssq666.robot.activity.JSPluginManagerActivity"
+
+            android:theme="@style/Toolbar">
+
+
+
+        </activity>
+
+
+        <activity
+            android:name=".activity.intent.ImportLuaActivity"
+            android:excludeFromRecents="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="导入Lua到机器人"
+            android:theme="@style/NotUiTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+                <!--<data android:mimeType="application/x-javascript" />-->
+                <data android:pathPattern=".*\.lua" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".activity.intent.ImportJSActivity"
+            android:excludeFromRecents="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="导入JS到机器人"
+            android:theme="@style/NotUiTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+                <!--<data android:mimeType="application/x-javascript" />-->
+                <data android:pathPattern=".*\.js" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+            android:name=".activity.intent.RunLuaActivity"
+            android:excludeFromRecents="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="运行Lua机器人插件"
+            android:theme="@style/NotUiTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+                <!--<data android:mimeType="application/x-javascript" />-->
+                <data android:pathPattern=".*\.lua" />
+            </intent-filter>
+
+        </activity>
+
+
+        <activity
+            android:name=".activity.intent.RunJSActivity"
+            android:excludeFromRecents="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="运行JS机器人插件"
+            android:theme="@style/NotUiTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+                <!--<data android:mimeType="application/x-javascript" />-->
+                <data android:pathPattern=".*\.js" />
+            </intent-filter>
+
+        </activity>
+
+
+        <activity
+            android:name=".activity.intent.RunRobotApiCodeLuaActivity"
+            android:excludeFromRecents="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="测试lua机器人Api"
+            android:theme="@style/NotUiTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+                <!--<data android:mimeType="application/x-javascript" />-->
+                <data android:pathPattern=".*\.lua" />
+            </intent-filter>
+
+        </activity>
+
+
+        <activity
+            android:name=".activity.intent.RunRobotApiCodeJSActivity"
+            android:excludeFromRecents="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="测试JS机器人Api"
+            android:theme="@style/NotUiTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+                <!--<data android:mimeType="application/x-javascript" />-->
+                <data android:pathPattern=".*\.lua" />
+            </intent-filter>
+
+        </activity>
+
+        <activity
+
+            android:name="cn.qssq666.robot.activity.LuaEditCodeActivity"
+
+            android:icon="@mipmap/ic_launcher"
+            android:label="编辑Lua机器人插件"
+
+
+            android:theme="@style/Toolbar">
+
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+                <!--<data android:mimeType="application/x-javascript" />-->
+                <data android:pathPattern=".*\.lua" />
+            </intent-filter>
+
+        </activity>
+
+
+        <activity
+
+            android:name="cn.qssq666.robot.activity.JSEditCodeActivity"
+
+            android:icon="@mipmap/ic_launcher"
+            android:label="编辑JS机器人插件"
+
+
+            android:theme="@style/Toolbar">
+
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+                <!--<data android:mimeType="application/x-javascript" />-->
+                <data android:pathPattern=".*\.js" />
+            </intent-filter>
+
+        </activity>
+
+
+        <activity
+
+            android:name="cn.qssq666.robot.activity.JSEditCodeNActivity"
+
+            android:icon="@mipmap/ic_launcher"
+            android:label="编辑JS机器人插件X"
+
+
+            android:theme="@style/Toolbar">
+
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+                <!--<data android:mimeType="application/x-javascript" />-->
+                <data android:pathPattern=".*\.js" />
+            </intent-filter>
+
+        </activity>
+
+
+        <activity
+
+            android:name="cn.qssq666.robot.activity.intent.EditAnyCodeActivity"
+
+            android:icon="@mipmap/ic_launcher"
+            android:label="编辑代码"
+
+
+            android:theme="@style/Toolbar">
+
+            <intent-filter android:label="发送..">
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+                <action android:name="android.intent.action.SEND"></action>
+
+                <category android:name="android.intent.category.DEFAULT"></category>
+
+                <data android:mimeType="image/*"></data>
+                <data android:mimeType="video/*"></data>
+                <data android:mimeType="audio/*"></data>
+                <data android:mimeType="application/*"></data>
+                <data android:mimeType="text/*"></data>
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+            <intent-filter android:label="发送">
+                <action android:name="android.intent.action.SEND_MULTIPLE"></action>
+                <category android:name="android.intent.category.DEFAULT"></category>
+                <data android:mimeType="image/*"></data>
+            </intent-filter>
+
+            <intent-filter android:label="发送2">
+
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.SEND_MULTIPLE"></action>
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"></category>
+
+                <data android:mimeType="image/*"></data>
+                <data android:mimeType="video/*"></data>
+                <data android:mimeType="audio/*"></data>
+                <data android:mimeType="application/*"></data>
+                <data android:mimeType="text/*"></data>
+                <data android:scheme="file" />
+                <data android:host="*" />
+                <data android:scheme="content" />
+                <data android:mimeType="*/*" />
+            </intent-filter>
+
+
+        </activity>
+
+        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            tools:replace="android:theme" />
+        <activity
+
+
+            android:name="cn.qssq666.robot.activity.ErrorActivity"
+            android:theme="@style/AppTheme"></activity>
+
+        <activity
+
+
+            android:name=".activity.PluginManagerActivity"
+            android:theme="@style/Toolbar"></activity>
+
+
+        <activity
+            android:name="cn.qssq666.robot.activity.AddWordActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Toolbar"></activity>
+
+        <activity
+            android:name="cn.qssq666.robot.activity.ImportWordActivity"
+            android:label="@string/app_name"
+            android:theme="@style/Toolbar"></activity>
+
+        <meta-data
+            android:name="plugin_info"
+            android:resource="@layout/as_plugin_load_info" />
+        <meta-data
+            android:name="UMENG_APPKEY"
+            android:value="5a3a0fe1a40fa33fd7000030" />
+        <meta-data
+            android:name="UMENG_CHANNEL"
+            android:value="baiducloud" />
+
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-6391307239504132~6124388718" />
+
+        <service
+            android:name="cn.qssq666.robot.service.RemoteService"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="cn.qssq666.robot.RemoteService" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+     <!--   <service
+            android:name=".service.DaemonService$InnerService"
+            android:process="@string/engine_process_name" />-->
+        <service
+            android:name=".service.DaemonService"
+            android:process="@string/engine_process_name" />
+
+        <service
+            android:name=".service.DaemonJobService"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            android:process="@string/engine_process_name" />
+
+        <!--
+                <meta-data
+                    android:name="xposedmodule"
+                    android:value="true" />
+                <meta-data
+                    android:name="xposeddescription"
+                    android:value="激活我没用,需要激活q++,然后QQ->设置->q++设置中勾选监听聊天消息和启用机器人。" />
+                <meta-data
+                    android:name="xposedminversion"
+                    android:value="30" />-->
+
+
+    </application>
+
+</manifest>

@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<androidx.cardview.widget.CardView
+    android:layout_marginTop="10dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardCornerRadius="5dp"
+    app:cardBackgroundColor="#fff"
+    android:layout_margin="10dp"
+    app:cardElevation="5dp"
+    android:layout_height="wrap_content"
+    >
+
+
+<RelativeLayout
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:padding="10dp"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_title"
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+        android:tag="标题"
+        android:text="测试界面"
+        android:textColor="#000"
+        android:textSize="15sp" />
+
+    <TextView
+
+        android:paddingTop="5dp"
+        android:layout_below="@+id/tv_title"
+        android:text="这是描述信息"
+        android:id="@+id/tv_descript"
+        android:tag="descript"
+
+        android:textColor="@android:color/darker_gray"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+
+        android:paddingTop="2dp"
+
+        android:layout_below="@+id/tv_descript"
+        android:text="编译时间:2018年05月17日"
+        android:id="@+id/tv_buttom_left0"
+
+        android:textColor="@android:color/darker_gray"
+
+        android:tag="buttom"
+        android:textSize="11sp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+
+        android:paddingTop="2dp"
+
+        android:layout_below="@+id/tv_buttom_left0"
+        android:text="编译时间:2018年05月17日"
+        android:id="@+id/tv_buttom_left"
+
+        android:textColor="@android:color/darker_gray"
+
+        android:tag="buttom"
+        android:textSize="11sp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <TextView
+
+        android:paddingTop="2dp"
+        android:layout_toLeftOf="@+id/cb"
+        android:layout_alignBaseline="@+id/tv_buttom_left"
+
+        android:text="作者:情随事迁"
+        android:id="@+id/tv_author"
+        android:textSize="11sp"
+        android:textColor="@android:color/darker_gray"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+
+        android:paddingTop="2dp"
+        android:layout_toLeftOf="@+id/cb"
+        android:layout_alignTop="@+id/cb"
+        android:layout_alignBottom="@+id/cb"
+
+        android:text="1.0"
+        android:id="@+id/tv_version"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="12sp"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <CheckBox
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textColor="@android:color/black"
+
+        android:layout_alignTop="@+id/tv_title"
+        android:layout_alignBottom="@+id/tv_title"
+        android:id="@+id/cb"
+        android:tag="checkbox"
+        android:layout_height="wrap_content" />
+
+    <!--<View-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:layout_below="@+id/tv_buttom_left"-->
+        <!--android:background="#cccccc"-->
+        <!--android:layout_height="1dp"/>-->
+        <!--/>-->
+</RelativeLayout>
+</androidx.cardview.widget.CardView>

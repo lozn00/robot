@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <LinearLayout
+        android:id="@+id/linelayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+<TextView
+    android:layout_width="wrap_content"
+
+    android:text="由于是国外广告可能网速比较慢，没显示的话可以尝试锁屏一下再解锁看看？？"
+    android:layout_height="wrap_content" />
+        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/ad_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            ads:adSize="BANNER"
+            app:adUnitId="@string/banner_ad_unit_id" />
+
+
+        <!--<com.google.android.gms.ads.formats.NativeAppInstallAdView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"></com.google.android.gms.ads.formats.NativeAppInstallAdView>-->
+
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/tv_bannr_ad"
+            android:text="banner广告还在加载中，请稍后哈!!!"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:id="@+id/tv_tip"
+            android:text="插屏广告还在在下载中，请稍后哈!!!"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+
+
+    android:layout_gravity="center"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:tag="title"
+        android:textColor="@android:color/holo_red_dark"
+        android:text="情迁聊天机器人"
+        android:layout_gravity="center_horizontal"
+
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:textColor="@android:color/black"
+        android:text="你能看到本消息吗?情迁软件 "
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

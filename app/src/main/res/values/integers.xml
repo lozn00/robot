@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--群消息重复消息忽略间隔毫秒 是根据群而不是根据人来维护 ，不过不推荐过滤.-->
+    <integer name="default_group_repeat_msg_distance_ignore_ms">200</integer>
+    <!--启动时间忽略间隔-->
+    <integer name="default_startup_time_distance_ms">1500</integer>
+    <!--用户屏蔽 在瞬间发送多条消息 或者机器人互相KO问题-->
+    <integer name="key_base_ignore_than_second_msg_duration">0</integer>
+    <!--指定毫秒历史消息忽略间隔，越短越有bug,应该越大越好-->
+
+    <integer name="key_base_ignore_second_history_msg_duration_second">3500</integer>
+    <integer name="length_money">8</integer>
+</resources>

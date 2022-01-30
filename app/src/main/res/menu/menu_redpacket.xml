@@ -1,0 +1,72 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".activity.MainActivity">
+
+    <item
+        android:id="@+id/action_help_install_plugin"
+        android:orderInCategory="100"
+        android:title="帮助"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_delete"
+        android:orderInCategory="100"
+        android:title="删除所有"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_total_money"
+        android:orderInCategory="100"
+        android:title="已抢总金额查询"
+        app:showAsAction="ifRoom" />
+
+
+    <item
+        android:id="@+id/action_month_record"
+        android:orderInCategory="100"
+        android:title="最近一个月前后所有流水(默认)"
+        app:showAsAction="ifRoom" />
+
+
+    <item
+        android:id="@+id/action_total_succ_count"
+        android:orderInCategory="100"
+        android:title="抢成功次数查询"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_total_record"
+        android:orderInCategory="100"
+        android:title="总记录流水"
+        app:showAsAction="ifRoom" />
+
+
+    <item
+        android:id="@+id/action_today_record"
+        android:orderInCategory="100"
+        android:title="今日成功流水"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_weekday_record"
+        android:orderInCategory="100"
+        android:title="最近一周成功流水"
+        app:showAsAction="ifRoom" />
+
+
+    <item
+        android:id="@+id/action_query"
+        android:orderInCategory="100"
+        android:title="SQL查询(只支持查询)"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_d_u_execute"
+        android:orderInCategory="100"
+        android:title="SQL命令(不支持查询显示)"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_d_u_timestamp"
+        android:orderInCategory="100"
+        android:title="获取精确毫秒时间戳"
+        app:showAsAction="never" />
+
+
+</menu>

@@ -1,0 +1,12 @@
+include ':app', ':LuaJava', ':editor', ':JavaTest', ':codeview'
+include ':customcrashlibrary'
+include ':robot_sdk'
+rootProject.name = "Robot"
+def robotSdkdir = "'G:\\newproject\\robot_sdk"
+if (file(robotSdkdir).exists()) {
+    project(':robot_sdk').projectDir = file(robotSdkdir)
+} else {
+    project(':robot_sdk').projectDir = new File("emptyDir")
+}
+
+
