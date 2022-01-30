@@ -1,5 +1,0 @@
-^BuildConfig.*?
-.*QuickUpdatePluginCache.*?
-.*?QuickUpdatePluginCache.*?
-^.*?CoreLibrary0.*?
-.*?InitFactory.*?

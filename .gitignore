@@ -9,3 +9,4 @@
 build
 /app/*.iml
 /*.properties
+/encrypt
