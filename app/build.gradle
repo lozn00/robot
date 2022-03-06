@@ -22,7 +22,7 @@ android {
                 JPUSH_CHANNEL: "default", //暂时填写默认值即可.
         ]
         applicationId "cn.qssq666.robot"
-    compileSdkVersion 29
+        compileSdkVersion 29
         minSdkVersion 15
 
         targetSdkVersion 29
@@ -71,7 +71,7 @@ android {
     }
 
 
-    buildFeatures{
+    buildFeatures {
         dataBinding {
             enabled = true
         }
@@ -98,28 +98,28 @@ android {
     signingConfigs {
 
 
- /*       debug {
+        /*       debug {
 
-            Properties properties = new Properties()
-            properties.load(project.rootProject.file(System.getenv("qssqsignfile")).newDataInputStream())
-            def keyPwd = properties.getProperty("signingConfigs.keyPwd")
-            def keyName = properties.getProperty("signingConfigs.keyName")
-            def keyPath = properties.getProperty("signingConfigs.path")
-            storeFile file(keyPath)
-            storePassword keyPwd
-            keyAlias keyName
-            keyPassword keyPwd
-        }*/
+                   Properties properties = new Properties()
+                   properties.load(project.rootProject.file(System.getenv("qssqsignfile")).newDataInputStream())
+                   def keyPwd = properties.getProperty("signingConfigs.keyPwd")
+                   def keyName = properties.getProperty("signingConfigs.keyName")
+                   def keyPath = properties.getProperty("signingConfigs.path")
+                   storeFile file(keyPath)
+                   storePassword keyPwd
+                   keyAlias keyName
+                   keyPassword keyPwd
+               }*/
 
         release {
 
             Properties properties = new Properties()
-            def confile=System.getenv("qssqsignfile")
+            def confile = System.getenv("qssqsignfile")
             properties.load(project.rootProject.file(confile).newDataInputStream())
             def keyPwd = properties.getProperty("signingConfigs.keyPwd")
             def keyName = properties.getProperty("signingConfigs.keyName")
             def keyPath = properties.getProperty("signingConfigs.path")
-            storeFile file(keyPath.contains(":")?keyPath:new File(new File(confile).getParentFile().absolutePath,keyPath).absolutePath)
+            storeFile file(keyPath.contains(":") ? keyPath : new File(new File(confile).getParentFile().absolutePath, keyPath).absolutePath)
             storePassword keyPwd
             keyAlias keyName
             keyPassword keyPwd
@@ -251,10 +251,10 @@ dependencies {
     implementation 'xyz.danoz:recyclerviewfastscroller:0.1.3'
 
 
-    implementation  'com.umeng.umsdk:common:9.3.8'// 必选
-    implementation  'com.umeng.umsdk:asms:1.2.2'// 必选
+    implementation 'com.umeng.umsdk:common:9.3.8'// 必选
+    implementation 'com.umeng.umsdk:asms:1.2.2'// 必选
 
-    implementation  'com.umeng.umsdk:abtest:1.0.0'//可选（使用U-App中ABTest能力）
+    implementation 'com.umeng.umsdk:abtest:1.0.0'//可选（使用U-App中ABTest能力）
 /*    // Use if Kotlin user.
     kapt "com.github.agrosner.dbflow:processor:${dbflow_version}"
 
@@ -336,7 +336,7 @@ dependencies {
     //    implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
 //    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:0.3'
 //    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:0.3'
-  //  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    //  api "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     api 'com.google.dagger:dagger-android:2.35.1'
     api 'com.google.dagger:dagger-android-support:2.16'
 
@@ -345,7 +345,7 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.16'
 //    kapt 'com.google.dagger:dagger-android-processor:2.15'
 //    kapt 'com.google.dagger:dagger-compiler:2.15'
- //   implementation 'org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.4-3'
+    //   implementation 'org.jetbrains.kotlin:kotlin-stdlib-jre7:1.1.4-3'
 
     //test
     testImplementation 'junit:junit:4.12'
