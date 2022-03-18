@@ -44,7 +44,7 @@ public class Cns {
     public final static String ROBOT_REPLY_TULING_URL = TULING_DOMAIN + "/openapi/api";
     public final static String ROBOT_REPLY_MOLI_DOMAIN = "http://i.itpk.cn";
     public final static String ROBOT_REPLY_MOLI_URL = ROBOT_REPLY_MOLI_DOMAIN + "/api.php";
-    public final static String UPDATE_URL = "http://lojunX.github.io/version/robot_update.json";
+    public final static String UPDATE_URL = "https://lozn.top/version/robot_update.json";
     public final static String ROBOT_KEY = "key_app_robotkey";
     public final static String ROBOT_SECRET = "key_app_reply_secret";
     public final static String SP_FILE = "COONFIG";
@@ -95,8 +95,8 @@ public class Cns {
     public static final String DEFAULT_QQ_3 = "153016267";
     public static final String DOMAIN = "http://lojunX.github.io";
     public static final String DOMAIN_UPDATE = "http://update.lojunX.github.io";
-    public static final String UPDATE_ABOUT_URL = "http://lojunX.github.io/about";
-    public static final String UPDATE_ALL_URL = "http://lojunX.github.io/update";
+    public static final String UPDATE_ABOUT_URL = "https://lozn.top/about";
+    public static final String UPDATE_ALL_URL = "https://lozn.top/update";
     public static final String PLUGIN_MAIN_ENTRY_FILE = "cn.qssq666.robot.plugin.sdk.control.PluginMainImpl";
     public static final String PLUGIN_INFO_ENTRY_FILE = "cn.qssq666.robot.plugin.sdk.interfaces.RobotGlobaInfo";
     //https://www.jianshu.com/p/76c80d2f91e4

@@ -652,7 +652,7 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
             break;
 
             case R.id.btn_download_url: {
-                AppUtils.openWebView(this, "http://lojunX.github.io/update");
+                AppUtils.openWebView(this, "https://lozn.top/update");
                 Toast.makeText(this, "如果无法打开网址,建议开启VPN", Toast.LENGTH_SHORT).show();
             }
             break;

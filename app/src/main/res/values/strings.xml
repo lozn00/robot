@@ -442,7 +442,7 @@
 \n\t\t\t\t\t    log.e(\"error,code=\"+code+\",exception:\",exception);//print stackflow
 \n\t\t\t}\t\t
 \n      };
-\n      api.sendAsyncGetRequest(\"http://lojunX.github.io/update/update.json\", apiCallBackclass);
+\n      api.sendAsyncGetRequest(\"https://lozn.top/update/update.json\", apiCallBackclass);
 
         ]]></string>
 
@@ -463,7 +463,7 @@
 \n\t\t          error(\"queryfail:\"..tostring(exception)..\",code:\"..tostring(code));
 \n        end
 \n        proxyImpl = luajava.createProxy(\"cn.qssq666.robot.plugin.sdk.interfaces.IApiCallBack\",  apiCallBackclass);
-\n        api:sendAsyncGetRequest(\"http://lojunX.github.io/update/update.json\",proxyImpl);
+\n        api:sendAsyncGetRequest(\"https://lozn.top/update/update.json\",proxyImpl);
 \n        print(\"exec over test\");
 
         ]]></string>

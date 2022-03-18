@@ -46,7 +46,7 @@ public interface AppConstants {
             "" + CmdConfig.CARD_MSG + "$超级转账(群主发起了转账,9999,c1x09104vwt0xobp1vmrr63,9999元,已转入金额,QQ转账)\n" +
             "" + CmdConfig.CARD_MSG + "$新人入群(我是山鸡，多多关照,新人入群)\n" +
             "" + CmdConfig.CARD_MSG + "$他的名片($u|qq,default|null|自定义内容,default,情迁软件工作室特别授权认证)\n" +
-            ""+ CmdConfig.CARD_MSG + " $转账消息(http://lojunX.github.io/update,[转账]点击百分百中奖,点击查看详情)\n" +
+            ""+ CmdConfig.CARD_MSG + " $转账消息(https://lozn.top/update,[转账]点击百分百中奖,点击查看详情)\n" +
             ""+CmdConfig.CARD_MSG +" xml格式体\n这里|符号代表可选择左边的规则也可以选择|右边的规则| 代表或的意思,default或者不填写代表默认值,否则显示传递的值。" ;
     String INTENT_FORM_CODE_VIEW = "INTENT_FROM_CODE_VIEW";
 

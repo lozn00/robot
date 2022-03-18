@@ -23,6 +23,7 @@ android {
         ]
         applicationId "cn.qssq666.robot"
         compileSdkVersion 29
+        buildToolsVersion '30.0.3'
         minSdkVersion 15
 
         targetSdkVersion 29
@@ -115,14 +116,17 @@ android {
 
             Properties properties = new Properties()
             def confile = System.getenv("qssqsignfile")
-            properties.load(project.rootProject.file(confile).newDataInputStream())
-            def keyPwd = properties.getProperty("signingConfigs.keyPwd")
-            def keyName = properties.getProperty("signingConfigs.keyName")
-            def keyPath = properties.getProperty("signingConfigs.path")
-            storeFile file(keyPath.contains(":") ? keyPath : new File(new File(confile).getParentFile().absolutePath, keyPath).absolutePath)
-            storePassword keyPwd
-            keyAlias keyName
-            keyPassword keyPwd
+            if (confile != null) {
+                properties.load(project.rootProject.file(confile).newDataInputStream())
+                def keyPwd = properties.getProperty("signingConfigs.keyPwd")
+                def keyName = properties.getProperty("signingConfigs.keyName")
+                def keyPath = properties.getProperty("signingConfigs.path")
+                storeFile file(keyPath.contains(":") ? keyPath : new File(new File(confile).getParentFile().absolutePath, keyPath).absolutePath)
+                storePassword keyPwd
+                keyAlias keyName
+                keyPassword keyPwd
+            }
+
         }
     }
     buildTypes {
@@ -133,7 +137,10 @@ android {
 
         release
                 {
-                    signingConfig signingConfigs.release
+                    def confile = System.getenv("qssqsignfile")
+                    if (confile != null) {
+                        signingConfig signingConfigs.release
+                    }
                     buildConfigField "String", "build", formattedDate
                     minifyEnabled true
                     zipAlignEnabled false
@@ -142,7 +149,10 @@ android {
                     proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
                 }
         debug {
-            signingConfig signingConfigs.release
+            def confile = System.getenv("qssqsignfile")
+            if (confile != null) {
+                signingConfig signingConfigs.release
+            }
             buildConfigField "String", "build", formattedDate
             minifyEnabled false
             zipAlignEnabled false
