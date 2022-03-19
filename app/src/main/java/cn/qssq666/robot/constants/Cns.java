@@ -44,7 +44,7 @@ public class Cns {
     public final static String ROBOT_REPLY_TULING_URL = TULING_DOMAIN + "/openapi/api";
     public final static String ROBOT_REPLY_MOLI_DOMAIN = "http://i.itpk.cn";
     public final static String ROBOT_REPLY_MOLI_URL = ROBOT_REPLY_MOLI_DOMAIN + "/api.php";
-    public final static String UPDATE_URL = "https://lozn.top/version/robot_update.json";
+    public final static String UPDATE_URL = "https://update.lozn.top/version/robot_update.json";
     public final static String ROBOT_KEY = "key_app_robotkey";
     public final static String ROBOT_SECRET = "key_app_reply_secret";
     public final static String SP_FILE = "COONFIG";

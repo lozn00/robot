@@ -24,8 +24,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,6 +41,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
+
 import cn.qssq666.robot.BuildConfig;
 import cn.qssq666.robot.R;
 import cn.qssq666.robot.activity.datamanager.FloorManagerActivity;
@@ -99,7 +98,7 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
     private int mProgress;
     private PowerManager.WakeLock wakeLock;
     private String mFrom;
-    private AdView adView;
+    //    private AdView adView;
     private InterstitialAdUtil interstitialAdUtil;
 
     int clickId;
@@ -284,6 +283,7 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
     }
 
     private void initAd() {
+/*
 
 
         MobileAds.initialize(this, AppContext.getInstance().getResources().getString(R.string.google_app_id_));
@@ -324,6 +324,7 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
 
             }
         });
+*/
 
 
     }
@@ -331,9 +332,9 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
 
     @Override
     public void onPause() {
-        if (adView != null) {
+   /*     if (adView != null) {
             adView.pause();
-        }
+        }*/
         stopUpdateTime();
         super.onPause();
     }
@@ -518,10 +519,10 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
         if (wakeLock != null) {
             wakeLock.release();
         }
-
+/*
         if (adView != null) {
             adView.destroy();
-        }
+        }*/
     }
 
     @Subscribe
@@ -564,14 +565,14 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
 
     public void doMenuClick(int id) {
 
+/*
+        if (!interstitialAdUtil.isLoadding()) {
 
-            if (!interstitialAdUtil.isLoadding()) {
+            if (interstitialAdUtil.loadSuccCount() < 3) {
 
-                if (interstitialAdUtil.loadSuccCount() < 3) {
-
-                    interstitialAdUtil.startRequest();
-                }
-        }
+                interstitialAdUtil.startRequest();
+            }
+        }*/
 
 
         if (mForceUpdate) {
@@ -767,9 +768,9 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
     @Override
     public void onResume() {
         super.onResume();
-        if (adView != null) {
+       /* if (adView != null) {
             adView.resume();
-        }
+        }*/
         if (mIndex == 0) {
             startUpdateTime();
         }

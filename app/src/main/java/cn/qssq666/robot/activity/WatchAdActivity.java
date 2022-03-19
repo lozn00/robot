@@ -2,7 +2,7 @@ package cn.qssq666.robot.activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdView;
+//import com.google.android.gms.ads.AdView;
 
 import androidx.annotation.Nullable;
 import cn.qssq666.robot.R;
@@ -15,7 +15,7 @@ import cn.qssq666.robot.app.AppContext;
  */
 @Deprecated
 public class WatchAdActivity extends SuperActivity {
-
+/*
 
     AdView adView;
 
@@ -112,5 +112,5 @@ public class WatchAdActivity extends SuperActivity {
             adView.destroy();
         }
         AppContext.getHandler().removeCallbacksAndMessages(null);
-    }
+    }*/
 }

@@ -1,10 +1,12 @@
 package cn.qssq666.robot.ad;
 import cn.qssq666.CoreLibrary0;import android.content.Context;
 import android.util.Log;
+/*
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
+*/
 
 import cn.qssq666.robot.R;
 
@@ -13,7 +15,7 @@ import cn.qssq666.robot.R;
  */
 public class InterstitialAdUtil {
 
-    private static final String TAG = "InterstitialAdUtil";
+   /* private static final String TAG = "InterstitialAdUtil";
     private InterstitialAd interstitialAd;
     private int succCount;
 
@@ -146,5 +148,5 @@ public class InterstitialAdUtil {
 
     public boolean isLoadding(){
         return interstitialAd!=null&&interstitialAd.isLoading();
-    }
+    }*/
 }

@@ -153,7 +153,7 @@ public class RobotUtil {
 
         dbUtils.insert(new VarBean().setName("息屏亮屏").setValue("input keyevent 26  "));//ignore_include
         dbUtils.insert(new VarBean().setName("返回键").setValue("input keyevent 4 "));//ignore_include
-        dbUtils.insert(new VarBean().setName("回回键").setValue("input keyevent 6"));//ignore_include
+        dbUtils.insert(new VarBean().setName("回车键").setValue("input keyevent 6"));//ignore_include
         dbUtils.insert(new VarBean().setName("PORT").setValue("service.adb.tcp.port"));//ignore_include
         dbUtils.insert(new VarBean().setName("服务").setValue("service list"));//ignore_include
         dbUtils.insert(new VarBean().setName("分辨率").setValue("wm size"));//ignore_include

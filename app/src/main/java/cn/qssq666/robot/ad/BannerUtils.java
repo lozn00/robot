@@ -1,9 +1,11 @@
 package cn.qssq666.robot.ad;
 import cn.qssq666.CoreLibrary0;import android.util.Log;
+/*
 
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+*/
 
 import cn.qssq666.robot.app.AppContext;
 
@@ -16,7 +18,7 @@ public class BannerUtils {
     public static  BannerUtils getInstance() {
         return new BannerUtils();
     }
-
+/*
     public BannerUtils show(AdView adView) {
 
 
@@ -80,7 +82,7 @@ public class BannerUtils {
 
         adView.loadAd(adRequest);
         return this;
-    }
+    }*/
 
     public OnListener getOnListener() {
         return onListener;
