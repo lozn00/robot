@@ -45,7 +45,7 @@
                     android:textColor="@color/colorRed" />
 
 
-                <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+             <!--   <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
                     xmlns:app="http://schemas.android.com/apk/res-auto"
                     android:id="@+id/ad_view"
                     android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     ads:adSize="BANNER"
-                    app:adUnitId="@string/banner_ad_unit_id" />
+                    app:adUnitId="@string/banner_ad_unit_id" />-->
 
                 <TextView
                     android:id="@+id/tv_run_time"

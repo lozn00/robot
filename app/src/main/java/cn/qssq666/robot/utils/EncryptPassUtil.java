@@ -25,7 +25,7 @@ import javax.crypto.spec.DESKeySpec;
         public static void main(String[] args) {
             try {
 
-                System.out.println(encryption("5555", "lojunX.github.io_luozheng"));
+                System.out.println(encryption("5555", "lozn.top_luozheng"));
             } catch (Exception e) {
                 e.printStackTrace();
             }

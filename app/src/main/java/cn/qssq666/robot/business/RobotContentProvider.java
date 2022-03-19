@@ -475,7 +475,7 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
         }
         if (!isAsPluginLoad()) {
             getContext().registerReceiver(new CodeUpdateReceiver(), new IntentFilter(Cns.UPDATE_CODE_BROADCAST));
-            System.loadLibrary("sqlite3core");
+//            System.loadLibrary("sqlite3core");//删除签名检测
         }
         loadData();
     }
@@ -7251,9 +7251,9 @@ System.out.println(m.group());//输出“水货”“正品”
                                             if (finalByNetPrint) {
 //https://blog.csdn.net/frankcheng5143/article/details/52939082
                                                 NetQuery netQuery = new NetQuery();
-                                                String urlMy = Cns.DOMAIN + "/robot/sql.html?info=" + AppUtils.encodeUrl(EncryptPassUtil.encryption("" + s, "lojunX.github.io_luozheng"));
+                                                String urlMy = Cns.DOMAIN + "/robot/sql.html?info=" + AppUtils.encodeUrl(EncryptPassUtil.encryption("" + s, "lozn.top_luozheng"));
                                                 ;
-//                                                String urlMy = Cns.DOMAIN + "/robot/sql.html?info=" + EncryptPassUtil.encryption(""+s, "lojunX.github.io_luozheng");;
+//                                                String urlMy = Cns.DOMAIN + "/robot/sql.html?info=" + EncryptPassUtil.encryption(""+s, "lozn.top_luozheng");;
                                                 //   String urlMy = Cns.DOMAIN + "/robot/sql.html?info=" + AppUtils.encodeUrl(s);
                                                 String urlRequest = mShortUrlTextApiUrl = "" + urlMy;
                                                 //   String urlRequest="http://suo.im/api.php?url=" + urlMy;
@@ -8086,11 +8086,11 @@ System.out.println(m.group());//输出“水货”“正品”
             cardInfo.setMusictitle("这是标题");
             cardInfo.setSharesource("情迁聊天机器人");
             cardInfo.setActionData("http://fs.open.kugou.com/d9a0a78fb63f6bd82831395bf18f35bd/5b892e90/G052/M00/1A/15/1IYBAFaeC92AVl3UAEU5UA5cCgc155.mp3");
-            cardInfo.setUrl("http://lojunX.github.io");;
+            cardInfo.setUrl("http://lozn.top");;
             cardInfo.setTitlebrief("测试");
 
             cardInfo.setExtraStr("notbody");*/
-            String msg = String.format(CardHelper.demo, "情迁聊天机器人", "http://lojunX.github.io", "永久免费/跨平台", "我是情迁", "我为自己代言", "赶快下载吧");
+            String msg = String.format(CardHelper.demo, "情迁聊天机器人", "http://lozn.top", "永久免费/跨平台", "我是情迁", "我为自己代言", "赶快下载吧");
             MsgReCallUtil.notifyHasDoWhileReply(this, "" + msg, item);
 
             return true;

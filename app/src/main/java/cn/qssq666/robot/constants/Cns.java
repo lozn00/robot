@@ -8,7 +8,7 @@ import cn.qssq666.robot.BuildConfig;
 
 public class Cns {
 //    public final static String ROBOT_DOMAIN = "http://192.168.0.5:8080";
-    public final static String ROBOT_DOMAIN = "http://robot.lojunX.github.io";
+    public final static String ROBOT_DOMAIN = "http://robot.lozn.top";
     public static final String URL_REGISTER_USER =ROBOT_DOMAIN+"/user/register?username=%s&password=%s&phone=%s&email=%s&qq=%s&wechat=%s&token=%s" ;
     public static final String URL_LOGIN_USER =ROBOT_DOMAIN+"/user/login?username=%s&password=%s&token=%s" ;
     public static final String URL_FIND_USER_USER =ROBOT_DOMAIN+"/user/login?username=%s&token=%s" ;
@@ -93,8 +93,8 @@ public class Cns {
     public static final String DEFAULT_QQ_1 = "35697438";
     public static final String DEFAULT_QQ_2 = "35068264";
     public static final String DEFAULT_QQ_3 = "153016267";
-    public static final String DOMAIN = "http://lojunX.github.io";
-    public static final String DOMAIN_UPDATE = "http://update.lojunX.github.io";
+    public static final String DOMAIN = "http://lozn.top";
+    public static final String DOMAIN_UPDATE = "lozn.top/update";
     public static final String UPDATE_ABOUT_URL = "https://lozn.top/about";
     public static final String UPDATE_ALL_URL = "https://lozn.top/update";
     public static final String PLUGIN_MAIN_ENTRY_FILE = "cn.qssq666.robot.plugin.sdk.control.PluginMainImpl";

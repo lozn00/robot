@@ -13,6 +13,7 @@ import cn.qssq666.robot.app.AppContext;
 /**
  * Created by qssq on 2018/4/21 qssq666@foxmail.com
  */
+@Deprecated
 public class WatchAdActivity extends SuperActivity {
 
 

@@ -17,7 +17,7 @@
 
     android:text="由于是国外广告可能网速比较慢，没显示的话可以尝试锁屏一下再解锁看看？？"
     android:layout_height="wrap_content" />
-        <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
+  <!--      <com.google.android.gms.ads.AdView xmlns:ads="http://schemas.android.com/apk/res-auto"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/ad_view"
             android:layout_width="match_parent"
@@ -26,7 +26,7 @@
             android:layout_centerHorizontal="true"
             ads:adSize="BANNER"
             app:adUnitId="@string/banner_ad_unit_id" />
-
+-->
 
         <!--<com.google.android.gms.ads.formats.NativeAppInstallAdView-->
             <!--android:layout_width="match_parent"-->

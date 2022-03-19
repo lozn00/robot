@@ -99,20 +99,7 @@ android {
     signingConfigs {
 
 
-        /*       debug {
-
-                   Properties properties = new Properties()
-                   properties.load(project.rootProject.file(System.getenv("qssqsignfile")).newDataInputStream())
-                   def keyPwd = properties.getProperty("signingConfigs.keyPwd")
-                   def keyName = properties.getProperty("signingConfigs.keyName")
-                   def keyPath = properties.getProperty("signingConfigs.path")
-                   storeFile file(keyPath)
-                   storePassword keyPwd
-                   keyAlias keyName
-                   keyPassword keyPwd
-               }*/
-
-        release {
+        app {
 
             Properties properties = new Properties()
             def confile = System.getenv("qssqsignfile")
@@ -123,7 +110,7 @@ android {
                 def keyPath = properties.getProperty("signingConfigs.path")
                 storeFile file(keyPath.contains(":") ? keyPath : new File(new File(confile).getParentFile().absolutePath, keyPath).absolutePath)
                 storePassword keyPwd
-                keyAlias keyName
+                keyAlias "qssq666"
                 keyPassword keyPwd
             }
 
@@ -134,12 +121,12 @@ android {
         def date = new Date()
         def formattedDate = "\"" + new String(date.format('yyyy-MM-dd hh:mm:ss')) + "\"";
 
+        def confile = System.getenv("qssqsignfile")
 
         release
                 {
-                    def confile = System.getenv("qssqsignfile")
                     if (confile != null) {
-                        signingConfig signingConfigs.release
+                        signingConfig signingConfigs.app
                     }
                     buildConfigField "String", "build", formattedDate
                     minifyEnabled true
@@ -149,9 +136,8 @@ android {
                     proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
                 }
         debug {
-            def confile = System.getenv("qssqsignfile")
             if (confile != null) {
-                signingConfig signingConfigs.release
+                signingConfig signingConfigs.app
             }
             buildConfigField "String", "build", formattedDate
             minifyEnabled false
@@ -236,71 +222,20 @@ dependencies {
 
     // 此处以JPush 3.1.6 版本为例。
     implementation 'cn.jiguang.sdk:jcore:1.2.5'
-
     // 此处以JCore 1.2.5 版本为例。
 
     implementation 'com.loopj.android:android-async-http:1.4.9'
     implementation 'com.squareup.okhttp3:okhttp:3.10.0'
     implementation 'org.greenrobot:eventbus:3.0.0'
-
-    //    compile project(':childgit/customcrashlibrary')
-
-    //noinspection GradleCompatible
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-
-//    implementation 'com.android.support:appcompat-v7:28.0.0'
-
-    //    compile 'com.squareup.okhttp3:okhttp:3.6.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.0'
     implementation project(':customcrashlibrary')
-
-    //    implementation project(':robotbiz')
-
     implementation 'xyz.danoz:recyclerviewfastscroller:0.1.3'
-
-
     implementation 'com.umeng.umsdk:common:9.3.8'// 必选
     implementation 'com.umeng.umsdk:asms:1.2.2'// 必选
-
     implementation 'com.umeng.umsdk:abtest:1.0.0'//可选（使用U-App中ABTest能力）
-/*    // Use if Kotlin user.
-    kapt "com.github.agrosner.dbflow:processor:${dbflow_version}"
-
-    // Annotation Processor
-    // if only using Java, use this. If using Kotlin do NOT use this.
-    annotationProcessor "com.github.agrosner.dbflow:processor:${dbflow_version}"
-
-
-    // core set of libraries
-    implementation "com.github.agrosner.dbflow:core:${dbflow_version}"
-    implementation "com.github.agrosner.dbflow:lib:${dbflow_version}"
-
-    // sql-cipher database encryption (optional)
- *//*   implementation "com.github.agrosner.dbflow:sqlcipher:${dbflow_version}"
-    implementation "net.zetetic:android-database-sqlcipher:1.0"
-*//*
-    // RXJava 2 support
-    implementation "com.github.agrosner.dbflow:reactive-streams:${dbflow_version}"
-
-    // Kotlin Coroutines
-    implementation "com.github.agrosner.dbflow:coroutines:${dbflow_version}"
-
-    // Android Architecture Components Paging Library Support
-    implementation "com.github.agrosner.dbflow:paging:${dbflow_version}"
-
-    // adds generated content provider annotations + support.
-    implementation "com.github.agrosner.dbflow:contentprovider:${dbflow_version}"*/
-
-    //    implementation 'io.reactivex.rxj
-
-    //
-
-    //
-
-    //
-
     // ava2:rxandroid:2.0.2'
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation files('libs/fastjson-1.1.34.android.jar')
@@ -318,7 +253,7 @@ dependencies {
     releaseApi 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
     testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 
-    implementation 'com.google.android.gms:play-services-ads:17.1.2'
+//    implementation 'com.google.android.gms:play-services-ads:17.1.2'
 
     implementation 'androidx.cardview:cardview:1.0.0'
 
@@ -359,7 +294,6 @@ dependencies {
 
     //test
     testImplementation 'junit:junit:4.12'
-    testImplementation 'junit:junit:4.12'
     /* androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
          exclude group: 'com.android.support', module: 'support-annotations'
      })*/
@@ -383,4 +317,4 @@ dependencies {
 }
 
 
-apply plugin: 'com.google.gms.google-services'
+//apply plugin: 'com.google.gms.google-services'

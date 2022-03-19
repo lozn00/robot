@@ -156,7 +156,6 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
 //        homeMenus.add(new HomeMenu(R.id.btn_clock_task, "定时任务(暂无)"));
 //        homeMenus.add(new HomeMenu(R.id.btn_clock_task, "群发(不自己开发插件)"));
 //        homeMenus.add(new HomeMenu(R.id.btn_group_illegal_record, "群员违规记录(无)"));
-        homeMenus.add(new HomeMenu(R.id.watch_ad, "广告展示"));
 //        homeMenus.add(new HomeMenu(R.id.plugin_to_install, "自身转插件"));
         homeMenus.add(new HomeMenu(R.id.btn_daemon_app, "提升稳定性"));
         homeMenus.add(new HomeMenu(R.id.btn_win_money, "撸羊毛"));
@@ -724,13 +723,6 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
 
 
             }
-            break;
-            case R.id.watch_ad: {
-
-                Intent intent = new Intent(this, WatchAdActivity.class);
-                startActivity(intent);
-            }
-
             break;
             case R.id.btn_var_manager: {
                 Intent intent = new Intent(this, VarManagerActivity.class);

@@ -72,7 +72,7 @@ public class RobotUtil {
 
         dbUtils.insert(new ReplyWordBean("举报").appendAsk("拉黑").appendAsk("贩卖").appendAsk("盗版").appendAsk("假群").appendAsk("投诉").appendAnswer("若要拉黑贩卖 请加作者qq153016267或联系作者群的管理 提供贩卖诈骗证据 我将计入黑名单"));
         dbUtils.insert(new ReplyWordBean("闪退").appendAsk("崩溃").appendAsk("无响应").appendAsk("没反应").appendAsk("警告").appendAnswer("卡").appendAnswer("篡改").appendAnswer("秒退").appendAnswer("安装失败").appendAnswer("无法安装").appendAnswer("打开不了").appendAnswer("内置还是插件出毛病了?不管出现什么问题").appendAnswer("你都应该看看是否是最新版").appendAnswer("如果不是最新版多多关注群信息群公告!出现问题注意描述清楚 不清楚的话只能视为低级问题 谢谢合作 对于无响应无法安装都可以尝试强制杀死程序(需要情迁工具箱打开软件详情终止程序)清除数据或者卸载 下载最新版  重装解决!"));
-        dbUtils.insert(new ReplyWordBean("打赏").appendAsk("支付宝").appendAsk("微信").appendAsk("付款").appendAsk("扫码").appendAnswer("想要打赏作者吗？想不用1分钱，每天免费打赏作者吗?你们知道作者有多辛苦吗？作者没日没夜的用业余时间不停的忙碌又1年了，1年的陪伴，又能得到什么？没有时间找对象，老大不小了，多可怜啊，用下面的姿势中了红包随便用掉不用过1天就报废了，也等于白搭，或者直接再打赏给作者也行，lojunX.github.io/about 里面有支付宝打赏方式的，【支付宝】年终红包再加10亿！12月24日还有机会获得圣诞惊喜红包！长按复制此消息，打开最新版支付宝就能领取！EoN14O57oI"));
+        dbUtils.insert(new ReplyWordBean("打赏").appendAsk("支付宝").appendAsk("微信").appendAsk("付款").appendAsk("扫码").appendAnswer("想要打赏作者吗？想不用1分钱，每天免费打赏作者吗?你们知道作者有多辛苦吗？作者没日没夜的用业余时间不停的忙碌又1年了，1年的陪伴，又能得到什么？没有时间找对象，老大不小了，多可怜啊，用下面的姿势中了红包随便用掉不用过1天就报废了，也等于白搭，或者直接再打赏给作者也行，lozn.top/about 里面有支付宝打赏方式的，【支付宝】年终红包再加10亿！12月24日还有机会获得圣诞惊喜红包！长按复制此消息，打开最新版支付宝就能领取！EoN14O57oI"));
 
     }
 

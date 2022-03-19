@@ -545,10 +545,7 @@ android:requestLegacyExternalStorage="true"
 
         </activity>
 
-        <activity
-            android:name="com.google.android.gms.ads.AdActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            tools:replace="android:theme" />
+
         <activity
 
 
@@ -581,10 +578,13 @@ android:requestLegacyExternalStorage="true"
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="baiducloud" />
-
+<!--        <activity
+            android:name="com.google.android.gms.ads.AdActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            tools:replace="android:theme" />
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-6391307239504132~6124388718" />
+            android:value="ca-app-pub-6391307239504132~6124388718" />-->
 
         <service
             android:name="cn.qssq666.robot.service.RemoteService"

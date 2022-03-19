@@ -14,7 +14,7 @@ import java.io.ByteArrayOutputStream;
 import androidx.core.content.ContextCompat;
 
 /**
- * Created by luozheng on 2016/9/29.  lojunX.github.io Administrator
+ * Created by luozheng on 2016/9/29.  lozn.top Administrator
  */
 
 public class DrawableUtils {
