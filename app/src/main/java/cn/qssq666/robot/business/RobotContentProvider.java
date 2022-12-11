@@ -1271,7 +1271,10 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 
                         MsgReCallUtil.notifyHasDoWhileReply(this, item.clone().setMessage(AppConstants.ACTION_OPERA_ALL_RESPONSE_NAME + "没有开启私聊"));
                     }
-                    return getFailUri("未启用私聊功能的情况下,管理员只可以响应自带命令,不会响应用网络/本地词库");
+                    if (!mCfprivateReplyManagrIgnoreRule) {
+                        return getFailUri("未启用私聊功能的情况下,管理员只可以响应自带命令,不会响应用网络/本地词库");
+
+                    }
                 }
 
 
@@ -1306,7 +1309,6 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
                         return getFailUri("本地词库网络词库都没有开启");
                     } else {
                         mCfBaseEnableLocalWord = true;
-
                         if (foolMode) {
                             mCfBaseEnableNetRobotPrivate = true;
                             MsgReCallUtil.notifyHasDoWhileReply(this, item.clone().setMessage(AppConstants.ACTION_OPERA_ALL_RESPONSE_NAME + "本地词库都没有开启,已自动开启,持久生效请手动修改"));
@@ -1349,7 +1351,7 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
             }
 
         } else {
-            return getFailUri("操作完成,失败");
+            return getFailUri("操作完成,无处理");
         }
 
     }
@@ -5732,8 +5734,8 @@ System.out.println(m.group());//输出“水货”“正品”
                     return true;
                 }
                 String value = item.getMessage().replace(CmdConfig.UPDATE_SERCRET, "");
-                if(TextUtils.isEmpty(value)){
-                    MsgReCallUtil.notifyHasDoWhileReply(this, "请传递参数accessToken,如果要传递accessToken和sessionToken请用分隔符|隔开" , item);
+                if (TextUtils.isEmpty(value)) {
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请传递参数accessToken,如果要传递accessToken和sessionToken请用分隔符|隔开", item);
                     return true;
                 }
                 if (value.contains("|")) {

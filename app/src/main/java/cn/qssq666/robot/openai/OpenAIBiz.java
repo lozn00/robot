@@ -181,7 +181,7 @@ public class OpenAIBiz {
                                             String strCenter = StringUtils.getStrCenter(errorResult, "<title>", "</body>");
                                             errorResult = RegexUtils.deleteHtmlLabel(TextUtils.isEmpty(strCenter) ? errorResult : strCenter);
                                         }
-                                        err = "AI执行出错," + errorResult + "" + response.code();
+                                        err = "AI执行出错," + errorResult + "" + code;
                                         LogUtil.writeLog(err);
                                         resultBean.setText(err);
                                     }
