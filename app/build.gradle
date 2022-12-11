@@ -225,7 +225,9 @@ dependencies {
     // 此处以JCore 1.2.5 版本为例。
 
     implementation 'com.loopj.android:android-async-http:1.4.9'
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+//    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
+    implementation("com.squareup.okhttp3:okhttp:4.10.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.cardview:cardview:1.0.0'

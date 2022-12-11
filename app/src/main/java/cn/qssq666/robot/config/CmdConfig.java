@@ -79,6 +79,8 @@ public class CmdConfig {
     public static final String VERSION_UPDATE = "更新日志";
 
     @REMARK(id = 1, group = "系统", remark = "查看帮助信息")
+
+
     public static final String HELP = "帮助";//"状态";
     @REMARK(id = 1, group = "菜单", remark = "查看帮助信息")
     public static final String HELP_MENU = "菜单";//"状态";
@@ -106,13 +108,18 @@ public class CmdConfig {
     public static final String KICK_1 = "kick";//"状态";
     public static final String FLOOR = "floor";//"状态";
 
+
+
+
     @REMARK(id = 1, group = "加敏感词", remark = "添加敏感词")
     public static final String ADD_GAG = "加敏感词";
+
+
     public static final String DEL_GAG = "删敏感词";
     // return DBHelper.getGagKeyWord(AppContext.dbUtils).insert(accountBean);
 
     public static final String AITE_CMD = "艾特";//"状态";
-    @REMARK(id = 1, group = "添加词库", remark = "问|问1,问2 答|答1,答2")
+    @REMARK(id = 1, group = "智能回复", remark = "问|问1,问2 答|答1,答2")
     public static final String ADD_WORD_CMD = "添加词库";//"状态";
 
     public static final String DELETE_WORD_CMD = "删除词库";//"状态";
@@ -151,7 +158,8 @@ public class CmdConfig {
     @REMARK(id = 1, group = "点歌", remark = "")
     public static final String FECTCH_MUSIC2 = "我想听";
 
-
+    @REMARK(id = 1, group = "智能回复", remark = "")
+    public static final String UPDATE_SERCRET = "秘钥更新";
     @REMARK(id = 1, group = "翻译", remark = "")
     public static final String TRANSLATE = "翻译";//"状态";
 

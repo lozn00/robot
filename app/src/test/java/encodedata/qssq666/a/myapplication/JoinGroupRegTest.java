@@ -12,13 +12,6 @@ public class JoinGroupRegTest {
 
     /*
 
-    8:43.751 22347-24433/? W/LogUtil: [LogUtil][1ms][新消息]apptype=Q++ 1.0.6版1.0.6_8 msg=情迁_深圳_.红米note4x 邀请 N......N 加入群聊                    ##**##2,5,0,15,0,153016267,icon,0,0,color,0,5,19,27,0,35068264,icon,0,0,color,0 time=1535464123000 nickname=122328962 senderuin=122328962 frienduin=122328962 version=q_v896 selfuin=202927128 extstr={"new_item_tag":"true"} type=-1012 extrajson= istroop=1
-08-28 21:48:43.752 22347-24433/? W/LogUtil: [LogUtil][1ms]不属于历史消息 ，发送时间:0秒 未超过0秒
-    [LogUtil][2ms]回调信息情迁_深圳_.红米note4x 邀请 N......N 加入群聊                    ##**##2,5,0,15,0,153016267,icon,0,0,color,0,5,19,27,0,35068264,icon,0,0,color,0给插件cn.qssq666.watchkpic_大自然艺术欣赏,是否拦截:false
-08-28 21:48:43.753 22347-24433/? W/LogUtil: [LogUtil][3ms]大自然艺术欣赏插件被禁用了,忽略
-    [LogUtil][3ms]回调信息情迁_深圳_.红米note4x 邀请 N......N 加入群聊                    ##**##2,5,0,15,0,153016267,icon,0,0,color,0,5,19,27,0,35068264,icon,0,0,color,0给插件cn.qssq666.keeprun_保持运行,是否拦截:false
-
-
      */
 
     //□ 加入了本群，点击修改TA的群名片                    ##**##2,5,0,1,0,2791864577,icon,0,0,color,0,19,8,18,2791864577,icon,0,0,color,0

@@ -43,6 +43,7 @@ public class Cns {
     public final static String TULING_DOMAIN = "http://www.tuling123.com";
     public final static String ROBOT_REPLY_TULING_URL = TULING_DOMAIN + "/openapi/api";
     public final static String ROBOT_REPLY_MOLI_DOMAIN = "http://i.itpk.cn";
+    public final static String ROBOT_OPEN_AI_DOMAIN = "https://chat.openai.com";
     public final static String ROBOT_REPLY_MOLI_URL = ROBOT_REPLY_MOLI_DOMAIN + "/api.php";
     public final static String UPDATE_URL = "https://update.lozn.top/version/robot_update.json";
     public final static String ROBOT_KEY = "key_app_robotkey";
@@ -77,8 +78,8 @@ public class Cns {
     public final static String FIELD_NICKNAME = "nickname";
     public final static String DEFAULT_QQ = "35068264";
     public final static String DEFAULT_QQ_SMALL_ADMIN = "35068264";
-    public static final String DEFAULT_GAG_WORD1 = "操你,搞你,搞死,加我,私我,私聊,Q我,q我,拉我,给我,发我,爱爱,SB,傻b,傻逼,你妈,加群,加Q";
-    public static final String DEFAULT_GAG_WORD = "免费,爸,啪,站街,援交,儿子,妈,孙子,爷,奶,杂,傻,日你,我日,淫贱,裸体,黄色,赌,拉群,黄片,微信,成人,电影,+Q,"
+    public static final String DEFAULT_GAG_WORD1 = "操你,搞你,搞死,爱爱,SB,傻b,傻逼,你妈,加群,加Q";
+    public static final String DEFAULT_GAG_WORD = "爸,啪,站街,援交,儿子,妈,孙子,爷,奶,杂,傻,日你,我日,淫,贱,嫖,娼,裸,性爱,砍头,血,腥,密,恐,密恐,屎,大便,黄色,赌,拉群,黄片,微信,成人,电影,+Q,色情,黄色,18禁,sm,傻,乳房,尤物,龟头,阴道,屄,下体"
             + "售,卖,逼,直播,下载,玩j,上床,看片,插入,撸管,摸你,犯贱,好湿";
     public static final String DEFAULT_GAG_SHUAPIN = "\nbr";
     public static final String DEFAULT_GAG_SILENCE = "我草泥马,我艹尼玛,我日你妈,我日你全家,搞你妈,全家死光光";
@@ -88,7 +89,7 @@ public class Cns {
     public static final String DEFAULT_GAG_RAG = "reg[拉加私]我";
     public static final String DEFAULT_GAG_RAG_FULL = "fullreg你妈逼,你麻痹";
 //    public static final String DEFAULT_GAG_RAG_GLOBAL_DISABLE_NUMBER = "greg[0-9]{5,10}";
-    public static final String DEFAULT_GAG_QSSQ = "内置,插件,秒抢,抢红包,外挂,协议挂,有g吗?,发我,";
+    public static final String DEFAULT_GAG_QSSQ = ",加我,私我,私聊,Q我,q我,拉我,给我,发我,免费,内置,插件,秒抢,抢红包,外挂,协议挂,有g,发我";
     public static final String ROBOT_NAME = "情迁聊天机器人";
     public static final String DEFAULT_QQ_1 = "35697438";
     public static final String DEFAULT_QQ_2 = "35068264";
@@ -114,6 +115,7 @@ public class Cns {
      * http://songsearch.kugou.com/song_search_v2?&keyword=%E8%80%81%E7%94%B7%E5%AD%A9&page=1&pagesize=1&showtype=1&iscorrection=1&platform=WebFilter
      */
     public static final String KUGOU_URL = "http://songsearch.kugou.com/song_search_v2?&keyword=%s&page=1&pagesize=%d&iscorrection=1&platform=WebFilter&showtype=0&author=bwn";
+    public static final String REQUEST_OPENAI_TOKEN_URL = "https://chat.openai.com/api/auth/session";
     //ScalarsConverterFactory
     /**
      *

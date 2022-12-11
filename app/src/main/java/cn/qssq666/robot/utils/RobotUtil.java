@@ -162,6 +162,7 @@ public class RobotUtil {
         dbUtils.insert(new VarBean().setName("窗口焦点").setValue("call phone 1 s16 \"10010\""));//ignore_include
         //adb shell dumpsys battery
         dbUtils.insert(new VarBean().setName("电池状态").setValue("dumpsys battery"));//ignore_include
+        dbUtils.insert(new VarBean().setName("温度").setValue("cat /sys/class/thermal/thermal_zone0/temp"));//ignore_include
 
     }
 

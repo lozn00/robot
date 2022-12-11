@@ -1,5 +1,6 @@
 package cn.qssq666.robot.business;
-import cn.qssq666.CoreLibrary0;import android.util.Log;
+
+import android.util.Log;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -92,6 +93,27 @@ public class OkHttpUtil {
 
     }
 
+    public static Response syncRequestGetBody(String url, INotify<OkHttpClient.Builder> okHttpClientCreateINotify) throws IOException {
+//    http://songsearch.kugou.com/song_search_v2?&keyword=%E8%80%81%E7%94%B7%E5%AD%A9&page=1&pagesize=1&showtype=1&iscorrection=1&platform=WebFilter
+
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (okHttpClientCreateINotify != null) {
+            okHttpClientCreateINotify.onNotify(builder);
+        }
+
+        CacheControl cacheControl = new CacheControl.Builder().build();
+        final Request request = new Request.Builder()
+                .url(url)
+
+                .cacheControl(cacheControl)
+                .get()
+                .build();
+        OkHttpClient okHttpClient = builder.build();
+        okhttp3.Response temp = okHttpClient.newCall(request).execute();
+        return temp;
+
+    }
+
     public static String syncPostRequest(String url, RequestBody requestBody, INotify<OkHttpClient.Builder> okHttpClientCreateINotify) throws IOException {
 //    http://songsearch.kugou.com/song_search_v2?&keyword=%E8%80%81%E7%94%B7%E5%AD%A9&page=1&pagesize=1&showtype=1&iscorrection=1&platform=WebFilter
 
@@ -117,7 +139,7 @@ public class OkHttpUtil {
 
         } else {
             temp.body().close();
-            Log.e("okhttp","requestFail:"+temp.code()+"");
+            Log.e("okhttp", "requestFail:" + temp.code() + "");
             return null;
         }
 

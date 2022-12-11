@@ -1,5 +1,8 @@
 package cn.qssq666.robot.utils;
-import cn.qssq666.CoreLibrary0;import java.text.SimpleDateFormat;
+
+import cn.qssq666.CoreLibrary0;
+
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -109,7 +112,7 @@ public class DateUtils {
         long second = secondCurrent % (86400) % (3600) % 60;
         StringBuffer sb = new StringBuffer();
         if (day > 0) {
-            sb.append(day +STR_DAY);
+            sb.append(day + STR_DAY);
         }
         if (hour > 0) {
             sb.append(hour + STR_HOUR);
@@ -121,11 +124,10 @@ public class DateUtils {
         }
 
         if (second > 0) {
-            sb.append(second +STR_SECOND);
+            sb.append(second + STR_SECOND);
         }
         return sb.toString();
     }
-
 
 
     public static String getTimeDetailDistance(long second) {
@@ -341,6 +343,37 @@ public class DateUtils {
                     .toString();
         }
 
+    }
+
+    public static String formatTimeDistance(long ms) {
+
+
+        StringBuilder builder = new StringBuilder();
+        if (ms < 60) {
+            return ms + "ms";
+        } else {
+           long seconds = ms / 1000;
+           long minutes = seconds / 60;
+           long hours = minutes / 60;
+           long days = hours / 24;
+            if (days > 0) {
+                builder.append(days);
+                builder.append("天");
+            }
+            if (hours > 0) {
+                builder.append(hours % 24);
+                builder.append("小时");
+            }
+            if (minutes > 0) {
+                builder.append(minutes % 60);
+                builder.append("分钟");
+            }
+            if (seconds > 0) {
+                builder.append(seconds % 60);
+                builder.append("秒");
+            }
+            return builder.toString();
+        }
     }
     //ignore_send
 }

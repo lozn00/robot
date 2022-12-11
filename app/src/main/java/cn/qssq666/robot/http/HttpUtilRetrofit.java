@@ -102,15 +102,6 @@ public class HttpUtilRetrofit {
                 writeTimeout(10, TimeUnit.SECONDS);
         OkHttpClient build = okHttpClientBuilder.build();
 
-    /*    Request.Builder requestBuilder = new Request.Builder();
-
-        if (headMap != null) {
-            for (Map.Entry<String, String> stringStringEntry : headMap.entrySet()) {
-
-                requestBuilder.addHeader(stringStringEntry.getKey(), stringStringEntry.getValue());
-            }
-        }*/
-
 
 
         Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl)
@@ -121,4 +112,23 @@ public class HttpUtilRetrofit {
         return retrofit;
     }
 
+    public static <T> Retrofit buildLongTimeRetrofit(String baseUrl,boolean isManager) {
+
+        OkHttpClient.Builder okHttpClientBuilder = HttpUtil.createOKHttpBuilder();
+//        okHttpBuilder.addHeader(stringStringEntry.getKey(), stringStringEntry.getValue());
+        okHttpClientBuilder.connectTimeout(70, TimeUnit.SECONDS).
+                readTimeout(isManager?400:70, TimeUnit.SECONDS).
+                callTimeout(isManager?400:70, TimeUnit.SECONDS).
+                writeTimeout(isManager?400:70, TimeUnit.SECONDS);
+        OkHttpClient build = okHttpClientBuilder.build();
+
+
+
+        Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl)
+                .client(build)
+                .addConverterFactory(ScalarsConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+        return retrofit;
+    }
 }

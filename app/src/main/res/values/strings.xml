@@ -477,6 +477,7 @@
     <string-array name="root_chat_api">
      <item>茉莉机器人</item>
     <item>图灵机器人</item>
+    <item>OPENAI人工智能</item>
     </string-array>
 
 </resources>

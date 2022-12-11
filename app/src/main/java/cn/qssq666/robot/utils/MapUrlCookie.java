@@ -16,7 +16,11 @@ public class MapUrlCookie {
         }
         int indexOf = str.indexOf("=");
         String replaceAll = str.substring(0, indexOf).replaceAll(" ", "");
-        String substring = str.substring(indexOf + 1, str.indexOf(";"));
+        int endIndex = str.indexOf(";");
+        if(endIndex<0){
+            endIndex=str.length();
+        }
+        String substring = str.substring(indexOf + 1, endIndex);
         if (substring.equals("")) {
             return false;
         }

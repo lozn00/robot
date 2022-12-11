@@ -362,6 +362,12 @@ public class RegexUtils {
         return false;
     }
 
+    public static String deleteHtmlLabel(String strCenter) {
+        String regex = "<[^>]*>"; // 正则表达式，用于匹配所有 HTML 标签
+        String result = strCenter.replaceAll(regex, "");
+        return result;
+    }
+
     ////ignore_end
 }
 

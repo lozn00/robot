@@ -43,6 +43,7 @@ import java.util.regex.Pattern;
 import androidx.annotation.IdRes;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
+
 import cn.qssq666.db.DBUtils;
 import cn.qssq666.robot.BuildConfig;
 import cn.qssq666.robot.R;
@@ -210,8 +211,16 @@ public class DevToolActivity extends SuperActivity implements View.OnClickListen
     }
 
     public void updateReplyWordUi(int defaultReplyIndex) {
-        binding.evReplySecret.setVisibility(defaultReplyIndex == 0 ? View.VISIBLE : View.GONE);
-
+        binding.evReplySecret.setVisibility(defaultReplyIndex == 1 ? View.GONE : View.VISIBLE);
+        if (defaultReplyIndex == 2) {
+            binding.evTutingKey.setHint("请输入accessToken");
+            binding.evReplySecret.setHint("请输入sessionToken");
+        } else if (defaultReplyIndex == 1) {
+            binding.evTutingKey.setHint("请输入key");
+        } else {
+            binding.evTutingKey.setHint("请输入key");
+            binding.evReplySecret.setHint("请输入sercret");
+        }
         String key = AppUtils.getConfigSharePreferences(getApplicationContext()).getString(AppUtils.getRobotReplyKey(defaultReplyIndex), "");
         if (BuildConfig.DEBUG) {
 
@@ -563,13 +572,11 @@ public class DevToolActivity extends SuperActivity implements View.OnClickListen
          * to persistent storage.
          */
 /**
-
  *将您的首选项更改从该编辑器返回到@link sharedreferences正在编辑的对象。这个原子执行请求的修改，替换当前在共享的引用中。
  * 请注意，当两个编辑器同时修改首选项时时间，最后一个调用commit的人获胜。
  * <p>如果您不关心返回值，并且在应用程序的主线程中使用这个，请考虑使用@链接 apply()。
 
  如果成功写入新值，*@return返回true
-
  *永久存储。
  */
                 edit.putInt(Cns.SP_DEFAULT_REPLY_API_INDEX, selectedItemPosition).apply();
@@ -873,7 +880,7 @@ public class DevToolActivity extends SuperActivity implements View.OnClickListen
 
 
                 if (!file.getAbsolutePath().endsWith("db") && !file.getAbsolutePath().endsWith("bak") && !file.getAbsolutePath().endsWith("zip")
-                        ) {
+                ) {
                     AppContext.showToast("你选择的文件不是db 数据库文件");
                 } else {
 

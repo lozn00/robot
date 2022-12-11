@@ -118,7 +118,9 @@ import cn.qssq666.robot.event.OnUpdateAccountListEvent;
 import cn.qssq666.robot.event.WordEvent;
 import cn.qssq666.robot.http.HttpUtilRetrofit;
 import cn.qssq666.robot.http.api.MoLiAPI;
+import cn.qssq666.robot.http.api.OpenAI;
 import cn.qssq666.robot.http.api.TuLingAPI;
+import cn.qssq666.robot.http.api.translate.OpenAIUtil;
 import cn.qssq666.robot.interfaces.DelegateSendMsgType;
 import cn.qssq666.robot.interfaces.ICmdIntercept;
 import cn.qssq666.robot.interfaces.IIntercept;
@@ -128,6 +130,7 @@ import cn.qssq666.robot.interfaces.OnCareteNotify;
 import cn.qssq666.robot.interfaces.RedPacketMessageType;
 import cn.qssq666.robot.interfaces.RequestListener;
 import cn.qssq666.robot.misc.SQLCns;
+import cn.qssq666.robot.openai.OpenAIBiz;
 import cn.qssq666.robot.plugin.PluginUtils;
 import cn.qssq666.robot.plugin.js.util.JSPluginUtil;
 import cn.qssq666.robot.plugin.lua.util.LuaPluginUtil;
@@ -180,10 +183,13 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
+import static cn.qssq666.robot.openai.OpenAIBiz.doOpenAI;
 import static cn.qssq666.robot.utils.DateUtils.TYPE_MS;
 import static cn.qssq666.robot.utils.DateUtils.TYPE_SECOND;
 import static cn.qssq666.robot.utils.DateUtils.getTimeDistance;
@@ -233,8 +239,8 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
     public final static String ACTION_KICK = "insert/kick";
     public final static String ACTION_UPDATE_KEY = "update/key";
     private static UriMatcher _uriMatcher;
-    private String robotReplyKey = Cns.DEFAULT_TULING_KEY;
-    private String robotReplySecret = "";
+    public String robotReplyKey = "";
+    public String robotReplySecret = "";
     private static final int CODE_MSG = 1;
     private static final int CODE_GAD = 2;
     private static final int CODE_TICK = 3;
@@ -805,16 +811,16 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 //        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
 
 //        sharedPreferences = getProxyContext().getSharedPreferences(Constants.SP_FILE, Context.MODE_PRIVATE);
-        defaultReplyIndex = sharedPreferences.getInt(Cns.SP_DEFAULT_REPLY_API_INDEX, 0);
-        String currentKey = sharedPreferences.getString(AppUtils.getRobotReplyKey(defaultReplyIndex), "");
+        defaultReplyIndex = sharedPreferences.getInt(Cns.SP_DEFAULT_REPLY_API_INDEX, 2);
+        robotReplyKey = sharedPreferences.getString(AppUtils.getRobotReplyKey(defaultReplyIndex), robotReplyKey);
         robotReplySecret = sharedPreferences.getString(AppUtils.getRobotReplySecret(defaultReplyIndex), "");
-        if (!TextUtils.isEmpty(currentKey)) {
-            LogUtil.writeLog(TAG, "robotReplyKey:" + currentKey);
-            robotReplyKey = currentKey;
+        if (!TextUtils.isEmpty(robotReplyKey)) {
+            LogUtil.writeLog(TAG, "robotReplyKey:" + robotReplyKey);
 
         } else {
             if (defaultReplyIndex == 1) {
                 robotReplyKey = Cns.DEFAULT_TULING_KEY;
+            } else if (defaultReplyIndex == 2) {
             }
         }
 
@@ -3435,7 +3441,7 @@ System.out.println(m.group());//输出“水货”“正品”
                     }
                 });
             } else {
-                doMoLi(this, msgItem, bean, whiteNameBean, intercept);//如果传参数传递错了，就会返回NULL
+                OpenAIBiz.doOpenAI(this, msgItem, bean, whiteNameBean, intercept);//如果传参数传递错了，就会返回NULL
             }
 
         } else if (defaultReplyIndex == 1) {
@@ -3466,10 +3472,13 @@ System.out.println(m.group());//输出“水货”“正品”
                     }
                 });
             } else {
-                doTuLing(RobotContentProvider.this, msgItem, bean, whiteNameBean, intercept);
+                OpenAIBiz.doOpenAI(RobotContentProvider.this, msgItem, bean, whiteNameBean, intercept);
             }
 
 
+        } else {
+
+            OpenAIBiz.doOpenAI(RobotContentProvider.this, msgItem, bean, whiteNameBean, intercept);
         }
 
 
@@ -3480,100 +3489,105 @@ System.out.println(m.group());//输出“水货”“正品”
 
 
         Observable.create(new ObservableOnSubscribe<ResultBean>() {
-            @Override
-            public void subscribe(ObservableEmitter<ResultBean> emitter) throws Exception {
-                Retrofit retrofit = HttpUtilRetrofit.buildRetrofit(Cns.ROBOT_REPLY_MOLI_DOMAIN);
-                MoLiAPI projectAPI = retrofit.create(MoLiAPI.class);
-                HashMap<String, String> forms = new HashMap<>();
-                String ask = bean.getInfo();
-                if (ask.contains("财神爷灵签")) {
-                    bean.setInfo("财神爷灵签");
-                } else if (ask.contains("月老灵签")) {
-                    bean.setInfo("月老灵签");
-                } else if (ask.contains("观音灵签")) {
-                    bean.setInfo("观音灵签");
-                } else if (ask.contains("笑话")) {
-                    bean.setInfo("笑话");
-                }
-                forms.put("question", bean.getInfo().trim());
-                forms.put("limit", (new Random().nextInt(3)) + "");
-                forms.put("api_key", robotContentProvider.robotReplyKey);
-                forms.put("api_secret", robotContentProvider.robotReplySecret);
-                Call<String> call1 = projectAPI.query(forms);
-                Response<String> response = call1.execute();
-                String str = response.body();
-                ResultBean resultBean = new ResultBean();
-                if (str.startsWith("{")) {
-                    str = str.replace("&nbsp;", " ");
-                    str = str.replace("&amp;", "&");
-                    resultBean.setNeedTranslate(false);
-                    if (bean.getInfo().contains("笑话")) {
-                        JSONObject jsonObject = new JSONObject(str);
-                        StringBuffer sb = new StringBuffer();
-                        sb.append("标题:" + jsonObject.optString("title"));
-                        sb.append("\n内容:" + jsonObject.optString("content"));
-                        resultBean.setText(sb.toString());
-                    } else if (bean.getInfo().contains("观音灵签")) {
-                        JSONObject jsonObject = new JSONObject(str);
-                        StringBuffer sb = new StringBuffer();
-                        sb.append("您抽取的是第" + jsonObject.optString("number2") + "签");
-                        RobotFormatUtil.appendIfNotNull("签位", "haohua", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("签语", "qianyu", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("诗意解签", "shiyi", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("百合解签", "jieqian", jsonObject, sb);
-                        resultBean.setText(sb.toString());
-                    } else if (bean.getInfo().contains("月老")) {
-                        JSONObject jsonObject = new JSONObject(str);
-                        StringBuffer sb = new StringBuffer();
-                        sb.append("您抽取的是第" + jsonObject.optString("number2") + "签");
-                        RobotFormatUtil.appendIfNotNull("签位", "haohua", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("诗意", "shiyi", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("解签", "jieqian", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("注释", "zhushi", jsonObject, sb);
-                        resultBean.setText(sb.toString());
-                    } else if (bean.getInfo().contains("财神")) {//财神爷灵签
-                        JSONObject jsonObject = new JSONObject(str);
-                        StringBuffer sb = new StringBuffer();
-                        sb.append("您抽取的是第" + jsonObject.optString("number2") + "签");
-//                        RobotFormatUtil.appendIfNotNull("签位", "haohua", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("签语", "qianyu", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("注释", "zhushi", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("解签", "jieqian", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("解说", "jieshuo", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("结果", "jieguo", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("婚姻", "hunyin", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("事业", "shiye", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("功名", "gongming", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("失物", "shiwu", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("外出移居", "cwyj", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("运途", "yuntu", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("交易", "jiaoyi", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("求财", "qiucai", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("六甲", "liujia", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("诉讼", "susong", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("疾病", "jibin", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("合伙做生意", "moushi", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("某事", "hhzsy", jsonObject, sb);
-                        RobotFormatUtil.appendIfNotNull("事端", "yuntu", jsonObject, sb);
-                        resultBean.setText(sb.toString());
-                    } else {
-                        JSONObject jsonObject = new JSONObject(str);
-                        JSONArray names = jsonObject.names();
-                        StringBuffer sb = new StringBuffer();
-                        for (int i = 0; i < names.length(); i++) {
-                            String key = names.getString(i);
-                            sb.append(key + ":" + jsonObject.getString(key));
-                        }
-                        resultBean.setText(sb.toString());
+                    @Override
+                    public void subscribe(ObservableEmitter<ResultBean> emitter) throws Exception {
+                        Retrofit retrofit = HttpUtilRetrofit.buildRetrofit(Cns.ROBOT_REPLY_MOLI_DOMAIN);
+                        MoLiAPI projectAPI = retrofit.create(MoLiAPI.class);
+                        HashMap<String, String> forms = new HashMap<>();
+                        String ask = bean.getInfo();
+                        if (ask == null) {
 
+                        } else {
+
+                            if (ask.contains("财神爷灵签")) {
+                                bean.setInfo("财神爷灵签");
+                            } else if (ask.contains("月老灵签")) {
+                                bean.setInfo("月老灵签");
+                            } else if (ask.contains("观音灵签")) {
+                                bean.setInfo("观音灵签");
+                            } else if (ask.contains("笑话")) {
+                                bean.setInfo("笑话");
+                            }
+                        }
+                        forms.put("question", bean.getInfo().trim());
+                        forms.put("limit", (new Random().nextInt(3)) + "");
+                        forms.put("api_key", robotContentProvider.robotReplyKey);
+                        forms.put("api_secret", robotContentProvider.robotReplySecret);
+                        Call<String> call1 = projectAPI.query(forms);
+                        Response<String> response = call1.execute();
+                        String str = response.body();
+                        ResultBean resultBean = new ResultBean();
+                        if (str.startsWith("{")) {
+                            str = str.replace("&nbsp;", " ");
+                            str = str.replace("&amp;", "&");
+                            resultBean.setNeedTranslate(false);
+                            if (bean.getInfo().contains("笑话")) {
+                                JSONObject jsonObject = new JSONObject(str);
+                                StringBuffer sb = new StringBuffer();
+                                sb.append("标题:" + jsonObject.optString("title"));
+                                sb.append("\n内容:" + jsonObject.optString("content"));
+                                resultBean.setText(sb.toString());
+                            } else if (bean.getInfo().contains("观音灵签")) {
+                                JSONObject jsonObject = new JSONObject(str);
+                                StringBuffer sb = new StringBuffer();
+                                sb.append("您抽取的是第" + jsonObject.optString("number2") + "签");
+                                RobotFormatUtil.appendIfNotNull("签位", "haohua", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("签语", "qianyu", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("诗意解签", "shiyi", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("百合解签", "jieqian", jsonObject, sb);
+                                resultBean.setText(sb.toString());
+                            } else if (bean.getInfo().contains("月老")) {
+                                JSONObject jsonObject = new JSONObject(str);
+                                StringBuffer sb = new StringBuffer();
+                                sb.append("您抽取的是第" + jsonObject.optString("number2") + "签");
+                                RobotFormatUtil.appendIfNotNull("签位", "haohua", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("诗意", "shiyi", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("解签", "jieqian", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("注释", "zhushi", jsonObject, sb);
+                                resultBean.setText(sb.toString());
+                            } else if (bean.getInfo().contains("财神")) {//财神爷灵签
+                                JSONObject jsonObject = new JSONObject(str);
+                                StringBuffer sb = new StringBuffer();
+                                sb.append("您抽取的是第" + jsonObject.optString("number2") + "签");
+//                        RobotFormatUtil.appendIfNotNull("签位", "haohua", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("签语", "qianyu", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("注释", "zhushi", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("解签", "jieqian", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("解说", "jieshuo", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("结果", "jieguo", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("婚姻", "hunyin", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("事业", "shiye", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("功名", "gongming", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("失物", "shiwu", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("外出移居", "cwyj", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("运途", "yuntu", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("交易", "jiaoyi", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("求财", "qiucai", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("六甲", "liujia", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("诉讼", "susong", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("疾病", "jibin", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("合伙做生意", "moushi", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("某事", "hhzsy", jsonObject, sb);
+                                RobotFormatUtil.appendIfNotNull("事端", "yuntu", jsonObject, sb);
+                                resultBean.setText(sb.toString());
+                            } else {
+                                JSONObject jsonObject = new JSONObject(str);
+                                JSONArray names = jsonObject.names();
+                                StringBuffer sb = new StringBuffer();
+                                for (int i = 0; i < names.length(); i++) {
+                                    String key = names.getString(i);
+                                    sb.append(key + ":" + jsonObject.getString(key));
+                                }
+                                resultBean.setText(sb.toString());
+
+                            }
+                        } else {
+                            resultBean.setText(str);
+                        }
+                        resultBean.setCode(TuLingType.NORMAL);
+                        emitter.onNext(resultBean);
                     }
-                } else {
-                    resultBean.setText(str);
-                }
-                resultBean.setCode(TuLingType.NORMAL);
-                emitter.onNext(resultBean);
-            }
-        }).subscribeOn(Schedulers.io())
+                }).subscribeOn(Schedulers.io())
                 .map(new Function<ResultBean, ResultBean>() {
                     @Override
                     public ResultBean apply(ResultBean resultBean) throws Exception {
@@ -3590,67 +3604,67 @@ System.out.println(m.group());//输出“水货”“正品”
                     }
                 }).map(RXUtil.mapTranslateFunction(whiteNameBean))
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ResultBean>() {
-            @Override
-            public void accept(ResultBean resultBean) throws Exception {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
 
-                if (robotContentProvider.mAllowReponseSelfCommand) {
-                    if (resultBean.getText().length() < 10) {
-                        resultBean.setText("." + resultBean.getText());
+                        if (robotContentProvider.mAllowReponseSelfCommand) {
+                            if (resultBean.getText().length() < 10) {
+                                resultBean.setText("." + resultBean.getText());
 
-                    }
-                }
-
-                if (resultBean.getText().equals("[cqname]")) {
-                    String tep = "我暂时没有名字,请主人打开情迁聊天机器人进入高级调试->设置机器人key哦！";
-                    resultBean.setText(tep);
-                }
-
-
-                resultBean.setText(resultBean.getText().replace("[cqname]", RobotContentProvider.getInstance().mLocalRobotName));
-                resultBean.setText(resultBean.getText().replace("[name]", NickNameUtils.formatNickname(msgItem)));
-
-                if (resultBean.getCode() == TuLingType.NORMAL || resultBean.getCode() == TuLingType.LINK) {
-                    String message = resultBean.getDetailMsg();
-
-
-                    if (intercept != null && intercept.isNeedIntercept(resultBean)) {
-
-                        return;
-                    }
-                    if (MsgTypeConstant.MSG_ISTROP_GROUP_PRIVATE_MSG_1 == msgItem.getIstroop() || MsgTypeConstant.MSG_ISTROOP__GROUP_PRIVATE_MSG == msgItem.getIstroop() || 0 == msgItem.getIstroop()) {
-                        if (!msgItem.getSenderuin().equals(msgItem.getSelfuin()) && !msgItem.getFrienduin().equals(msgItem.getSelfuin())) {
-                            //
-                            msgItem.setExtrajson(msgItem.getSelfuin());//避免反反复复的回复消息。
-
+                            }
                         }
-                    }
-                    MsgReCallUtil.notifyHasDoWhileReply(robotContentProvider, message, msgItem);
+
+                        if (resultBean.getText().equals("[cqname]")) {
+                            String tep = "我暂时没有名字,请主人打开情迁聊天机器人进入高级调试->设置机器人key哦！";
+                            resultBean.setText(tep);
+                        }
 
 
-                } else if (ErrorHelper.isNotSupportMsgType(resultBean.getCode())) {
+                        resultBean.setText(resultBean.getText().replace("[cqname]", RobotContentProvider.getInstance().mLocalRobotName));
+                        resultBean.setText(resultBean.getText().replace("[name]", NickNameUtils.formatNickname(msgItem)));
+
+                        if (resultBean.getCode() == TuLingType.NORMAL || resultBean.getCode() == TuLingType.LINK) {
+                            String message = resultBean.getDetailMsg();
+
+
+                            if (intercept != null && intercept.isNeedIntercept(resultBean)) {
+
+                                return;
+                            }
+                            if (MsgTypeConstant.MSG_ISTROP_GROUP_PRIVATE_MSG_1 == msgItem.getIstroop() || MsgTypeConstant.MSG_ISTROOP__GROUP_PRIVATE_MSG == msgItem.getIstroop() || 0 == msgItem.getIstroop()) {
+                                if (!msgItem.getSenderuin().equals(msgItem.getSelfuin()) && !msgItem.getFrienduin().equals(msgItem.getSelfuin())) {
+                                    //
+                                    msgItem.setExtrajson(msgItem.getSelfuin());//避免反反复复的回复消息。
+
+                                }
+                            }
+                            MsgReCallUtil.notifyHasDoWhileReply(robotContentProvider, message, msgItem);
+
+
+                        } else if (ErrorHelper.isNotSupportMsgType(resultBean.getCode())) {
 //                    MsgItem msgItem1 = msgItem.setMessage("网络词库无法处理消息" + msgItem.getMessage() + "" + resultBean.getText()).setCode(-1);
 //                    notifyHasDoWhileReply(msgItem1);
-                    LogUtil.writeLog("网络词库不支持" + resultBean);
+                            LogUtil.writeLog("网络词库不支持" + resultBean);
 
-                } else {
+                        } else {
 //                    String msg = msgItem.setMessage("网络词库无法处理消息" + msgItem.getMessage() + ",type:" + msgItem.getType() + "  " + msgItem.getMessage() + ErrorHelper.codeToMessage(resultBean.getCode())).setCode(-1;
-                    LogUtil.writeLog("网络词库不支持 -e" + resultBean);
+                            LogUtil.writeLog("网络词库不支持 -e" + resultBean);
 //                    notifyHasDoWhileReply());
-                }
-                LogUtil.writeLog("onResponse" + Thread.currentThread());
+                        }
+                        LogUtil.writeLog("onResponse" + Thread.currentThread());
 
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-                Log.e(TAG, "茉莉词库", throwable);
-                if (!RobotContentProvider.getInstance().mCfBaseNetReplyErrorNotWarn) {
-                    MsgReCallUtil.notifyHasDoWhileReply(robotContentProvider, "无法回复 出现错误" + throwable.toString(), msgItem);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.e(TAG, "茉莉词库", throwable);
+                        if (!RobotContentProvider.getInstance().mCfBaseNetReplyErrorNotWarn) {
+                            MsgReCallUtil.notifyHasDoWhileReply(robotContentProvider, "无法回复 出现错误" + throwable.toString(), msgItem);
 
-                }
+                        }
 
-            }
-        });
+                    }
+                });
 
 
 /*
@@ -3767,68 +3781,68 @@ System.out.println(m.group());//输出“水货”“正品”
                         }
                     })*/
                 .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ResultBean>() {
-            @Override
-            public void accept(ResultBean resultBean) throws Exception {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
 
-                if (robotContentProvider.mAllowReponseSelfCommand) {
-                    if (resultBean.getText().length() < 10) {
-                        resultBean.setText("\t" + resultBean.getText());
+                        if (robotContentProvider.mAllowReponseSelfCommand) {
+                            if (resultBean.getText().length() < 10) {
+                                resultBean.setText("\t" + resultBean.getText());
 
+                            }
+                        }
+
+                        if ((resultBean.getText() + "").contains("QQ")) {
+                            String tep = "我只有爸爸,我爸爸是人类,他叫情迁,现在还单身呢?";
+                            resultBean.setText(tep);
+                        }
+
+                        if (RegexUtils.isContaineQQOrPhone(resultBean.getText())) {
+                            resultBean.setText("检测到当前问题[" + msgItem.getMessage() + "]触发第三方网络词库发送垃圾广告,如QQ 手机号码,情迁聊天机器人已自动屏蔽!");
+
+
+                        }
+
+
+                        if (resultBean.getCode() == TuLingType.NORMAL || resultBean.getCode() == TuLingType.LINK) {
+                            String message = resultBean.getDetailMsg();
+
+
+                            if (intercept != null && intercept.isNeedIntercept(resultBean)) {
+
+                                return;
+                            }
+                            if (MsgTypeConstant.MSG_ISTROP_GROUP_PRIVATE_MSG_1 == msgItem.getIstroop() || MsgTypeConstant.MSG_ISTROOP__GROUP_PRIVATE_MSG == msgItem.getIstroop() || 0 == msgItem.getIstroop()) {
+                                if (!msgItem.getSenderuin().equals(msgItem.getSelfuin()) && !msgItem.getFrienduin().equals(msgItem.getSelfuin())) {
+                                    //
+                                    msgItem.setExtrajson(msgItem.getSelfuin());//避免反反复复的回复消息。
+
+                                }
+                            }
+                            MsgReCallUtil.notifyHasDoWhileReply(robotContentProvider, message, msgItem);
+
+
+                        } else if (ErrorHelper.isNotSupportMsgType(resultBean.getCode())) {
+//                    MsgItem msgItem1 = msgItem.setMessage("网络词库无法处理消息" + msgItem.getMessage() + "" + resultBean.getText()).setCode(-1);
+//                    notifyHasDoWhileReply(msgItem1);
+                            LogUtil.writeLog("网络词库不支持" + resultBean);
+
+                        } else {
+//                    String msg = msgItem.setMessage("网络词库无法处理消息" + msgItem.getMessage() + ",type:" + msgItem.getType() + "  " + msgItem.getMessage() + ErrorHelper.codeToMessage(resultBean.getCode())).setCode(-1;
+                            LogUtil.writeLog("网络词库不支持 -e" + resultBean);
+//                    notifyHasDoWhileReply());
+                        }
+                        LogUtil.writeLog("onResponse" + resultBean.getText() + Thread.currentThread());
                     }
-                }
-
-                if ((resultBean.getText() + "").contains("QQ")) {
-                    String tep = "我只有爸爸,我爸爸是人类,他叫情迁,现在还单身呢?";
-                    resultBean.setText(tep);
-                }
-
-                if (RegexUtils.isContaineQQOrPhone(resultBean.getText())) {
-                    resultBean.setText("检测到当前问题[" + msgItem.getMessage() + "]触发第三方网络词库发送垃圾广告,如QQ 手机号码,情迁聊天机器人已自动屏蔽!");
-
-
-                }
-
-
-                if (resultBean.getCode() == TuLingType.NORMAL || resultBean.getCode() == TuLingType.LINK) {
-                    String message = resultBean.getDetailMsg();
-
-
-                    if (intercept != null && intercept.isNeedIntercept(resultBean)) {
-
-                        return;
-                    }
-                    if (MsgTypeConstant.MSG_ISTROP_GROUP_PRIVATE_MSG_1 == msgItem.getIstroop() || MsgTypeConstant.MSG_ISTROOP__GROUP_PRIVATE_MSG == msgItem.getIstroop() || 0 == msgItem.getIstroop()) {
-                        if (!msgItem.getSenderuin().equals(msgItem.getSelfuin()) && !msgItem.getFrienduin().equals(msgItem.getSelfuin())) {
-                            //
-                            msgItem.setExtrajson(msgItem.getSelfuin());//避免反反复复的回复消息。
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        Log.e(TAG, "茉莉词库", throwable);
+                        if (!RobotContentProvider.getInstance().mCfBaseNetReplyErrorNotWarn) {
+                            MsgReCallUtil.notifyHasDoWhileReply(robotContentProvider, "无法回复 出现错误" + throwable.toString(), msgItem);
 
                         }
                     }
-                    MsgReCallUtil.notifyHasDoWhileReply(robotContentProvider, message, msgItem);
-
-
-                } else if (ErrorHelper.isNotSupportMsgType(resultBean.getCode())) {
-//                    MsgItem msgItem1 = msgItem.setMessage("网络词库无法处理消息" + msgItem.getMessage() + "" + resultBean.getText()).setCode(-1);
-//                    notifyHasDoWhileReply(msgItem1);
-                    LogUtil.writeLog("网络词库不支持" + resultBean);
-
-                } else {
-//                    String msg = msgItem.setMessage("网络词库无法处理消息" + msgItem.getMessage() + ",type:" + msgItem.getType() + "  " + msgItem.getMessage() + ErrorHelper.codeToMessage(resultBean.getCode())).setCode(-1;
-                    LogUtil.writeLog("网络词库不支持 -e" + resultBean);
-//                    notifyHasDoWhileReply());
-                }
-                LogUtil.writeLog("onResponse" + resultBean.getText() + Thread.currentThread());
-            }
-        }, new Consumer<Throwable>() {
-            @Override
-            public void accept(Throwable throwable) throws Exception {
-                Log.e(TAG, "茉莉词库", throwable);
-                if (!RobotContentProvider.getInstance().mCfBaseNetReplyErrorNotWarn) {
-                    MsgReCallUtil.notifyHasDoWhileReply(robotContentProvider, "无法回复 出现错误" + throwable.toString(), msgItem);
-
-                }
-            }
-        });
+                });
 
 
          /*       .retryWhen(new Function<Observable<Throwable>, ObservableSource<?>>() {
@@ -4030,7 +4044,7 @@ System.out.println(m.group());//输出“水货”“正品”
         }
         if (!isSelf && nameBean != null && nameBean.isCmdsilent() && !isManager && AppContext.isVip()) {
             LogUtil.writeLog("指令静默，非管理忽略内置命令!.");
-            return true;
+            return false;
         }
 
 
@@ -5661,16 +5675,16 @@ System.out.println(m.group());//输出“水货”“正品”
                     ListIterator<GagAccountBean> gagAccountBeanListIterator = list.listIterator();
                     StringBuilder sb = new StringBuilder();
                     sb.append("删除" + ask + "|");
-                    boolean find=false;
+                    boolean find = false;
                     while (gagAccountBeanListIterator.hasNext()) {
                         GagAccountBean accountBean = gagAccountBeanListIterator.next();
                         if (accountBean.getAccount().contains(ask)) {
-                            find=true;
+                            find = true;
                             if (accountBean.getAccount().equals(ask)) {
 
                                 long result = DBHelper.getGagKeyWord(AppContext.dbUtils).deleteById(GagAccountBean.class, accountBean.getId());
                                 String msg = "";
-                                sb.append("删除相等关键词,id:" + accountBean.getId()+",禁言时间:"+ DateUtils.getGagTime(accountBean.getDuration()));
+                                sb.append("删除相等关键词,id:" + accountBean.getId() + ",禁言时间:" + DateUtils.getGagTime(accountBean.getDuration()));
                                 if (result > 0) {
                                     gagAccountBeanListIterator.remove();
                                     msg = "成功";
@@ -5683,7 +5697,7 @@ System.out.println(m.group());//输出“水货”“正品”
                                 String replace = accountBean.getAccount().replace(ClearUtil.wordSplit + ask, "");
                                 replace = accountBean.getAccount().replace(ask + ClearUtil.wordSplit, "");
                                 replace = accountBean.getAccount().replace(ClearUtil.wordSplit + ClearUtil.wordSplit, ClearUtil.wordSplit);
-                                sb.append(",从多条分歌词里面移除关键词" + ask + ",id:" + accountBean.getId() +",禁言时间:"+ DateUtils.getGagTime(accountBean.getDuration())+",移除后的词条内容:" + replace);
+                                sb.append(",从多条分歌词里面移除关键词" + ask + ",id:" + accountBean.getId() + ",禁言时间:" + DateUtils.getGagTime(accountBean.getDuration()) + ",移除后的词条内容:" + replace);
 
                                 accountBean.setAccount(replace);
                                 String msg;
@@ -5710,6 +5724,37 @@ System.out.println(m.group());//输出“水货”“正品”
                     }
 
                 }
+
+            }
+            break;
+            case CmdConfig.UPDATE_SERCRET: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return true;
+                }
+                String value = item.getMessage().replace(CmdConfig.UPDATE_SERCRET, "");
+                if(TextUtils.isEmpty(value)){
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请传递参数accessToken,如果要传递accessToken和sessionToken请用分隔符|隔开" , item);
+                    return true;
+                }
+                if (value.contains("|")) {
+                    String[] keyValue = value.split("\\|");
+                    if (keyValue.length >= 2) {
+                        String myKey = keyValue[0];
+                        String myValue = keyValue[1];
+
+                        SharedPreferences sharedPreferences = AppUtils.getConfigSharePreferences(RobotContentProvider.getInstance().getProxyContext());
+                        sharedPreferences.edit().putString(AppUtils.getRobotReplyKey(RobotContentProvider.getInstance().defaultReplyIndex), myKey).commit();
+                        sharedPreferences.edit().putString(AppUtils.getRobotReplySecret(RobotContentProvider.getInstance().defaultReplyIndex), myValue).commit();
+                        MsgReCallUtil.notifyHasDoWhileReply(this, "更新key,以及value完成", item);
+                    } else {
+                        MsgReCallUtil.notifyHasDoWhileReply(this, "更新key,以及value失败,分隔符|长度不匹配2", item);
+                    }
+
+                } else {
+
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "更新机器人回复key为" + value, item);
+                }
+
 
             }
             break;
@@ -6548,6 +6593,7 @@ System.out.println(m.group());//输出“水货”“正品”
 
                             }
                         }).execute(s1);
+
 
                         return true;
                     case CmdConfig.ChildCmd.CONFIG_QQINFO: {
@@ -7875,7 +7921,46 @@ System.out.println(m.group());//输出“水货”“正品”
                 sb.append("WIFI名:" + AppUtils.getSSID() + "\n");
                 sb.append("型号:" + " " + Build.MODEL + "\nSDK_INT:" + Build.VERSION.SDK_INT);
 
-                MsgReCallUtil.notifyJoinMsgNoJump(this, "" + sb.toString(), item);
+
+                new QssqTaskFix<String, String>(new QssqTaskFix.ICallBackImp<String, String>() {
+                    @Override
+                    public String onRunBackgroundThread(String[] params) {
+                        final Pair<String, Exception> s = ShellUtil.executeAndFetchResultPair(params[0], new ICmdIntercept<String>() {
+                            @Override
+                            public boolean isNeedIntercept(String str) {
+                                MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.getInstance(), str, item);
+                                return false;
+                            }
+
+                            @Override
+                            public void onComplete(String name) {
+
+                            }
+                        });
+
+                        if (s.first != null) {
+                            return s.first;
+                        } else if (s.second != null) {
+                            return "[执行错误]" + s.second.getMessage();
+                        }
+
+                        return "未知错误";
+
+                    }
+
+                    @Override
+                    public void onRunFinish(String o) {
+
+                        MsgReCallUtil.notifyJoinMsgNoJump(RobotContentProvider.getInstance(), "" + sb.toString() + "\nCPU温度:" + o, item);
+
+
+                    }
+                }).execute("cat /sys/class/thermal/thermal_zone0/temp");
+
+
+                //                配置运行 cat /sys/class/thermal/thermal_zone0/temp
+
+
                 break;
             }
             case CmdConfig.VERSION:
