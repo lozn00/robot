@@ -116,7 +116,7 @@ public class MsgTyeUtils {
     }
 
     public static boolean isFriendMsg(IMsgModel item) {
-        return MsgTypeConstant.MSG_TYPE_TEXT == item.getType() && item.getIstroop() == 0;
+        return (MsgTypeConstant.MSG_TYPE_TEXT == item.getType()||MsgTypeConstant.MSG_TYPE_STRUCT_LONG_TEXT == item.getType())&& item.getIstroop() == 0;
     }
 
     public static boolean isRedPacketMsg(IMsgModel item) {

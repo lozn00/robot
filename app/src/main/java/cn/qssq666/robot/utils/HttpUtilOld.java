@@ -22,7 +22,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
  * Created by luozheng on 2017/3/12.  qssq.space
  */
 
-public class HttpUtil {
+public class HttpUtilOld {
 
     public static void queryData(String url, final RequestListener listener) {
         OkHttpClient okHttpClient = buildOkHttpClient();

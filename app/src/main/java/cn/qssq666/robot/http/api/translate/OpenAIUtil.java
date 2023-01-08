@@ -34,4 +34,15 @@ public class OpenAIUtil {
                 "    \"parent_message_id\": \"" + parentMessageID + "\"\n" +
                 "}";
     }
+
+    public static String GenereateBodyByTextUseApi( String text) {
+        return "{\n" +
+                "    \"model\": \"text-davinci-003\",\n" +
+                "    \"prompt\": \""+text+"\",\n" +
+                "    \"temperature\": 1,\n" +
+                "    \"max_tokens\": 1000\n" +
+                "}";
+    }
+
+
 }

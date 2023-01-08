@@ -2,25 +2,28 @@ package cn.qssq666.robot.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
+import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.os.PowerManager;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.view.WindowManager;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -53,7 +56,6 @@ import cn.qssq666.robot.activity.datamanager.QQIgnoresActivity;
 import cn.qssq666.robot.activity.datamanager.QQIgnoresGagActivity;
 import cn.qssq666.robot.activity.datamanager.QQSuperManagerActivity;
 import cn.qssq666.robot.activity.datamanager.VarManagerActivity;
-import cn.qssq666.robot.ad.BannerUtils;
 import cn.qssq666.robot.ad.InterstitialAdUtil;
 import cn.qssq666.robot.adapter.HomeMenuAdapter;
 import cn.qssq666.robot.app.AppContext;
@@ -75,7 +77,7 @@ import cn.qssq666.robot.utils.DateUtils;
 import cn.qssq666.robot.utils.DensityUtil;
 import cn.qssq666.robot.utils.DialogUtils;
 import cn.qssq666.robot.utils.DownloadUtils;
-import cn.qssq666.robot.utils.HttpUtil;
+import cn.qssq666.robot.utils.HttpUtilOld;
 import cn.qssq666.robot.utils.MediaUtils;
 import cn.qssq666.robot.utils.PermissionUtil;
 import cn.qssq666.robot.xbean.HomeMenu;
@@ -86,7 +88,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-public class MainActivity extends SuperActivity implements View.OnClickListener, RadioGroup.OnCheckedChangeListener {
+public class MainActivity extends SuperActivity implements View.OnClickListener {//, RadioGroup.OnCheckedChangeListener {
     private static final String TAG = "MainActivityR";
 
     public static final String TEST = "\n" + "\n\n" + "\n\n" + "测试换行符\n\n你好世界 我擦\n擦擦擦" + "\n" + "===========\n\n\n后面是t\t然后还是t\t逼逼来了\b还有一个bb\b逼逼结束 rn了\r\n";
@@ -104,61 +106,95 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
     int clickId;
     private int _CurrentPermissionIndex;
     private int mIndex = -1;
+    private boolean _KeepLight;
+    private long clockLaunchAppTime;
+    private long launchCount;
+    Runnable rAutoLaunch = new Runnable() {
+        @Override
+        public void run() {
+            try {
+                launchCount++;
+                AppUtils.lauchApp(MainActivity.this, "com.tencent.mobileqq");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+    }
+
+    /**
+     * 判断应用是否是在后台
+     */
+    public static boolean isBackground(Context context) {
+        ActivityManager activityManager = (ActivityManager) context
+                .getSystemService(Context.ACTIVITY_SERVICE);
+        KeyguardManager keyguardManager = (KeyguardManager) context.getSystemService(KEYGUARD_SERVICE);
+
+        List<ActivityManager.RunningAppProcessInfo> appProcesses = activityManager
+                .getRunningAppProcesses();
+        for (ActivityManager.RunningAppProcessInfo appProcess : appProcesses) {
+            if (TextUtils.equals(appProcess.processName, context.getPackageName())) {
+                return appProcess.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_BACKGROUND;
+            }
+        }
+        return false;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
+        SharedPreferences sharedPreferences = AppUtils.getConfigSharePreferences(this);
+        if (sharedPreferences.getBoolean(AppContext.getStr(R.string.keep_screen_on), true)) {
+            _KeepLight = true;
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        }
+        clockLaunchAppTime = sharedPreferences.getLong(AppContext.getStr(R.string.clock_launcher_app), 0);
         Intent intent = getIntent();
         if (intent != null) {
-
-
             mFrom = intent.getStringExtra("from");
-
-
         }
-
+        if (clockLaunchAppTime > 0) {
+            AppContext.getHandler().postDelayed(rAutoLaunch, 1000 * clockLaunchAppTime);
+        }
 
         setTitleColor(Color.WHITE);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         binding.setVersion(BuildConfig.VERSION_NAME);
         binding.executePendingBindings();
-        binding.radioGroup.setOnCheckedChangeListener(this);
-        binding.rb1.setChecked(true);
-        binding.recyclerview.setLayoutManager(new GridLayoutManager(AppContext.getInstance(), 3));
+//        binding.radioGroup.setOnCheckedChangeListener(this);
+//        binding.rb1.setChecked(true);
+        binding.recyclerview.setLayoutManager(new GridLayoutManager(AppContext.getInstance(), 2));
         int size = DensityUtil.dip2px(AppContext.getInstance(), 5);
         AppThemeUtilsX.setGridLayoutDividerItem(binding.recyclerview, true, true, true, size);
         final HomeMenuAdapter homeMenuAdapter = new HomeMenuAdapter();
         List<HomeMenu> homeMenus = new ArrayList<>();
-        homeMenus.add(new HomeMenu(R.id.btn_set, "总开关"));
-        homeMenus.add(new HomeMenu(R.id.btn_group_white_names, "配置群"));
-        homeMenus.add(new HomeMenu(R.id.btn_super_manager, "超级管理员"));
+        homeMenus.add(new HomeMenu(R.id.btn_set, "基本配置"));
+        homeMenus.add(new HomeMenu(R.id.btn_misc_config, "杂项配置"));
+        homeMenus.add(new HomeMenu(R.id.btn_group_white_names, "群白名单维护"));
+        homeMenus.add(new HomeMenu(R.id.btn_super_manager, "配置超级管理员"));
         homeMenus.add(new HomeMenu(R.id.btn_group_admin, "配置群管理"));
         homeMenus.add(new HomeMenu(R.id.btn_ignore_uncheck_qq, "免检账号"));
-        homeMenus.add(new HomeMenu(R.id.btn_ignore_qq, "忽略账号"));
+        homeMenus.add(new HomeMenu(R.id.btn_ignore_qq, "配置忽略账号"));
         homeMenus.add(new HomeMenu(R.id.btn_key_manager, "词库管理"));
         homeMenus.add(new HomeMenu(R.id.btn_gag_word, "违禁词管理"));
         homeMenus.add(new HomeMenu(R.id.btn_js_plugin_manager, "JS插件管理"));
         homeMenus.add(new HomeMenu(R.id.btn_lua_plugin_manager, "Lua插件管理"));
         homeMenus.add(new HomeMenu(R.id.btn_plugin_manager, "Java插件管理"));
         homeMenus.add(new HomeMenu(R.id.btn_var_manager, "变量管理"));
-        homeMenus.add(new HomeMenu(R.id.btn_key_redpacket_record, "红包流水"));
-//        homeMenus.add(new HomeMenu(R.id.btn_floor_manager, "楼层数据查询"));
-//        homeMenus.add(new HomeMenu(R.id.btn_nickname, "昵称管理"));
         homeMenus.add(new HomeMenu(R.id.btn_self_comd, "机器人命令"));
         homeMenus.add(new HomeMenu(R.id.btn_join_group, "申请加群"));
         homeMenus.add(new HomeMenu(R.id.btn_about, "关于本软件"));
         homeMenus.add(new HomeMenu(R.id.btn_view_Log, "调试日志"));
         homeMenus.add(new HomeMenu(R.id.btn_debug_robot, "高级调试"));
-//        homeMenus.add(new HomeMenu(R.id.btn_clock_task, "定时任务(暂无)"));
-//        homeMenus.add(new HomeMenu(R.id.btn_clock_task, "群发(不自己开发插件)"));
-//        homeMenus.add(new HomeMenu(R.id.btn_group_illegal_record, "群员违规记录(无)"));
-//        homeMenus.add(new HomeMenu(R.id.plugin_to_install, "自身转插件"));
-        homeMenus.add(new HomeMenu(R.id.btn_daemon_app, "提升稳定性"));
-        homeMenus.add(new HomeMenu(R.id.btn_win_money, "撸羊毛"));
-        homeMenus.add(new HomeMenu(R.id.btn_download_url, "更新入口"));
         homeMenuAdapter.setData(homeMenus);
         homeMenuAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -198,11 +234,11 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
         }
 
 
-        TextView tvAd = (TextView) findViewById(R.id.tv_top_ad);
+    /*    TextView tvAd = (TextView) findViewById(R.id.tv_top_ad);
         if (hasHook()) {
             tvAd.setText("机器人宿主软件已激活(注意勾选启用哦!)");
             tvAd.setTextColor(Color.parseColor("#006400"));//ignore_include
-        }
+        }*/
 
 
         int i = initPermission();
@@ -330,14 +366,7 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
     }
 
 
-    @Override
-    public void onPause() {
-   /*     if (adView != null) {
-            adView.pause();
-        }*/
-        stopUpdateTime();
-        super.onPause();
-    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -371,7 +400,6 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-
     @SuppressLint("InvalidWakeLockTag")
     private void registerWakeLock() {
 //        PermissionUtil.showSystemDialog(this);
@@ -386,7 +414,7 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
 
 
     private void checkUpdate() {
-        HttpUtil.queryData(Cns.UPDATE_URL, new RequestListener() {
+        HttpUtilOld.queryData(Cns.UPDATE_URL, new RequestListener() {
             @Override
             public void onSuccess(String str) {
 
@@ -519,6 +547,7 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
         if (wakeLock != null) {
             wakeLock.release();
         }
+        AppContext.getHandler().removeCallbacks(rAutoLaunch);
 /*
         if (adView != null) {
             adView.destroy();
@@ -590,6 +619,12 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
 
             }
             break;
+            case R.id.btn_misc_config:
+            {
+                Intent intent = new Intent(this, MiscConfigActivity.class);
+                startActivity(intent);
+            }
+                break;
 
             case R.id.btn_win_money: {
                 AppUtils.openWebView(this, "https://qssq666.gitee.io/software/s.html");
@@ -739,8 +774,6 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
 
     @Override
     public void onBackPressed() {
-//        super.onBackPressed();
-//        moveTaskToBack(true);
 
         FloorUtils.saveAllGroupFloorToDb();
         AlertDialog alertDialog = DialogUtils.showConfirmDialog(this, "真的要退出吗?(退出除非关闭宿主机器人监听)", "退出", "后台", new INotify<Void>() {
@@ -751,8 +784,6 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
         }, new INotify<Void>() {
             @Override
             public void onNotify(Void param) {
-
-
                 binding.linelayout.requestFocusFromTouch();
                 binding.linelayout.requestFocus();
                 Intent home = new Intent(Intent.ACTION_MAIN);
@@ -764,38 +795,44 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
         alertDialog.setCancelable(true);
     }
 
-
+    @Override
+    public void onPause() {
+   /*     if (adView != null) {
+            adView.pause();
+        }*/
+        stopUpdateTime();
+        super.onPause();
+//        AppContext.getHandler().removeCallbacks(rAutoLaunch);
+    }
     @Override
     public void onResume() {
         super.onResume();
-       /* if (adView != null) {
-            adView.resume();
-        }*/
-        if (mIndex == 0) {
             startUpdateTime();
-        }
 
     }
 
-    Runnable runnable = new Runnable() {
+    Runnable runnableShowRuntime = new Runnable() {
         @Override
         public void run() {
             long distance = System.currentTimeMillis() - AppContext.getInstance().getStartupTime();
-            binding.tvRunTime.setText("本软件已稳定运行:" + DateUtils.generateTimeDetail(distance) + ""
-                    + (mFrom != null ? "  本程序被异常或者后台内存不足时杀死过," +
-                    "被第三方程序" + mFrom + "调用激活了,如果本软件反复弹出,您要么放弃使用机器人 在" + mFrom + "设置里面关闭启用机器人," +
-                    "要么就忍受要么就去系统电池优化里面给本软件添加后台白名单避免被反复杀死又被" + mFrom + "反复启动激活" : ""));
-            AppContext.getHandler().postDelayed(runnable, 1000);
+            StringBuffer sb = new StringBuffer();
+            sb.append("本软件已运行:" + DateUtils.generateTimeDetail(distance) + "");
+
+            sb.append("\n保持屏幕常亮" + (_KeepLight ? "已启用" : "未启用"));
+            sb.append("\n自动运行宿主" + (clockLaunchAppTime <= 0 ? "未启用" : "已启用/间隔:" + clockLaunchAppTime + "秒)"));
+            sb.append("\n启动宿主总次数" + (launchCount));
+            binding.tvRunTime.setText(sb.toString());
+
         }
     };
 
     public void stopUpdateTime() {
-        AppContext.getHandler().removeCallbacks(runnable);
+        AppContext.getHandler().removeCallbacks(runnableShowRuntime);
     }
 
     public void startUpdateTime() {
-        AppContext.getHandler().removeCallbacks(runnable);
-        AppContext.getHandler().postDelayed(runnable, 1000);
+        AppContext.getHandler().removeCallbacks(runnableShowRuntime);
+        AppContext.getHandler().postDelayed(runnableShowRuntime, 1000);
     }
 
     @Override
@@ -891,6 +928,7 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
         return os;
 
     }
+/*
 
     @Override
     public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -912,6 +950,7 @@ public class MainActivity extends SuperActivity implements View.OnClickListener,
             stopUpdateTime();
         }
     }
+*/
 
 
     private int getCheckIndex(RadioGroup group, int checkedId) {

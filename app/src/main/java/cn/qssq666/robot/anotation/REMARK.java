@@ -10,5 +10,6 @@ import java.lang.annotation.Target;
 public @interface REMARK {
 	int id();
 	String group();
+	String menu();
 	String remark();
 }

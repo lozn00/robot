@@ -17,7 +17,7 @@ public final class DefaultTipUtil {
 
     @NotNull
     public final String getHostNameAndTip() {
-        return "宿主(q++/情迁抢包等软件)";
+        return "宿主";
     }
 
     private DefaultTipUtil() {

@@ -32,19 +32,6 @@
             android:key="@string/key_base_robot_music_engine"
             android:title="点歌引擎切换(QQ音乐/网易云/酷狗音乐)" />
 
-        <!--        <EditTextPreference
-                    android:capitalize="words"
-
-                    android:defaultValue="@string/default_join_word"
-                    android:hint="加群回复语"
-                    android:inputType="textCapWords"
-                    android:key="@string/key_group_join_reply_word"
-                    android:maxLines="1"
-                    android:selectAllOnFocus="true"
-                    android:singleLine="false"
-                    android:summary="输入加群回复语多个用,分割"
-                    android:title="@string/pref_title_join_group_reply" />
-                -->
 
         <EditTextPreference
             android:capitalize="words"
@@ -98,7 +85,6 @@
         <SwitchPreference
             android:defaultValue="true"
             android:key="@string/key_base_enable_net_robot_private"
-            android:summary="默认为茉莉机器人"
 
             android:title="私聊启用网络回复" />
 
@@ -168,17 +154,23 @@
 
         <SwitchPreference
             android:defaultValue="false"
-            android:enabled="false"
-            android:key="@string/key_base_reply_show_nickname"
-
-            android:summary="需要最新版插件1.5.0或最新版内置1.3.2(白名单模式下此功能已设置作废)"
-            android:title="回复时艾特提问人" />
-
-        <SwitchPreference
-            android:defaultValue="false"
             android:key="@string/key_base_allow_intercept_robot_not_aite_final_callmsg"
             android:summary="机器人内部结果消息允许插件拦截，(机器人内部消息处理完毕之后的回调消息，如果开启艾特回复则不会回调)不建议开启，影响性能"
             android:title="插件是否可监听拦截结果消息" />
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="@string/keep_screen_on"
+            android:summary=""
+            android:title="保持屏幕常亮" />
+
+
+        <cn.qssq666.robot.ui.NumberPerference
+            android:defaultValue="@integer/key_base_ignore_than_second_msg_duration"
+            android:inputType="number"
+            android:key="@string/clock_launcher_app"
+            android:summary="单位微妙"
+            android:title="定时启动宿主APP" />
 
 
         <SwitchPreference
@@ -186,56 +178,6 @@
             android:key="@string/key_base_enable_plugin"
             android:summary="让更多开发者一起打造一款功能强大的情迁聊天机器人(支持扩展插件实现禁言等功能)"
             android:title="启用插件功能" />
-
-<!--
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:enabled="false"
-            android:key="@string/key_base_reply_show_nickname"
-
-            android:summary="需要最新版插件1.5.0或最新版内置1.3.2(白名单模式下此功能已设置作废)"
-            android:title="回复时艾特提问人" />
-
-
-        <SwitchPreference
-            android:defaultValue="true"
-
-            android:enabled="false"
-            android:key="@string/key_base_enable_net_robot_group"
-            android:summary="默认为图灵机器人(白名单模式下此功能已设置作废)"
-            android:title="群聊启用网络回复" />
-
-
-        <SwitchPreference
-            android:defaultValue="true"
-            android:enabled="false"
-            android:key="@string/key_base_gag_enable_check_msg"
-            android:summary="开启群违规检测将对此群人员的聊天记录进行监控，如果发现违规将直接禁言或者踢人(白名单模式下此功能已设置作废)"
-            android:title="群违规检测" />
-
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:enabled="false"
-            android:key="@string/key_base_aite_me_reply"
-            android:summary="必须艾特才能回复(白名单模式下此功能已设置作废)"
-            android:title="艾特我模式" />
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:enabled="false"
-            android:key="@string/key_base_aite_me_reply_not_whitename_affect"
-            android:summary="开启只回复白名单模式群后非白名单群艾特我也可以回复(白名单模式下此功能已设置作废)"
-            android:title="白名单模式忽略" />
-
-        <SwitchPreference
-            android:defaultValue="false"
-            android:enabled="false"
-            android:key="@string/key_base_white_name_aite_not_need"
-            android:summary="白名单无需艾特也可以自动回复发言"
-            android:title="白名单无需艾特(白名单模式下此功能已设置作废)" />
--->
 
 
         <EditTextPreference

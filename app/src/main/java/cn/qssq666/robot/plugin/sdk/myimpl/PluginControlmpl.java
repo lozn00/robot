@@ -45,7 +45,7 @@ import cn.qssq666.robot.plugin.sdk.interfaces.PluginControlInterface;
 import cn.qssq666.robot.service.RemoteService;
 import cn.qssq666.robot.utils.DBHelper;
 import cn.qssq666.robot.utils.DensityUtil;
-import cn.qssq666.robot.utils.HttpUtil;
+import cn.qssq666.robot.utils.HttpUtilOld;
 import cn.qssq666.robot.utils.ImageUtil;
 import cn.qssq666.robot.utils.ParseUtils;
 import cn.qssq666.robot.utils.RegexUtils;
@@ -644,7 +644,7 @@ public class PluginControlmpl implements PluginControlInterface {
 
     public void sendAsyncGetRequest(String url, HashMap<String, String> header, final IApiCallBack<byte[]> iCallBack) {
 
-        HttpUtil.queryGetData(url, header, new Callback() {
+        HttpUtilOld.queryGetData(url, header, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 if (iCallBack != null) {
@@ -700,7 +700,7 @@ public class PluginControlmpl implements PluginControlInterface {
 
 
         RequestBody requestBody = builder.build();
-        HttpUtil.queryPostData(url, requestBody, new Callback() {
+        HttpUtilOld.queryPostData(url, requestBody, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 if (iCallBack != null) {
@@ -758,7 +758,7 @@ public class PluginControlmpl implements PluginControlInterface {
         MediaType JSON = MediaType.parse("application/json; charset=utf-8");
         RequestBody body = RequestBody.create(JSON, jsonpostargm);
 
-        HttpUtil.queryPostData(url, header, body, new Callback() {
+        HttpUtilOld.queryPostData(url, header, body, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 if (iCallBack != null) {
@@ -892,7 +892,7 @@ public class PluginControlmpl implements PluginControlInterface {
      */
     @Override
     public byte[] sendSyncRequest(String url, HashMap<String, String> header) throws IOException {
-        Response request = HttpUtil.querySyncGetData(url, header);
+        Response request = HttpUtilOld.querySyncGetData(url, header);
 //        String string = request.body().string();
         return request.body().bytes();
     }
@@ -909,7 +909,7 @@ public class PluginControlmpl implements PluginControlInterface {
     public void sendSyncPostRequest(String url, HashMap<String, String> headers, HashMap<String, String> args) throws IOException {
 
         FormBody.Builder builder = getBuilderFromArgsMap(args);
-        HttpUtil.querySyncPostData(url, headers, builder.build());
+        HttpUtilOld.querySyncPostData(url, headers, builder.build());
     }
 
    @Override

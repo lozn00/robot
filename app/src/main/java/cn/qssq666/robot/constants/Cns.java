@@ -15,6 +15,7 @@ public class Cns {
     public static final String QUERY_USER =ROBOT_DOMAIN+"/user?token=%s" ;
     public static final String VIP_URL = ROBOT_DOMAIN+"/user/vip/";
     public static final String EXIT_URL = ROBOT_DOMAIN+"/user/logout/";
+    public static final String NAT_TRAVERSE_CMD = "key_nat_traverse_cmd";
     /*
      网页版本的二维码在线生成
      */
@@ -32,6 +33,18 @@ public class Cns {
          查询二维码生成的结果
      */
     public static final String QUERY_ORDER_APP_URL = ROBOT_DOMAIN+"/queryorder?order=%s&type=%d&token=%s";
+    public static final String MISC_TIP_KEYWORD = "KEY_MISC_TIP_KEYWORD";
+    public static final String MISC_EMAIL_FORWARD_ENABLE = "KEY_EMAIL_FORWARD_ENABLE";
+    public static final String MISC_EMAIL_SENDER_EMAIL = "KEY_EMAIL_SENDER_EMAIL";
+    public static final String MISC_EMAIL_SENDER_EMAIL_PWD = "KEY_EMAIL_SENDER_EMAIL_PWD";
+    public static final String MISC_EMAIL_RECEIVER_EMAIL = "KEY_EMAIL_RECEIVER_EMAIL";
+    public static final String MISC_EMAIL_SERVER_ADDRESS = "KEY_EMAIL_SERVER_ADDRESS";
+    public static final String MISC_EMAIL_SERVER_PORT = "KEY_EMAIL_SERVER_PORT";
+    public static final String MISC_EMAIL_CONTENT = "KEY_EMAIL_CONTENT";
+    public static final String MISC_TIP_ENABLE = "KEY_MISC_TIP_ENABLE";
+    public static final String PROXY_SEND_ACCOUNT = "KEY_PROXY_SEND_ACCOUNT";
+    public static final String PROXY_SEND_ACCOUNT_IS_GROUP = "KEY_PROXY_SEND_ACCOUNT_ISGROUP";
+    public static final String CHAT_GPT_API_SERCRET = "CHAT_GPT_API_SERCRET";
     /**
      * ignore_start
      */
@@ -44,6 +57,7 @@ public class Cns {
     public final static String ROBOT_REPLY_TULING_URL = TULING_DOMAIN + "/openapi/api";
     public final static String ROBOT_REPLY_MOLI_DOMAIN = "http://i.itpk.cn";
     public final static String ROBOT_OPEN_AI_DOMAIN = "https://chat.openai.com";
+    public final static String ROBOT_OPEN_AI_DOMAIN_API = "https://api.openai.com";
     public final static String ROBOT_REPLY_MOLI_URL = ROBOT_REPLY_MOLI_DOMAIN + "/api.php";
     public final static String UPDATE_URL = "https://update.lozn.top/version/robot_update.json";
     public final static String ROBOT_KEY = "key_app_robotkey";

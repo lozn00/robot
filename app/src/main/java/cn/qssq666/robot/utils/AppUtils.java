@@ -54,8 +54,10 @@ import java.util.Locale;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
+
 import cn.qssq666.robot.BuildConfig;
 import cn.qssq666.robot.activity.MainActivity;
+import cn.qssq666.robot.activity.click.NotificationAct;
 import cn.qssq666.robot.app.AppContext;
 import cn.qssq666.robot.bean.UpdateBean;
 import cn.qssq666.robot.constants.Cns;
@@ -64,6 +66,7 @@ import cn.qssq666.robot.interfaces.DownloadListener;
 import cn.qssq666.robot.interfaces.INotify;
 import cn.qssq666.robot.proguardx.user.UserInfo;
 import cn.qssq666.robot.webview.WebViewActivity;
+import cn.qssq666.tencent5x.X5WebViewActivity;
 import cz.msebera.android.httpclient.Header;
 
 /**
@@ -72,6 +75,42 @@ import cz.msebera.android.httpclient.Header;
 
 public class AppUtils {
     private static final String TAG = "aPPU";
+
+    public static String removePort(String url) {
+
+        int index = url.lastIndexOf(":");
+        int urlIndex = url.indexOf("://");//http://xx:8080 这种情况取后面的
+        if (index != -1 && index != urlIndex) {
+            return url.substring(0, index);
+        }
+        return url;
+    }
+
+    public static String url2Domain(String url) {
+//        String domain = GlobalSettingModel.getInstance().getDomain();
+        String domain = "";
+        int schameIndex = url.indexOf("//");
+        String schame = "";
+        int endIndex;
+        if (schameIndex != -1) {
+            endIndex = url.indexOf("/", schameIndex + 2);
+        } else {
+            schame = "http://";
+            endIndex = url.indexOf("/");
+        }
+
+        if (endIndex == -1) {
+            endIndex = url.indexOf("?");
+        }
+
+
+        if (endIndex != -1) {
+            domain = schame + url.substring(0, endIndex);
+        } else {
+            domain = schame + url;
+        }
+        return domain;
+    }
 
     public static Context getApplication() {
 
@@ -87,8 +126,22 @@ public class AppUtils {
 
     public static void toWebView(Context context, String url) {
         Intent intent = new Intent(context, WebViewActivity.class);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
         intent.putExtra("url", url);
         context.startActivity(intent);
+    }
+
+    public static void toWebViewTX(Context context, String url, String title) {
+        Intent intent = new Intent(context, X5WebViewActivity.class);
+        if (!(context instanceof Activity)) {
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        intent.putExtra("url", url);
+        intent.putExtra("title", title == null ? "加载中..." : title);
+        context.startActivity(intent);
+
     }
 
     public static String getCurProcessName(Context context) {
@@ -120,6 +173,10 @@ public class AppUtils {
 
     public static String getRobotReplySecret(int index) {
         return Cns.ROBOT_SECRET + "_" + index;
+    }
+
+    public static String getRobotReplyDefaultRequest(int index) {
+        return "request_header" + "_" + index;
     }
 
     public static String getRealFilePath(Context context, final Uri uri) {
@@ -427,7 +484,7 @@ public class AppUtils {
             intent.setData(content_url);
             activity.startActivity(intent);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -698,6 +755,13 @@ public class AppUtils {
         return intent;
     }
 
+    public static Intent getClickNotificationIntent(String packageName) {
+        Intent intent = new Intent("click.notification");
+        intent.setClassName(packageName, NotificationAct.class.getName());
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return intent;
+    }
+
     public static String getLoginToken(String key) {
         try {
             AppUtils.class.getClassLoader().loadClass("de.robv.android.xposed.XposedHelpers");
@@ -805,6 +869,7 @@ public class AppUtils {
             return title + string;
         }
     }
+
     public static String getIP() {
         try {
             Enumeration<NetworkInterface> networkInterfaces = NetworkInterface.getNetworkInterfaces();
@@ -828,7 +893,7 @@ public class AppUtils {
         }
     }
 
-    public  static String getWifiIP() {
+    public static String getWifiIP() {
         WifiInfo connectionInfo = ((WifiManager) AppContext.getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE)).getConnectionInfo();
         if (connectionInfo == null) {
             return null;
@@ -841,7 +906,6 @@ public class AppUtils {
     }
 
 
-
     public static String getSSID() {
         NetworkInfo activeNetworkInfo = ((ConnectivityManager) AppContext.getContext().getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();
         if (activeNetworkInfo == null || !activeNetworkInfo.isConnected() || activeNetworkInfo.getType() != 1) {
@@ -852,7 +916,7 @@ public class AppUtils {
             return ssid;
         }
         String extraInfo = activeNetworkInfo.getExtraInfo();
-        Log.e(TAG, "getSSID() returns <unknown ssid>, let's try extraInfo={} as SSID "+ extraInfo);
+        Log.e(TAG, "getSSID() returns <unknown ssid>, let's try extraInfo={} as SSID " + extraInfo);
         return extraInfo;
 
     }

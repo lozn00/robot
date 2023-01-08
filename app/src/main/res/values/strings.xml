@@ -473,6 +473,15 @@
     <string name="error_invalid_email">无效的邮箱</string>
     <string name="prompt_username">请输入用户名</string>
     <string name="prompt_password">请输入密码</string>
+    <string name="keep_screen_on">keep_screen_on</string>
+    <string name="clock_launcher_app">定时启动宿主APP</string>
+    <string name="loading_">加载中</string>
+    <string name="actionbar_webview_share">分享</string>
+    <string name="actionbar_webview_cope">复制</string>
+    <string name="actionbar_webview_refresh">刷新</string>
+    <string name="change_orientation">切换屏幕方向</string>
+    <string name="actionbar_webview_open">打开指定地址</string>
+    <string name="action_share">分享</string>
 
     <string-array name="root_chat_api">
      <item>茉莉机器人</item>

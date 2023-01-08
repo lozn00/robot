@@ -40,11 +40,11 @@ public class LogUtil {
 
     }
 
-    public static final String TAG = "LogUtil";//ignore_include
+    public static final String TAG = "[RobotI]";//ignore_include
 
     //g]不支持的处理消息类型，您可以反馈作者增加友好支持提示-3006,MsgItem{nickname='腾讯课堂', istroop=1008, senderuin='2029033910', frienduin='2029033910', message='<?xml version="1.0" encoding="utf-8"?><msg><appmsg><item><cover>http://10.url.cn/qqcourse_logo_ng/ajNVdqHZLLBk3UAd8FV7E3CUvtFYdnufxSjichjsrItnZTEWyRRv1Z9Uz9tXaQBlep0LlwFfemWg/</cover><digest>Android开发/安卓/NDK/架构/React Native/性能优化【动脑学院】
     public static void writeLog(String log) {
-        writeLog("[LogUtil]", log);
+        writeLog("_", log);
     }
 
     public static void writeLog(String TAG1, String log) {
@@ -66,7 +66,9 @@ public class LogUtil {
     public static void writeLoge(String s) {
         Log.e(TAG, getConsumeTime() + "" + s);
     }
-
+    public static void writeLoge(String tag,Throwable s) {
+        Log.e(TAG, getConsumeTime()+ tag+ "" + Log.getStackTraceString(s));
+    }
     public static String getConsumeTime() {
         return String.format("[%sms]", System.currentTimeMillis() - RobotContentProvider.mInsertTime);
     }

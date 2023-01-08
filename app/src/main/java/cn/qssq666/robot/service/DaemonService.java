@@ -65,13 +65,18 @@ public class DaemonService extends Service {
 //        nfIntent  = new Intent(this, MainActivity.class);
 
         intent = AppUtils.getAppDetail(this.getPackageName());
-
+        Intent clickNotificationIntent = AppUtils.getClickNotificationIntent(this.getPackageName());
 //        Intent nfIntent = new Intent(this, MainActivity.class);
 
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        builder.setContentIntent(PendingIntent.getActivity(this, 0, intent, 0)) // 设置PendingIntent
+        builder.setContentIntent(PendingIntent.getActivities(this, 0, new Intent[]{
+                intent,clickNotificationIntent
+        }, 0)); // 设置PendingIntent
+
+
+
 //        builder.setContentIntent(PendingIntent. getActivity(this, 0, nfIntent, 0)) // 设置PendingIntent
-                .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
+        builder .setLargeIcon(BitmapFactory.decodeResource(this.getResources(),
                         R.drawable.xiaobing)) // 设置下拉列表中的图标(大图标)
                 .setContentTitle("情迁聊天机器人服务") // 设置下拉列表里的标题
                 .setSmallIcon(R.drawable.xiaobing) // 设置状态栏内的小图标

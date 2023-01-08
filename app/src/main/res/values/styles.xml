@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="@style/Theme.AppCompat.Light">
@@ -7,6 +7,21 @@
         <item name="actionBarStyle">@style/actionBarStyle</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="Theme.MyApplication.App.ContentContainNavigationBar" parent="AppTheme">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowTranslucentStatus" tools:ignore="NewApi">true</item>
+        <!--        <item name="android:navigationBarColor" tools:targetApi="lollipop">@color/red</item> 由于透明设置是无效的-->
+        <item name="android:statusBarColor" tools:targetApi="lollipop">@color/colorPrimary</item>
+        <item name="android:windowTranslucentNavigation" tools:targetApi="kitkat">true</item>
+    </style>
+    <style name="Theme.MyApplication.App.ContentContainNavigationBarNoActionBar" parent="Theme.MyApplication.App.ContentContainNavigationBar">
+        <item name="windowActionBar">false</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="actionBarStyle" parent="@style/Widget.AppCompat.ActionBar.Solid">
@@ -65,6 +80,14 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowActionBar">false</item>
     </style>
+
+
+    <style name="ToolbarStyle">
+        <item name="android:background">@color/colorPrimaryBlack</item>
+        <!--        <item name="titleTextAppearance">@style/MyActionBarTabText</item>-->
+
+    </style>
+
 
     <!--    <style name="NotUiTheme"  parent="android:Theme.NoDisplay">
 

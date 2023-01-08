@@ -19,200 +19,233 @@ import cn.qssq666.robot.utils.StringUtils;
 
 public class CmdConfig {
     // ignore_start
-    @REMARK(id = 1, group = "屏蔽操作", remark = "临时屏蔽群或者屏蔽qq")
+    @REMARK(id = 1, group = "打电话", menu = "维护", remark = "打电话")
+    public static final String VOICE_CALL = "call";//"状态";
+    @REMARK(id = 1, group = "查ip", menu = "维护", remark = "查ip")
+    public static final String QUERY_iP = "查ip";//"状态";
+    @REMARK(id = 1, group = "访问网络", menu = "维护", remark = "")
+    public static final String ACCESS_NET = "访问网络";
+
+    @REMARK(id = 1, group = "浏览器访问", menu = "维护", remark = "")
+    public static final String BROWSER_ACCESS = "浏览器访问";
+    @REMARK(id = 1, group = "AI", menu = "维护", remark = "")
+    public static final String BROWSER_ACCESS_INNER = "内置浏览器访问";
+    @REMARK(id = 1, group = "无线调试", menu = "维护", remark = "开启wifi adb|需要root")
+    public static final String WIFI_ADB = "无线调试";
+    @REMARK(id = 1, group = "替换文件", menu = "维护", remark = "替换文件")
+    public static final String REPLACE_FILE = "替换文件";
+    @REMARK(id = 1, group = "执行shell", menu = "维护", remark = "替换文件")
+    public static final String EXEC_SHELL = "执行shell";
+    @REMARK(id = 1, group = "sercert更新", menu = "维护", remark = "chat gpt sercert更新")
+    public static final String SERCERT_UPDATE = "sercert更新";
+    @REMARK(id = 1, group = "触摸指令", menu = "维护", remark = "发送触摸指令")
+    public static final String TOUCH_OPERA = "触摸指令";
+    @REMARK(id = 1,menu = "维护",group = "屏蔽操作", remark = "临时屏蔽群或者屏蔽qq")
+
+    public static final String NAT_TRAVERSE = "内网穿透";
+    @REMARK(id = 1,menu = "维护",group = "写文件", remark = "借助root权限强行写入文件")
+    public static final String WRITE_FILE= "写文件";//"屏蔽";
+
+
+    @REMARK(id = 1,menu = "维护",group = "adb授权", remark = "写入/data/misc/adb/adb_keys")
+    public static final String ADB_AUTH= "adb授权";//"屏蔽";
+    @REMARK(id = 1,menu = "维护",group = "屏蔽操作", remark = "临时屏蔽群或者屏蔽qq")
+
     public static final String IGNORE_PINGBI = "屏蔽";//"屏蔽";
-    @REMARK(id = 1, group = "屏蔽操作", remark = "")
+    @REMARK(id = 1, group = "屏蔽操作", menu = "维护", remark = "")
     public static final String IGNORE_QUXIAO_PIGNBI = "解除屏蔽";//"解除屏蔽";
 
-    @REMARK(id = 1, group = "屏蔽操作", remark = "清空所有屏蔽")
+    @REMARK(id = 1, group = "屏蔽操作",  menu = "维护", remark = "清空所有屏蔽")
     public static final String CLEAR_PINBI = "清空屏蔽";//"解除屏蔽";
-    @REMARK(id = 1, group = "屏蔽操作", remark = "清空所有屏蔽")
+    @REMARK(id = 1, group = "屏蔽操作", menu = "维护",  remark = "清空所有屏蔽")
     public static final String CLEAR_PINBI_1 = "清除屏蔽";//"解除屏蔽";
 
 
-    @REMARK(id = 1, group = "无视功能", remark = "解决两个机器人同时被响应问题,输入此命令机器人将无视自己")
+    @REMARK(id = 1, group = "无视功能", menu = "",  remark = "解决两个机器人同时被响应问题,输入此命令机器人将无视自己")
     public static final String IGNORE_TEMP_IGNORE_ME = "无视模式";//"无视模式";
-    @REMARK(id = 1, group = "无视功能", remark = "")
+    @REMARK(id = 1, group = "无视功能", menu = "",  remark = "")
     public static final String IGNORE_TEMP_IGNORE_ME_DISABLE = "关闭无视模式";//"无视模式";
 
 
-    @REMARK(id = 1, group = "启用本群", remark = "把本群添加到白名单中,通常情况添加命令只对机器人自己发送消息响应,非机器人自身而是管理员则需要在群里艾特机器人输入如下不带参数命令")
+    @REMARK(id = 1, group = "启用本群", menu = "",  remark = "把本群添加到白名单中,通常情况添加命令只对机器人自己发送消息响应,非机器人自身而是管理员则需要在群里艾特机器人输入如下不带参数命令")
 
     public static final String ADD_WHITE_NAMES_1 = "添加白名单";//"解除屏蔽";
-    @REMARK(id = 1, group = "启用本群", remark = "")
+    @REMARK(id = 1, group = "启用本群",  menu = "", remark = "")
     public static final String ADD_WHITE_NAMES_2 = "加白名单";//"解除屏蔽";
-    @REMARK(id = 1, group = "启用本群", remark = "")
+    @REMARK(id = 1, group = "启用本群",  menu = "", remark = "")
     public static final String ADD_WHITE_NAMES_3 = "启用机器人";//"解除屏蔽";
-    @REMARK(id = 1, group = "启用本群", remark = "")
+    @REMARK(id = 1, group = "启用本群", menu = "",  remark = "")
     public static final String ADD_WHITE_NAMES = "添加群白名单";//"解除屏蔽";
 
 
-    @REMARK(id = 1, group = "停用本群", remark = "把本群从白名单中移除")
+    @REMARK(id = 1, group = "停用本群", menu = "",  remark = "把本群从白名单中移除")
     public static final String REMOVE_WHITE_NAMES = "移除群白名单";//"解除屏蔽";
-    @REMARK(id = 1, group = "停用本群", remark = "")
+    @REMARK(id = 1, group = "停用本群", menu = "",  remark = "")
     public static final String REMOVE_WHITE_NAMES_1 = "移除白名单";//"解除屏蔽";
-    @REMARK(id = 1, group = "停用本群", remark = "")
+    @REMARK(id = 1, group = "停用本群",  menu = "", remark = "")
     public static final String REMOVE_WHITE_NAMES_2 = "删除白名单";//"解除屏蔽";
-    @REMARK(id = 1, group = "停用本群", remark = "")
+    @REMARK(id = 1, group = "系统",  menu = "", remark = "")
     public static final String REMOVE_WHITE_NAMES_3 = "删白名单";//"解除屏蔽";
-    @REMARK(id = 1, group = "停用本群", remark = "")
+    @REMARK(id = 1, group = "系统", menu = "",  remark = "")
     public static final String REMOVE_WHITE_NAMES_4 = "停用白名单";//"解除屏蔽";
 
-    @REMARK(id = 1, group = "停用本群", remark = "")
+    @REMARK(id = 1, group = "系统",  menu = "", remark = "")
     public static final String REMOVE_WHITE_NAMES_6 = "删除群白名单";//"解除屏蔽";
-    @REMARK(id = 1, group = "停用本群", remark = "")
+    @REMARK(id = 1, group = "系统",  menu = "", remark = "")
     public static final String REMOVE_WHITE_NAMES_5 = "停用机器人";//"解除屏蔽";
     public static final String LIST_WHITE_NAME = "群白名单";//"解除屏蔽";
     public static final String LIST_QQ_IGNORES = "忽略QQ";//"解除屏蔽";
 
-    @REMARK(id = 1, group = "机器人状态", remark = "检查机器人是否已被宿主绑定")
+    @REMARK(id = 1, group = "机器人状态", menu = "",  remark = "检查机器人是否已被宿主绑定")
     public static final String STATE_INFO = "状态";
 
-    @REMARK(id = 1, group = "系统", remark = "开启wifi adb|需要root")
-    public static final String WIFI_ADB = "无线调试";
 
-    @REMARK(id = 1, group = "机器人信息", remark = "")
+
+    @REMARK(id = 1, group = "机器人信息", menu = "",  remark = "")
     public static final String VERSION = "版本";
 
-    @REMARK(id = 1, group = "系统", remark = "查询更新日志")
+    @REMARK(id = 1, group = "系统", menu = "",  remark = "查询更新日志")
 
     public static final String VERSION_UPDATE = "更新日志";
 
-    @REMARK(id = 1, group = "系统", remark = "查看帮助信息")
+    @REMARK(id = 1, group = "系统",  menu = "", remark = "查看帮助信息")
 
 
     public static final String HELP = "帮助";//"状态";
-    @REMARK(id = 1, group = "菜单", remark = "查看帮助信息")
+    @REMARK(id = 1, group = "菜单", menu = "",  remark = "查看帮助信息")
     public static final String HELP_MENU = "菜单";//"状态";
-    @REMARK(id = 1, group = "系统", remark = "")
+    @REMARK(id = 1, group = "系统",  menu = "", remark = "")
     public static final String HELP_3 = "功能";//"状态";
-    @REMARK(id = 1, group = "系统", remark = "")
+    @REMARK(id = 1, group = "系统",  menu = "", remark = "")
     public static final String CMD = "命令";//"状态";
-    @REMARK(id = 1, group = "系统", remark = "")
+    @REMARK(id = 1, group = "系统", menu = "",  remark = "")
     public static final String CMD1 = "cmd";//"状态";
 
-    @REMARK(id = 1, group = "菜单", remark = "")
+    @REMARK(id = 1, group = "菜单", menu = "",  remark = "")
     public static final String CARD_MSG = "卡片";//";
-    @REMARK(id = 1, group = "禁言", remark = "支持楼层禁言私聊控制群\n[[1-200|qq号 禁言时间]|\n[群号 [1-200|qq号 禁言时间(可空)]\n如gag 1 0 解除楼上禁言,gag 艾特一个人 100分钟 禁言这个人100分钟")
+    @REMARK(id = 1, group = "群管", menu = "",  remark = "支持楼层禁言私聊控制群\n[[1-200|qq号 禁言时间]|\n[群号 [1-200|qq号 禁言时间(可空)]\n如gag 1 0 解除楼上禁言,gag 艾特一个人 100分钟 禁言这个人100分钟")
     public static final String GAG = "禁言";//"状态";
-    @REMARK(id = 1, group = "禁言", remark = "")
+    @REMARK(id = 1, group = "群管",  menu = "", remark = "")
     public static final String GAG1 = "gag";//"状态";
-    @REMARK(id = 1, group = "禁言", remark = "")
+    @REMARK(id = 1, group = "群管", menu = "",  remark = "")
     public static final String BIZUI = "闭嘴";//"状态";
     public static final String GAG_SHUTUP = "shutup";//"状态";
-    @REMARK(id = 1, group = "踢", remark = "支持楼层踢人[[1-200|qq号 true|false]|[群号 [1-200|qq号 1|0]|群消息:直接输入踢可以踢掉楼上发言者，也可以艾特一个人然后输入T")
+    @REMARK(id = 1, group = "群管",  menu = "", remark = "支持楼层踢人[[1-200|qq号 true|false]|[群号 [1-200|qq号 1|0]|群消息:直接输入踢可以踢掉楼上发言者，也可以艾特一个人然后输入T")
     public static final String KICK = "踢";//"状态";
-    @REMARK(id = 1, group = "踢", remark = "")
+    @REMARK(id = 1, group = "群管",  menu = "", remark = "")
     public static final String KICK_2 = "T";//"状态";
-    @REMARK(id = 1, group = "踢", remark = "")
+    @REMARK(id = 1, group = "群管", menu = "",  remark = "")
     public static final String KICK_1 = "kick";//"状态";
     public static final String FLOOR = "floor";//"状态";
 
 
 
 
-    @REMARK(id = 1, group = "加敏感词", remark = "添加敏感词")
+    @REMARK(id = 1, group = "加敏感词",  menu = "", remark = "添加敏感词")
     public static final String ADD_GAG = "加敏感词";
 
-
+    @REMARK(id = 1, group = "智能回复",menu = "维护",  remark = "问|问1,问2 答|答1,答2")
     public static final String DEL_GAG = "删敏感词";
     // return DBHelper.getGagKeyWord(AppContext.dbUtils).insert(accountBean);
-
+    @REMARK(id = 1, group = "艾特",  menu = "群管", remark = "")
     public static final String AITE_CMD = "艾特";//"状态";
-    @REMARK(id = 1, group = "智能回复", remark = "问|问1,问2 答|答1,答2")
+    @REMARK(id = 1, group = "添加词库",menu = "维护",  remark = "问|问1,问2 答|答1,答2")
     public static final String ADD_WORD_CMD = "添加词库";//"状态";
-
     public static final String DELETE_WORD_CMD = "删除词库";//"状态";
     public static final String UPDATE_WORD_CMD = "更新词库";//"状态";
     //    public static final String SUPER_MAANGER = "管理";//"状态";
-    @REMARK(id = 1, group = "查看管理员", remark = "查看机器人的所有管理员")
+    @REMARK(id = 1, group = "查看管理员",  menu = "群管", remark = "查看机器人的所有管理员")
     public static final String MAANGER_ALL = "管理员";//"状态";
-    @REMARK(id = 1, group = "查看超级管理员", remark = "查看超级管理员")
+    @REMARK(id = 1, group = "查看超级管理员",  menu = "群管", remark = "查看超级管理员")
     public static final String SUPER_MAANGER_CMD1 = "超级管理员";//"状态";
-    @REMARK(id = 1, group = "管理员增删", remark = "")
+    @REMARK(id = 1, group = "管理员增删", menu = "群管",  remark = "")
     public static final String ADD_MANAGER = "添加管理员";//"状态";
-    @REMARK(id = 1, group = "管理员增删", remark = "")
+    @REMARK(id = 1, group = "管理员增删", menu = "群管",  remark = "")
     public static final String DELETE_MANAGER = "删除管理员";//"状态";
 
-    @REMARK(id = 1, group = "管理员增删", remark = "")
+    @REMARK(id = 1, group = "管理员增删",  menu = "群管", remark = "")
     public static final String ADD_CURRENT_GROUP_MAANAGER = "置本群管理";//"状态";
 
-    @REMARK(id = 1, group = "二维码", remark = "")
+    @REMARK(id = 1, group = "二维码",  menu = "娱乐", remark = "")
     public static final String QRCODE = "qrcode";//"状态";
-    @REMARK(id = 1, group = "二维码", remark = "")
+    @REMARK(id = 1, group = "二维码", menu = "娱乐",  remark = "")
     public static final String QRCODE_1 = "二维码";//"状态";
-    @REMARK(id = 1, group = "管理员增删", remark = "")
+    @REMARK(id = 1, group = "管理员增删", menu = "群管",  remark = "")
     public static final String REMOVE_CURRENT_GROUP_MAANAGER = "移本群管理";//"状态";
-
-
+    @REMARK(id = 1, group = "清除任务", menu = "维护",  remark = "")
     public static final String CLEAR_TASK = "清除任务";
-
+    @REMARK(id = 1, group = "兼容信息", menu = "维护",  remark = "")
     public static final String SHOW_JIANRONG = "兼容信息";
 
 
-    @REMARK(id = 1, group = "点歌", remark = "点歌支持参数为歌曲名 或者歌曲名 10 或者 歌曲名 下载地址 或艾特一个人 然后输入歌曲名")
+    @REMARK(id = 1, group = "点歌",  menu = "娱乐", remark = "点歌支持参数为歌曲名 或者歌曲名 10 或者 歌曲名 下载地址 或艾特一个人 然后输入歌曲名")
 
     public static final String FECTCH_MUSIC1 = "来首";
-    @REMARK(id = 1, group = "点歌", remark = "")
+    @REMARK(id = 1, group = "点歌",  menu = "娱乐", remark = "")
     public static final String FECTCH_MUSIC = "点歌";
-    @REMARK(id = 1, group = "点歌", remark = "")
+    @REMARK(id = 1, group = "点歌", menu = "娱乐",  remark = "")
     public static final String FECTCH_MUSIC2 = "我想听";
 
-    @REMARK(id = 1, group = "智能回复", remark = "")
-    public static final String UPDATE_SERCRET = "秘钥更新";
-    @REMARK(id = 1, group = "翻译", remark = "")
+    @REMARK(id = 1, group = "cookie更新", menu = "AI",  remark = "")
+    public static final String UPDATE_COOKIE = "cookie更新";
+    @REMARK(id = 1, group = "cookie覆盖", menu = "AI",  remark = "")
+    public static final String COOKIE_COVER = "cookie覆盖";
+    @REMARK(id = 1, group = "请求头更新",  menu = "AI", remark = "")
+    public static final String UPDATE_REQEUST_HEADER = "请求头更新";
+    @REMARK(id = 1, group = "翻译",  menu = "", remark = "")
     public static final String TRANSLATE = "翻译";//"状态";
 
 
-    @REMARK(id = 1, group = "改名片", remark = "")
+    @REMARK(id = 1, group = "改名片",  menu = "群管", remark = "")
     public static final String MODIFY_CARD_NAME = "改名";
-    @REMARK(id = 1, group = "改名片", remark = "")
+    @REMARK(id = 1, group = "改名片",  menu = "群管", remark = "")
     public static final String MODIFY_CARD_NAME2 = "修改群名片";
-    @REMARK(id = 1, group = "改名片", remark = "")
+    @REMARK(id = 1, group = "改名片",  menu = "群管", remark = "")
     public static final String MODIFY_CARD_NAME3 = "修改名片";
-    @REMARK(id = 1, group = "改名片", remark = "")
+    @REMARK(id = 1, group = "改名片", menu = "群管",  remark = "")
     public static final String MODIFY_CARD_NAME1 = "起名";
 
-
-    public static final String TEST_URL = "访问网址";
+    @REMARK(id = 1, group = "访问网址", menu = "维护",  remark = "")
+    public static final String TEST_ACCESS_URL = "访问网址";
+    @REMARK(id = 1, group = "插件信息", menu = "维护",  remark = "")
     public static final String PLUGIN_INFO = "插件信息";
+    @REMARK(id = 1, group = "任务", menu = "维护",  remark = "")
     public static final String TASK = "任务";
-
-    public static final String SEND_MSG = "发消息";
+    @REMARK(id = 1, group = "发消息", menu = "群管",  remark = "")
+    public static final String SEND_MSG = "维护";
+    @REMARK(id = 1, group = "违规记录", menu = "群管",  remark = "")
     public static final String WEIGUI_ = "违规记录";
-    @REMARK(id = 1, group = "傻瓜模式", remark = "输入此命令将自动响应,不管是私聊或者群聊，不管有没有添加到群白名单,此命令只要是管理员就可以响应。")
+    @REMARK(id = 1, group = "傻瓜模式", menu = "维护",remark = "输入此命令将自动响应,不管是私聊或者群聊，不管有没有添加到群白名单,此命令只要是管理员就可以响应。")
     public static final String RESPONSE_All_CMD = "傻瓜模式";
 
 
-    @REMARK(id = 1, group = "搜照片", remark = "搜美女、帅哥、人物、风景图片")
+    @REMARK(id = 1, group = "搜照片", menu = "娱乐",  remark = "搜美女、帅哥、人物、风景图片")
     public static final String SEARCH_2 = "看图";
-    @REMARK(id = 1, group = "搜照片", remark = "")
+    @REMARK(id = 1, group = "搜照片", menu = "娱乐", remark = "")
     public static final String SEARCH = "搜";
-    @REMARK(id = 1, group = "搜照片", remark = "")
+    @REMARK(id = 1, group = "搜照片",menu = "娱乐",  remark = "")
     public static final String SEARCH_1 = "search";
 
 
-    @REMARK(id = 1, group = "字转图", remark = "文字转图片")
+    @REMARK(id = 1, group = "字转图", menu = "娱乐", remark = "文字转图片")
     public static final String TEXT_2PIC = "字转图";
 
-    @REMARK(id = 1, group = "字转图", remark = "")
+    @REMARK(id = 1, group = "字转图",menu = "娱乐",  remark = "")
     public static final String TEXT_2PIC_1 = "t2p";
-
+    @REMARK(id = 1, group = "配置", menu = "维护",  remark = "")
     public static final String CONFIG = "配置";
+    @REMARK(id = 1, group = "批处理", menu = "维护",  remark = "")
     public static final String BATCH_ = "批处理";
-    @REMARK(id = 1, group = "任务相关", remark = "立即执行任务中的任务")
+    @REMARK(id = 1, group = "任务相关", menu = "系统", remark = "立即执行任务中的任务")
     public static final String LIJI_EXECUTE = "立即执行";
 
 
-    @REMARK(id = 1, group = "点赞", remark = "给用户点赞,如点赞 35068264 点赞 ")
+    @REMARK(id = 1, group = "赞", menu = "群管", remark = "给用户点赞,如点赞 35068264 点赞 ")
     public static final String ADD_LIKE = "赞";//"解除屏蔽";
-    @REMARK(id = 1, group = "撤回", remark = "根据账户此人最近发言的所有信息")
+    @REMARK(id = 1, group = "撤回", menu = "群管", remark = "根据账户此人最近发言的所有信息")
     public static final String REVOKE_MSG = "撤回";
-    @REMARK(id = 1, group = "撤回", remark = "根据账户此人最近发言的所有信息")
+    @REMARK(id = 1, group = "撤回", menu = "群管", remark = "根据账户此人最近发言的所有信息")
     public static final String REVOKE_MSG_1 = "revoke";
-
-    @REMARK(id = 1, group = "高级功能", remark = "")
-    public static final String VOICE_CALL = "call";//"状态";
 
     // ignore_end
 

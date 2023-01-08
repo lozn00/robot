@@ -62,6 +62,7 @@ public interface MsgTypeConstant {
     String extrajson="extrajson";
     String msg = "msg";
     int MSG_TYPE_TEXT = -1000;
+
     int MSG_TYPE_PROXY_SEND_TEXT = -99999;
     int MSG_TYPE_SHUOSHUO = -2015;
     int MSG_TYPE_PIC = -2000;

@@ -10,6 +10,7 @@ import android.content.UriMatcher;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -21,7 +22,6 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
-import android.util.TimeUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -97,6 +97,7 @@ import cn.qssq666.robot.business.module.TranslateQueryImpl;
 import cn.qssq666.robot.config.CmdConfig;
 import cn.qssq666.robot.config.IGnoreConfig;
 import cn.qssq666.robot.config.MemoryIGnoreConfig;
+import cn.qssq666.robot.config.MiscConfig;
 import cn.qssq666.robot.constants.AccountType;
 import cn.qssq666.robot.constants.AppConstants;
 import cn.qssq666.robot.constants.CardHelper;
@@ -118,9 +119,9 @@ import cn.qssq666.robot.event.OnUpdateAccountListEvent;
 import cn.qssq666.robot.event.WordEvent;
 import cn.qssq666.robot.http.HttpUtilRetrofit;
 import cn.qssq666.robot.http.api.MoLiAPI;
-import cn.qssq666.robot.http.api.OpenAI;
 import cn.qssq666.robot.http.api.TuLingAPI;
-import cn.qssq666.robot.http.api.translate.OpenAIUtil;
+import cn.qssq666.robot.http.newcache.HttpUtil;
+import cn.qssq666.robot.http.newcache.MyCookieManager;
 import cn.qssq666.robot.interfaces.DelegateSendMsgType;
 import cn.qssq666.robot.interfaces.ICmdIntercept;
 import cn.qssq666.robot.interfaces.IIntercept;
@@ -158,7 +159,7 @@ import cn.qssq666.robot.utils.DBHelper;
 import cn.qssq666.robot.utils.DateUtils;
 import cn.qssq666.robot.utils.EncryptPassUtil;
 import cn.qssq666.robot.utils.ErrorHelper;
-import cn.qssq666.robot.utils.HttpUtil;
+import cn.qssq666.robot.utils.HttpUtilOld;
 import cn.qssq666.robot.utils.InitUtils;
 import cn.qssq666.robot.utils.LogUtil;
 import cn.qssq666.robot.utils.NetQuery;
@@ -168,6 +169,7 @@ import cn.qssq666.robot.utils.ParseUtils;
 import cn.qssq666.robot.utils.QssqTaskFix;
 import cn.qssq666.robot.utils.RXUtil;
 import cn.qssq666.robot.utils.RegexUtils;
+import cn.qssq666.robot.utils.ProxySendAlertUtil;
 import cn.qssq666.robot.utils.RobotFormatUtil;
 import cn.qssq666.robot.utils.RobotUtil;
 import cn.qssq666.robot.utils.SPUtils;
@@ -183,13 +185,11 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
+import okhttp3.Callback;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-import static cn.qssq666.robot.openai.OpenAIBiz.doOpenAI;
 import static cn.qssq666.robot.utils.DateUtils.TYPE_MS;
 import static cn.qssq666.robot.utils.DateUtils.TYPE_SECOND;
 import static cn.qssq666.robot.utils.DateUtils.getTimeDistance;
@@ -209,8 +209,11 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
     public boolean mAllowReponseSelfCommand = true;
     public IHostControlApi mHostControlApi;
     private boolean mUseChildThread = false;
-    private int defaultReplyIndex;
+    public int defaultReplyIndex;
     private MsgItem mItem;
+    //    private boolean mCfBaseEnableOutProgramVoiceAlert;
+//    private String mCfBaseEnableOutProgramVoiceKeyword;
+    public MiscConfig _miscConfig = new MiscConfig();
 
 
     public PluginControlInterface getPluginControlInterface() {
@@ -238,13 +241,16 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
     private String mShortUrlTextApiUrl = "http://suo.im/api.php?url=";
     public final static String ACTION_KICK = "insert/kick";
     public final static String ACTION_UPDATE_KEY = "update/key";
+    public final static String ACTION_UPDATE_MISC_CONFIG = "update/miscconfig";
     private static UriMatcher _uriMatcher;
     public String robotReplyKey = "";
     public String robotReplySecret = "";
+    public String robotReplyRequestMark = "";
     private static final int CODE_MSG = 1;
     private static final int CODE_GAD = 2;
     private static final int CODE_TICK = 3;
     private static final int CODE_UPDATE_KEY = 4;
+    private static final int CODE_UPDATE_MISC = 5;
 
     public boolean mCfeanbleGroupReply = true;
     public final boolean mCfOnlyReplyWhiteNameGroup = true;
@@ -440,6 +446,8 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
     @Override
     public boolean onCreate() {
         doOnCreate();
+
+
         if (!isAsPluginLoad()) {
             Intent intent = new Intent(getContext(), RemoteService.class);
             getContext().startService(intent);
@@ -463,7 +471,7 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
         _uriMatcher.addURI(Cns.AUTHORITY, ACTION_GAD, CODE_GAD);
         _uriMatcher.addURI(Cns.AUTHORITY, ACTION_KICK, CODE_TICK);
         _uriMatcher.addURI(Cns.AUTHORITY, ACTION_UPDATE_KEY, CODE_UPDATE_KEY);
-
+        _uriMatcher.addURI(Cns.AUTHORITY, ACTION_UPDATE_MISC_CONFIG, CODE_UPDATE_MISC);
         LogUtil.importPackage();
         instance = RobotContentProvider.this;
         mPackageName = getProxyContext().getPackageName();
@@ -472,7 +480,7 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 //        mStatupTime = SPUtils.getValue(getProxyContext(), AppConstants.CONFIG_STARTUPTIME, currentTime);
 //        SPUtils.getValue(getProxyContext(), AppConstants.CONFIG_STARTUPTIME, currentTime);//这个逻辑代表下次启动读取的是这次启动的间隔时间。
         if (getProxyContext().getPackageName().equals(BuildConfig.APPLICATION_ID)) {
-          /*  if(EventBus.getDefault().hasSubscriberForEvent(this)){
+          /*  if(EventBus.getDefault().hasSubscriberForEvent(this)){sha
 
             }*/
             EventBus.getDefault().register(this);
@@ -483,6 +491,7 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
             getContext().registerReceiver(new CodeUpdateReceiver(), new IntentFilter(Cns.UPDATE_CODE_BROADCAST));
 //            System.loadLibrary("sqlite3core");//删除签名检测
         }
+        OpenAIBiz.init();
         loadData();
     }
 
@@ -808,12 +817,10 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 
     private void initConfig() {
         sharedPreferences = AppUtils.getConfigSharePreferences(getProxyContext());
-//        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-
-//        sharedPreferences = getProxyContext().getSharedPreferences(Constants.SP_FILE, Context.MODE_PRIVATE);
         defaultReplyIndex = sharedPreferences.getInt(Cns.SP_DEFAULT_REPLY_API_INDEX, 2);
         robotReplyKey = sharedPreferences.getString(AppUtils.getRobotReplyKey(defaultReplyIndex), robotReplyKey);
         robotReplySecret = sharedPreferences.getString(AppUtils.getRobotReplySecret(defaultReplyIndex), "");
+        OpenAIBiz.init();
         if (!TextUtils.isEmpty(robotReplyKey)) {
             LogUtil.writeLog(TAG, "robotReplyKey:" + robotReplyKey);
 
@@ -826,6 +833,25 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 
         initGroupSpConfig();
         initBaseConfig();
+        initMiscConfig();
+    }
+
+    private void initMiscConfig() {
+//        mCfBaseEnableOutProgramVoiceKeyword
+        _miscConfig.outProgramVoiceKeyword = sharedPreferences.getString(Cns.MISC_TIP_KEYWORD, "实盘");
+        _miscConfig.enableOutProgramVoiceAlert = sharedPreferences.getBoolean(Cns.MISC_TIP_ENABLE, false);
+        _miscConfig.enableEmailForward = sharedPreferences.getBoolean(Cns.MISC_EMAIL_FORWARD_ENABLE, false);// binding.cbEanbleMailForward.isChecked());
+        _miscConfig.sender = sharedPreferences.getString(Cns.MISC_EMAIL_SENDER_EMAIL, "");// binding.evSenderEmail.getText().toString());
+        _miscConfig.senderPwd = sharedPreferences.getString(Cns.MISC_EMAIL_SENDER_EMAIL_PWD, "");// binding.evSenderEmailPwd.getText().toString());
+        _miscConfig.receiver = sharedPreferences.getString(Cns.MISC_EMAIL_RECEIVER_EMAIL, "");//  binding.evReceiverEmailAddress.getText().toString());
+        _miscConfig.emailServer = sharedPreferences.getString(Cns.MISC_EMAIL_SERVER_ADDRESS, "");// binding.evEmailServerAddress.getText().toString());
+        _miscConfig.emailPort = sharedPreferences.getInt(Cns.MISC_EMAIL_SERVER_PORT, 25);//inding.evEmailServerAddress.getText().toString());
+        _miscConfig.emailContent = sharedPreferences.getString(Cns.MISC_EMAIL_CONTENT, "");//  binding.evEmailContent.getText().toString());
+        _miscConfig.redirectProxySendAccount = sharedPreferences.getString(Cns.PROXY_SEND_ACCOUNT, "");//  binding.evEmailContent.getText().toString());
+        _miscConfig.redirectProxyAccountIsGroup = sharedPreferences.getBoolean(Cns.PROXY_SEND_ACCOUNT_IS_GROUP, false);//  binding.evEmailContent.getText().toString());
+        _miscConfig.chatgpt_api_sercret_key = sharedPreferences.getString(Cns.CHAT_GPT_API_SERCRET, "");//  binding.evEmailContent.getText().toString());
+
+
     }
 
 
@@ -859,6 +885,7 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
         musicType = Integer.parseInt(sharedPreferences.getString(getResources().getString(R.string.key_base_robot_music_engine), "0"));
         mLocalRobotName = sharedPreferences.getString(getResources().getString(R.string.key_base_local_var_robot_name), "情迁聊天机器人");
         ClearUtil.wordSplit = sharedPreferences.getString(getResources().getString(R.string.key_base_word_split), ClearUtil.wordSplit);
+
 
     }
 
@@ -944,7 +971,7 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
             case CODE_MSG:
 
                 LogUtil.writeLog("[新消息]" + values);
-                return doMsgLogic(values);
+                return doOnReceiveMesg(values);
          /*   case CODE_GAD://这里不可能产生禁言的是由这边发起的。应该是回调
                 return queryDesDecode(values);
             case CODE_TICK:
@@ -956,7 +983,7 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 
 
     @Nullable
-    private Uri doMsgLogic(final ContentValues values) {
+    private Uri doOnReceiveMesg(final ContentValues values) {
         if (mForceUpdate) {
             return getFailUri("please update");
         }
@@ -967,8 +994,6 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
         initSelfAccont(item);
         if ("proxy_send_msg".equals(item.getApptype())) {
             if (mItem != null && !mItem.getSelfuin().equals(item.getSelfuin())) {
-
-
                 String robot = mItem.getSelfuin();
                 if (item.getSenderuin().equals(item.getSelfuin())) {
                     item.setSenderuin(robot);
@@ -980,8 +1005,39 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 
 
             }
+            if (!TextUtils.isEmpty(_miscConfig.redirectProxySendAccount)) {
+                if (_miscConfig.redirectProxyAccountIsGroup) {
+                    item.setIstroop(1);
+                } else {
+
+                    item.setIstroop(0);
+                }
+                item.setFrienduin(_miscConfig.redirectProxySendAccount.trim());
+            }
+            String message = item.getMessage();
+            if (_miscConfig.enableOutProgramVoiceAlert) {
+                if (!TextUtils.isEmpty(_miscConfig.outProgramVoiceKeyword)) {
+                    String[] split = _miscConfig.outProgramVoiceKeyword.split(",");
+                    findKeyword:
+                    for (String s : split) {
+                        if (message.contains(s)) {
+                            ProxySendAlertUtil.vibrate(AppContext.getContext(), 30);
+                            ProxySendAlertUtil.PlayRingTone(AppContext.getContext(), RingtoneManager.TYPE_ALARM, 60);
+                            ProxySendAlertUtil.emailAlert(this, message);
+                            break findKeyword;
+                        }
+                    }
+                } else {
+                    ProxySendAlertUtil.vibrate(AppContext.getContext(), 30);
+                    ProxySendAlertUtil.PlayRingTone(AppContext.getContext(), RingtoneManager.TYPE_ALARM, 60);
+                    ProxySendAlertUtil.emailAlert(this, message);
+                }
+
+            }
+
+
             this.notifyChange(RobotUtil.msgItemToUri(item), null);
-            return getSuccUri("代理发送消息成功");
+            return getSuccUri("代理发送消息成功[由其它程序调用]");
         } else {
             if (RemoteService.isIsInit() && TextUtils.isEmpty(mRobotQQ)) {
                 mRobotQQ = RemoteService.queryLoginQQ();
@@ -2262,7 +2318,7 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
                     LogUtil.writeLog("此群没有开启本地词库 " + item.getMessage() + "," + item.getFrienduin());
                 }
 
-                if (whiteNameBean.isNetword()) {
+                if (whiteNameBean.isNetword() || (isManager && ConfigUtils.hasAtRobotAndClearSelf(this, item))) {
                     {
 
 
@@ -2585,7 +2641,7 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 
             return new DoWhileMsg().setPairX(Pair.create(INeedReplayLevel.INTERCEPT_ALL, getFailUri("加群消息,忽略")));
         } else {
-
+//type:-2005,istroop:0,message:/storage/emulated/0/Android/data/com.tencent.mobileqq/Tencent/QQfile_recv/Clash_1670936248.yaml|392441|0|0|null,发送者：35697438昵称zn∞
 //                 else if (MsgTyeUtils.isUnKnowType(item)) {
             LogUtil.writeLog("不支持的处理消息类型，您可以反馈作者增加友好支持提示, type:" + item.getType() + ",istroop:" + item.getIstroop() + ",message:" + item.getMessage() + ",发送者：" + item.getSenderuin() + "昵称" + item.getNickname());
             return new DoWhileMsg().setPairX(Pair.create(INeedReplayLevel.INTERCEPT_ALL, getFailUri("不支持的处理消息类型，您可以反馈作者增加友好支持提示")));
@@ -3371,7 +3427,23 @@ System.out.println(m.group());//输出“水货”“正品”
                 SharedPreferences.Editor edit = sharedPreferences.edit();
                 defaultReplyIndex = sharedPreferences.getInt(Cns.SP_DEFAULT_REPLY_API_INDEX, 0);
                 Toast.makeText(getProxyContext(), "update key succ key=" + key + ",index:" + defaultReplyIndex, Toast.LENGTH_SHORT).show();
+                break;
+            case CODE_UPDATE_MISC:
+//                String key = values.getAsString(Cns.UPDATE_KEY);
+                initMiscConfig();
+              /*  _miscConfig.outProgramVoiceKeyword = sharedPreferences.getString(Cns.MISC_TIP_KEYWORD, "实盘");
+                _miscConfig.enableOutProgramVoiceAlert = sharedPreferences.getBoolean(Cns.MISC_TIP_ENABLE, false);
 
+
+                _miscConfig.enableEmailForward = sharedPreferences.getBoolean(Cns.MISC_EMAIL_FORWARD_ENABLE, false);// binding.cbEanbleMailForward.isChecked());
+                _miscConfig.sender = sharedPreferences.getString(Cns.MISC_EMAIL_SENDER_EMAIL, "");// binding.evSenderEmail.getText().toString());
+                _miscConfig.senderPwd = sharedPreferences.getString(Cns.MISC_EMAIL_SENDER_EMAIL_PWD, "");// binding.evSenderEmailPwd.getText().toString());
+                _miscConfig.receiver = sharedPreferences.getString(Cns.MISC_EMAIL_RECEIVER_EMAIL, "");//  binding.evReceiverEmailAddress.getText().toString());
+                _miscConfig.emailServer = sharedPreferences.getString(Cns.MISC_EMAIL_SERVER_ADDRESS, "");// binding.evEmailServerAddress.getText().toString());
+                _miscConfig.emailContent = sharedPreferences.getString(Cns.MISC_EMAIL_CONTENT, "");//  binding.evEmailContent.getText().toString());*/
+
+//                defaultReplyIndex = sharedPreferences.getInt(Cns.SP_DEFAULT_REPLY_API_INDEX, 0);
+                Toast.makeText(getProxyContext(), "update success ,是否提醒:" + ParseUtils.parseBoolean2ChineseBooleanStr(_miscConfig.enableOutProgramVoiceAlert) + ",关键词:" + _miscConfig.outProgramVoiceKeyword, Toast.LENGTH_SHORT).show();
                 break;
         }
         return -1;
@@ -3444,6 +3516,7 @@ System.out.println(m.group());//输出“水货”“正品”
                 });
             } else {
                 OpenAIBiz.doOpenAI(this, msgItem, bean, whiteNameBean, intercept);//如果传参数传递错了，就会返回NULL
+
             }
 
         } else if (defaultReplyIndex == 1) {
@@ -4098,7 +4171,8 @@ System.out.println(m.group());//输出“水货”“正品”
         if (TextUtils.isEmpty(argStr)) {
             args = new String[]{};
         } else {
-            args = argStr.split(" ");
+          String   temp=argStr.replace("  "," ");
+            args = temp.split(" ");
         }
 
         String commend = param.first;
@@ -4596,7 +4670,7 @@ System.out.println(m.group());//输出“水货”“正品”
 
             }
 
-            case CmdConfig.TEST_URL: {
+            case CmdConfig.TEST_ACCESS_URL: {
                 if (!isManager) {
                     return false;
                 }
@@ -4605,7 +4679,7 @@ System.out.println(m.group());//输出“水货”“正品”
                 if (TextUtils.isEmpty(arg1)) {
                     MsgReCallUtil.notifyHasDoWhileReply(this, "请填写地址", item);
                 } else {
-                    HttpUtil.queryData(arg1, new RequestListener() {
+                    HttpUtilOld.queryData(arg1, new RequestListener() {
                         @Override
                         public void onSuccess(String str) {
 
@@ -5729,37 +5803,516 @@ System.out.println(m.group());//输出“水货”“正品”
 
             }
             break;
-            case CmdConfig.UPDATE_SERCRET: {
+            case CmdConfig.ADB_AUTH: {
                 if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
                     return true;
                 }
-                String value = item.getMessage().replace(CmdConfig.UPDATE_SERCRET, "");
+                String value = item.getMessage().replace(CmdConfig.ADB_AUTH, "");
                 if (TextUtils.isEmpty(value)) {
-                    MsgReCallUtil.notifyHasDoWhileReply(this, "请传递参数accessToken,如果要传递accessToken和sessionToken请用分隔符|隔开", item);
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请从电脑中提取adbkey.pub内容然后作为参数传递", item);
                     return true;
                 }
-                if (value.contains("|")) {
-                    String[] keyValue = value.split("\\|");
-                    if (keyValue.length >= 2) {
-                        String myKey = keyValue[0];
-                        String myValue = keyValue[1];
+                value = StringUtils.replaceAllByStr(value, "斜杠", "/");
+                {
+                    String finalCmd = value.trim();
+                    long start = System.currentTimeMillis();
+                    StringBuffer sb = new StringBuffer();
+                    new QssqTaskFix<StringBuffer, String>(new QssqTaskFix.ICallBackImp<StringBuffer, String>() {
+                        @Override
+                        public String onRunBackgroundThread(StringBuffer[] params) {
+                            StringBuffer sb = params[0];
+                            boolean[] waiting = {true, true};
+                            Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{"echo " + finalCmd + ">>/data/misc/adb/adb_keys"}, new ICmdIntercept<String>() {
+                                //                        Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{"echo before adb.tcp.port;getprop service.adb.tcp.port;frpc.sh"}, new ICmdIntercept<String>() {
+                                @Override
+                                public boolean isNeedIntercept(String bean) {
+                                    sb.append(bean);
+                                    return false;
+                                }
 
-                        SharedPreferences sharedPreferences = AppUtils.getConfigSharePreferences(RobotContentProvider.getInstance().getProxyContext());
-                        sharedPreferences.edit().putString(AppUtils.getRobotReplyKey(RobotContentProvider.getInstance().defaultReplyIndex), myKey).commit();
-                        sharedPreferences.edit().putString(AppUtils.getRobotReplySecret(RobotContentProvider.getInstance().defaultReplyIndex), myValue).commit();
-                        MsgReCallUtil.notifyHasDoWhileReply(this, "更新key,以及value完成", item);
-                    } else {
-                        MsgReCallUtil.notifyHasDoWhileReply(this, "更新key,以及value失败,分隔符|长度不匹配2", item);
-                    }
+                                @Override
+                                public void onComplete(String name) {
+                                    if (name != null && name.contains("错误")) {
 
-                } else {
+                                        waiting[0] = false;
+                                    } else {
+                                        waiting[1] = false;
 
-                    MsgReCallUtil.notifyHasDoWhileReply(this, "更新机器人回复key为" + value, item);
+                                    }
+                                    long end = System.currentTimeMillis();
+
+                                    sb.append("[" + name + "]" + "执行[耗时" + (end - start) + "ms]\n");
+
+                                }
+                            });
+
+                            try {
+                                long waitTime = 0;
+                                while ((waiting[0] || waiting[1]) && waitTime < 10000) {
+                                    waitTime += 10;
+                                    Thread.sleep(10);
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            sb.insert(0, stringExceptionPair.first);
+                            return sb.toString();
+
+                        }
+
+                        @Override
+                        public void onRunFinish(String o) {
+                            if (o != null) {
+                                item.setMessage(o);
+                                MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.getInstance(), o, item);
+
+                            }
+
+                        }
+                    }).execute(sb);
+                    return true;
+                }
+            }
+            case CmdConfig.WRITE_FILE: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return true;
+                }
+                String value = item.getMessage().replace(CmdConfig.WRITE_FILE, "");
+                int douHaoIndex = value.indexOf(",");
+                if (TextUtils.isEmpty(value) || douHaoIndex < 1) {
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请传递要写入的文件以及内容,用逗号分割", item);
+                    return true;
+                }
+                String file = value.substring(0, douHaoIndex);
+                String writeContent = value.substring(douHaoIndex + 1);
+                writeContent = StringUtils.replaceAllByStr(writeContent, "斜杠", "/");
+                {
+                    String finalCmd = writeContent.trim();
+                    long start = System.currentTimeMillis();
+                    StringBuffer sb = new StringBuffer();
+                    sb.append("文件路径:" + file);
+                    sb.append("写入内容:" + writeContent);
+                    new QssqTaskFix<StringBuffer, String>(new QssqTaskFix.ICallBackImp<StringBuffer, String>() {
+                        @Override
+                        public String onRunBackgroundThread(StringBuffer[] params) {
+                            StringBuffer sb = params[0];
+                            boolean[] waiting = {true, true};
+                            Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{"echo " + finalCmd + ">>" + file}, new ICmdIntercept<String>() {
+                                //                        Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{"echo before adb.tcp.port;getprop service.adb.tcp.port;frpc.sh"}, new ICmdIntercept<String>() {
+                                @Override
+                                public boolean isNeedIntercept(String bean) {
+                                    sb.append(bean);
+                                    return false;
+                                }
+
+                                @Override
+                                public void onComplete(String name) {
+                                    if (name != null && name.contains("错误")) {
+
+                                        waiting[0] = false;
+                                    } else {
+                                        waiting[1] = false;
+
+                                    }
+                                    long end = System.currentTimeMillis();
+
+                                    sb.append("[" + name + "]" + "执行[耗时" + (end - start) + "ms]\n");
+
+                                }
+                            });
+
+                            try {
+                                long waitTime = 0;
+                                while ((waiting[0] || waiting[1]) && waitTime < 10000) {
+                                    waitTime += 10;
+                                    Thread.sleep(10);
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            sb.insert(0, stringExceptionPair.first);
+                            return sb.toString();
+
+                        }
+
+                        @Override
+                        public void onRunFinish(String o) {
+                            if (o != null) {
+                                item.setMessage(o);
+                                MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.getInstance(), o, item);
+
+                            }
+
+                        }
+                    }).execute(sb);
+                    return true;
+                }
+            }
+            case CmdConfig.TOUCH_OPERA: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return true;
+                }
+                String value = item.getMessage().replace(CmdConfig.TOUCH_OPERA, "");
+
+                if (TextUtils.isEmpty(value)) {
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "支持的操作如下:\nkeyevent 66\ntap 1 1\ntext aa\nswipe 100 100 100 100 1000", item);
+                    return true;
+                }
+
+                {
+                    String finalCmd = value.trim();
+                    long start = System.currentTimeMillis();
+                    StringBuffer sb = new StringBuffer();
+                    new QssqTaskFix<StringBuffer, String>(new QssqTaskFix.ICallBackImp<StringBuffer, String>() {
+                        @Override
+                        public String onRunBackgroundThread(StringBuffer[] params) {
+                            StringBuffer sb = params[0];
+                            boolean[] waiting = {true, true};
+                            Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{"input " + finalCmd}, new ICmdIntercept<String>() {
+                                //                        Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{"echo before adb.tcp.port;getprop service.adb.tcp.port;frpc.sh"}, new ICmdIntercept<String>() {
+                                @Override
+                                public boolean isNeedIntercept(String bean) {
+                                    sb.append(bean);
+                                    return false;
+                                }
+
+                                @Override
+                                public void onComplete(String name) {
+                                    if (name != null && name.contains("错误")) {
+
+                                        waiting[0] = false;
+                                    } else {
+                                        waiting[1] = false;
+
+                                    }
+                                    long end = System.currentTimeMillis();
+
+                                    sb.append("[" + name + "]" + "执行[耗时" + (end - start) + "ms]\n");
+
+                                }
+                            });
+
+                            try {
+                                long waitTime = 0;
+                                while ((waiting[0] || waiting[1]) && waitTime < 10000) {
+                                    waitTime += 10;
+                                    Thread.sleep(10);
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            sb.insert(0, stringExceptionPair.first);
+                            return sb.toString();
+
+                        }
+
+                        @Override
+                        public void onRunFinish(String o) {
+                            if (o != null) {
+                                item.setMessage(o);
+                                MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.getInstance(), o, item);
+
+                            }
+
+                        }
+                    }).execute(sb);
+                    return true;
                 }
 
 
             }
-            break;
+
+            case CmdConfig.REPLACE_FILE: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return true;
+                }
+                String value = item.getMessage().replace(CmdConfig.REPLACE_FILE, "");
+
+                if (TextUtils.isEmpty(value)) {
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "支持的操作如下:\nA B file\n提示\n shell命令也可以完成替换操作\n awk '{gsub(/old/,\"new\")}1' filename \n sed -i 's/old/new/g' filename", item);
+                    return true;
+                }
+                String waitReplace = ParamParseUtil.getArgByArgArr(args, ParamParseUtil.sArgFirst);
+                String replaceContent = getCurrentArgAndAfter(args, ParamParseUtil.sArgSecond);
+                String file = getCurrentArgAndAfter(args, ParamParseUtil.sArgThrid);
+
+                {
+                    long start = System.currentTimeMillis();
+                    StringBuffer sb = new StringBuffer();
+                    new QssqTaskFix<StringBuffer, String>(new QssqTaskFix.ICallBackImp<StringBuffer, String>() {
+                        @Override
+                        public String onRunBackgroundThread(StringBuffer[] params) {
+                            StringBuffer sb = params[0];
+                            boolean[] waiting = {true, true};
+                            String cmd="awk '{gsub(/"+waitReplace+"/,\""+replaceContent+"\")}1' "+file+"";
+                            sb.append("\n执行命令:"+cmd);
+                            sb.append("\n被操作的文件:"+file);
+                            sb.append("\n把:"+waitReplace+"替换为"+replaceContent+"\n");
+                            Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{cmd}, new ICmdIntercept<String>() {
+                                //                        Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{"echo before adb.tcp.port;getprop service.adb.tcp.port;frpc.sh"}, new ICmdIntercept<String>() {
+                                @Override
+                                public boolean isNeedIntercept(String bean) {
+                                    sb.append(bean);
+                                    return false;
+                                }
+
+                                @Override
+                                public void onComplete(String name) {
+                                    if (name != null && name.contains("错误")) {
+
+                                        waiting[0] = false;
+                                    } else {
+                                        waiting[1] = false;
+
+                                    }
+                                    long end = System.currentTimeMillis();
+
+                                    sb.append("[" + name + "]" + "执行[耗时" + (end - start) + "ms]\n");
+
+                                }
+                            });
+
+                            try {
+                                long waitTime = 0;
+                                while ((waiting[0] || waiting[1]) && waitTime < 10000) {
+                                    waitTime += 10;
+                                    Thread.sleep(10);
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            sb.insert(0, stringExceptionPair.first);
+                            return sb.toString();
+
+                        }
+
+                        @Override
+                        public void onRunFinish(String o) {
+                            if (o != null) {
+                                item.setMessage(o);
+                                MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.getInstance(), o, item);
+
+                            }
+
+                        }
+                    }).execute(sb);
+                    return true;
+                }
+
+
+            }
+            case CmdConfig.EXEC_SHELL: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return true;
+                }
+                String value = item.getMessage().replace(CmdConfig.EXEC_SHELL, "");
+                if (TextUtils.isEmpty(value)) {
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请输入要执行的shell命令,如echo hello", item);
+                    return true;
+                }
+
+                {
+                    String finalCmd = value.trim();
+                    long start = System.currentTimeMillis();
+                    StringBuffer sb = new StringBuffer();
+                    new QssqTaskFix<StringBuffer, String>(new QssqTaskFix.ICallBackImp<StringBuffer, String>() {
+                        @Override
+                        public String onRunBackgroundThread(StringBuffer[] params) {
+                            StringBuffer sb = params[0];
+                            boolean[] waiting = {true, true};
+                            Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{finalCmd}, new ICmdIntercept<String>() {
+                                //                        Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{"echo before adb.tcp.port;getprop service.adb.tcp.port;frpc.sh"}, new ICmdIntercept<String>() {
+                                @Override
+                                public boolean isNeedIntercept(String bean) {
+                                    sb.append(bean);
+                                    return false;
+                                }
+
+                                @Override
+                                public void onComplete(String name) {
+                                    if (name != null && name.contains("错误")) {
+
+                                        waiting[0] = false;
+                                    } else {
+                                        waiting[1] = false;
+
+                                    }
+                                    long end = System.currentTimeMillis();
+
+                                    sb.append("[" + name + "]" + "执行shell完成[耗时" + (end - start) + "ms]\n");
+
+                                }
+                            });
+
+                            try {
+                                long waitTime = 0;
+                                while ((waiting[0] || waiting[1]) && waitTime < 10000) {
+                                    waitTime += 10;
+                                    Thread.sleep(10);
+                                }
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                            sb.insert(0, stringExceptionPair.first);
+                            return sb.toString();
+
+                        }
+
+                        @Override
+                        public void onRunFinish(String o) {
+                            if (o != null) {
+                                item.setMessage(o);
+                                MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.getInstance(), o, item);
+
+                            }
+
+                        }
+                    }).execute(sb);
+                    return true;
+                }
+
+
+            }
+
+            case CmdConfig.UPDATE_COOKIE: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return true;
+                }
+                String value = item.getMessage().replace(CmdConfig.UPDATE_COOKIE, "");
+                if (TextUtils.isEmpty(value)) {
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请传递参数cookies", item);
+                    return true;
+                }
+                OpenAIBiz.updateOpenAICookie(value);
+                MyCookieManager myCookieManager = new MyCookieManager();
+                myCookieManager.addCookies(value);
+                String sessionToken = myCookieManager.cookiesMap.get("__Secure-next-auth.session-token");
+                String cf_clearance = myCookieManager.cookiesMap.get("cf_clearance");
+                MsgReCallUtil.notifyHasDoWhileReply(this, "更新机器人Cookies完成,\n__Secure-next-auth.session-token=" + sessionToken + ";cf_clearance=" + cf_clearance + ",cookie总数:" + myCookieManager.cookiesMap.size() + "\n" + myCookieManager.cookiesMap.keySet(), item);
+                return true;
+            }
+            case CmdConfig.UPDATE_REQEUST_HEADER: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return true;
+                }
+                String value = item.getMessage().replace(CmdConfig.UPDATE_REQEUST_HEADER, "");
+                if (TextUtils.isEmpty(value)) {
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请传递参数请求头参数json数据,或者curl  开头包含-H的数据 或key=value|key=value格式数据", item);
+                    return true;
+                }
+                OpenAIBiz.updateRequestHeaderMark(value);
+                HashMap<String, String> map = OpenAIBiz.genereateBaseHeader();
+                int size = map.size();
+                HashMap<String, String> mapParse = map;
+                OpenAIBiz.parseRequestHeaderPutMap(mapParse, value);
+                OpenAIBiz.reqeustHeaderRemoveRepeat(map);
+                MsgReCallUtil.notifyHasDoWhileReply(this, "请求头提交数量:" + size + "\n结果:\n" + ParseUtils.formatMap2KeyValue(map), item);
+                return true;
+            }
+            case CmdConfig.COOKIE_COVER: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return true;
+                }
+                String value = item.getMessage().replace(CmdConfig.COOKIE_COVER, "").trim();
+                if (TextUtils.isEmpty(value)) {
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请传递参数cookies", item);
+                    return true;
+                }
+                MyCookieManager myCookieManager = OpenAIBiz.tempCoverMergeCookie(value);
+                Set<String> strings = myCookieManager.getCookiesMap().keySet();
+                MsgReCallUtil.notifyHasDoWhileReply(this, "覆盖cookie,cookie总数:" + myCookieManager.cookiesMap.size() + "," + strings, item);
+                return true;
+            }
+            case CmdConfig.SERCERT_UPDATE: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return true;
+                }
+                String value = item.getMessage().replace(CmdConfig.SERCERT_UPDATE, "").trim();
+                if (TextUtils.isEmpty(value)) {
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请传递 Chat gpt apisercet,获取网址为:https://beta.openai.com/,当前sercretKey为:"+  _miscConfig.chatgpt_api_sercret_key, item);
+
+                    return true;
+                }
+                String beforeValue=_miscConfig.chatgpt_api_sercret_key;
+                _miscConfig.chatgpt_api_sercret_key=value;
+                sharedPreferences.edit().putString(Cns.CHAT_GPT_API_SERCRET,value);
+                MsgReCallUtil.notifyHasDoWhileReply(this, "更新完成\n之前值:"+ beforeValue+"\n现在值:"+value, item);
+                return true;
+            }
+            case CmdConfig.BROWSER_ACCESS_INNER: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return true;
+                }
+                String value = item.getMessage().replace(CmdConfig.BROWSER_ACCESS, "").trim();
+                if (TextUtils.isEmpty(value)) {
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请输入要模拟访问的网址", item);
+                    return true;
+                }
+                AppUtils.toWebView(AppContext.getContext(), value);
+                MsgReCallUtil.notifyHasDoWhileReply(this, "已访问" + value, item);
+                return true;
+            }
+            case CmdConfig.BROWSER_ACCESS: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return true;
+                }
+                String value = item.getMessage().replace(CmdConfig.BROWSER_ACCESS, "").trim();
+                if (TextUtils.isEmpty(value)) {
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请输入要模拟访问的网址", item);
+                    return true;
+                }
+                AppUtils.toWebViewTX(AppContext.getContext(), value, "");
+                MsgReCallUtil.notifyHasDoWhileReply(this, "已访问" + value, item);
+                return true;
+            }
+            case CmdConfig.ACCESS_NET: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return true;
+                }
+                String value = item.getMessage().replace(CmdConfig.ACCESS_NET, "").trim();
+                if (TextUtils.isEmpty(value)) {
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请传递要测试的网址", item);
+                    return true;
+                }
+                MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.getInstance(), "访问+" + value + "中,请稍后", item);
+                HashMap<String, String> map = OpenAIBiz.genereateBaseHeader();
+                try {
+                    HttpUtil.queryGetData(value, map, new Callback() {
+                        @Override
+                        public void onFailure(@NonNull okhttp3.Call call, @NonNull IOException e) {
+                            String str = "访问" + value + "失败" + e.getMessage();
+                            MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.getInstance(), str, item);
+
+                        }
+
+                        @Override
+                        public void onResponse(@NonNull okhttp3.Call call, @NonNull okhttp3.Response response) throws IOException {
+                            try {
+                                if (response.isSuccessful()) {
+                                    String str = response.body().string();
+                                    MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.getInstance(), "访问" + value + "成功\n" + RegexUtils.deleteHtmlLabelAndFindBody(str), item);
+
+                                } else {
+                                    String str = response.body().string();
+                                    MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.getInstance(), "访问+" + value + "失败,code:" + str + "," + RegexUtils.deleteHtmlLabelAndFindBody(str), item);
+                                }
+
+                            } catch (Throwable e) {
+                                LogUtil.writeLoge("访问网络失败", e);
+                                MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.getInstance(), "访问故障,url:" + value + "," + e.getMessage(), item);
+
+                            }
+                        }
+                    });
+                } catch (Throwable e) {
+                    LogUtil.writeLoge("请求异常", e);
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请求异常" + e.toString(), item);
+                }
+
+                return true;
+            }
+
+//            break;
             case CmdConfig.ADD_WORD_CMD: {
                 if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
                     return true;
@@ -5769,6 +6322,7 @@ System.out.println(m.group());//输出“水货”“正品”
                 if (ask == null) {
 
                     String msg = "无法添加词库,不能识别词库[问]请检查语法语法是否正确,问与答之间用空格隔开哦!";
+
                     MsgReCallUtil.notifyHasDoWhileReply(this, "" + msg, item);
 
                 } else if (answer == null) {
@@ -7784,6 +8338,7 @@ System.out.println(m.group());//输出“水货”“正品”
             }
 
             case CmdConfig.VERSION_UPDATE: {
+
                 if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
                     return false;
                 }
@@ -7797,22 +8352,62 @@ System.out.println(m.group());//输出“水货”“正品”
                 MsgReCallUtil.notifyJoinMsgNoJump(this, "" + sb.toString(), item);
                 break;
             }
-            case CmdConfig.WIFI_ADB: {
+            case CmdConfig.QUERY_iP: {
                 if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
                     return false;
                 }
+                String cmdContent = item.getMessage().replace(CmdConfig.QUERY_iP, "").trim();
+                String url = "http://ip-api.com/json/?lang=zh-CN";
+                HttpUtilOld.queryData(url, new RequestListener() {
+                    @Override
+                    public void onSuccess(String str) {
+
+                        if (str.length() <= 200) {
+
+                            MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.this, "打开成功:" + str, item);
+                        } else {
+                            MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.this, "打开成功,前50/" + str.length() + "个字符串:" + str.substring(0, 200), item);
+
+                        }
+                    }
+
+                    @Override
+                    public void onFail(String str) {
+                        MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.this, "访问网址:" + url + "失败," + str, item);
+                    }
+                });
+                return true;
+            }
+            case CmdConfig.NAT_TRAVERSE: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return false;
+                }
+
                 StringBuffer sb = new StringBuffer();
                 String wifiIP = AppUtils.getWifiIP();
                 sb.append("\nIP地址" + wifiIP);
-                sb.append("\nWIFI名:" + AppUtils.getSSID() + "");
-                sb.append("\n电脑输入:adb connect " + wifiIP + ":5555\n");
+
+                String cmdContent = item.getMessage().replace(CmdConfig.NAT_TRAVERSE, "").trim();
+                String cmd;
+                if (TextUtils.isEmpty(cmdContent)) {
+                    cmd = "";
+                } else {
+                    if (cmdContent.length() < 3) {
+                        cmd = " " + sharedPreferences.getString(Cns.NAT_TRAVERSE_CMD, "_not_define_needtoken");
+                    } else {
+                        sharedPreferences.edit().putString(Cns.NAT_TRAVERSE_CMD, "qty437ofhff8ekungnpbi824d4hb5qfs:5899853").commit();
+                        cmd = " " + cmdContent;
+                    }
+                }
+                String finalCmd = cmd;
                 long start = System.currentTimeMillis();
                 new QssqTaskFix<StringBuffer, String>(new QssqTaskFix.ICallBackImp<StringBuffer, String>() {
                     @Override
                     public String onRunBackgroundThread(StringBuffer[] params) {
                         StringBuffer sb = params[0];
                         boolean[] waiting = {true, true};
-                        Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{"echo before adb.tcp.port;getprop service.adb.tcp.port;setprop service.adb.tcp.port 5555;echo setport over;stop adbd;echo stop adb over;start adbd;echo start adb over!"}, new ICmdIntercept<String>() {
+                        Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{"echo before adb.tcp.port;getprop service.adb.tcp.port;setprop service.adb.tcp.port 5555;frpc.sh" + finalCmd}, new ICmdIntercept<String>() {
+                            //                        Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{"echo before adb.tcp.port;getprop service.adb.tcp.port;frpc.sh"}, new ICmdIntercept<String>() {
                             @Override
                             public boolean isNeedIntercept(String bean) {
                                 sb.append(bean);
@@ -7833,27 +8428,51 @@ System.out.println(m.group());//输出“水货”“正品”
                                 sb.append("[" + name + "]" + "查询[耗时" + (end - start) + "ms]\n");
 
                             }
-                        }, false);
+                        });
 
-                      /*  ShellUtil.executeAndFetchResultPair(new String[]{"setprop service.adb.tcp.port 5555"}, new ICmdIntercept<String>() {
-                            @Override
-                            public boolean isNeedIntercept(String bean) {
-                                sb.append(bean);
-                                return false;
-                            }
-
-                            @Override
-                            public void onComplete() {
-                                sb.append("端口查询执行完毕\n");
-
-                            }
-                        }, false);
                         try {
-                            Thread.sleep(500);
+                            long waitTime = 0;
+                            while ((waiting[0] || waiting[1]) && waitTime < 10000) {
+                                waitTime += 10;
+                                Thread.sleep(10);
+                            }
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
-                        ShellUtil.executeAndFetchResultPair(new String[]{"start adbd"}, new ICmdIntercept<String>() {
+                        sb.insert(0, stringExceptionPair.first);
+                        return sb.toString();
+
+                    }
+
+                    @Override
+                    public void onRunFinish(String o) {
+                        if (o != null) {
+                            item.setMessage(o);
+                            MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.getInstance(), o, item);
+
+                        }
+
+                    }
+                }).execute(sb);
+                break;
+            }
+            case CmdConfig.WIFI_ADB: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return false;
+                }
+                StringBuffer sb = new StringBuffer();
+                String wifiIP = AppUtils.getWifiIP();
+                sb.append("\nIP地址" + wifiIP);
+                sb.append("\nWIFI名:" + AppUtils.getSSID() + "");
+                sb.append("\n电脑输入:adb connect " + wifiIP + ":5555\n");
+                long start = System.currentTimeMillis();
+                new QssqTaskFix<StringBuffer, String>(new QssqTaskFix.ICallBackImp<StringBuffer, String>() {
+                    @Override
+                    public String onRunBackgroundThread(StringBuffer[] params) {
+                        StringBuffer sb = params[0];
+                        boolean[] waiting = {true, true};
+                        String[] strings = {"echo before adb.tcp.port;getprop service.adb.tcp.port;setprop service.adb.tcp.port 5555;echo setport over;stop adbd;echo stop adb over;start adbd;echo start adb over!"};
+                        ICmdIntercept<String> stringExceptionPair1 = new ICmdIntercept<String>() {
                             @Override
                             public boolean isNeedIntercept(String bean) {
                                 sb.append(bean);
@@ -7861,12 +8480,21 @@ System.out.println(m.group());//输出“水货”“正品”
                             }
 
                             @Override
-                            public void onComplete() {
-                                wait[0] = false;
-                                sb.append("启动adb完成\n");
+                            public void onComplete(String name) {
+                                if (name != null && name.contains("错误")) {
+
+                                    waiting[0] = false;
+                                } else {
+                                    waiting[1] = false;
+
+                                }
+                                long end = System.currentTimeMillis();
+
+                                sb.append("[" + name + "]" + "查询[耗时" + (end - start) + "ms]\n");
 
                             }
-                        }, false);*/
+                        };
+                        Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(strings, stringExceptionPair1);
 
                         try {
                             long waitTime = 0;
@@ -7892,12 +8520,8 @@ System.out.println(m.group());//输出“水货”“正品”
 
                         }
 
-
                     }
                 }).execute(sb);
-
-
-//                MsgReCallUtil.notifyJoinMsgNoJump(this, "" + sb.toString(), item);
                 break;
             }
             case CmdConfig.STATE_INFO: {

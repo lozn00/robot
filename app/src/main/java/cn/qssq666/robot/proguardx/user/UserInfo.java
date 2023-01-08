@@ -3,8 +3,7 @@ package cn.qssq666.robot.proguardx.user;
 import android.text.TextUtils;
 
 import cn.qssq666.robot.constants.Cns;
-import cn.qssq666.robot.utils.CookieUtil;
-import cn.qssq666.robot.utils.HttpUtil;
+import cn.qssq666.robot.utils.CookieLocalFilePool;
 
 public class UserInfo {
     public String getPhone() {
@@ -45,7 +44,7 @@ public class UserInfo {
 
     public String getToken() {
         if(TextUtils.isEmpty(token)){
-            String cookie = CookieUtil.getCookie(Cns.ROBOT_DOMAIN,Cns.ROBOT_DOMAIN);
+            String cookie = CookieLocalFilePool.getCookie(Cns.ROBOT_DOMAIN,Cns.ROBOT_DOMAIN);
             return cookie;
         }
         return token;

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 <item type="id" name="btn_set"/>
+<item type="id" name="btn_misc_config"/>
 <item type="id" name="btn_group_white_names"/>
 <item type="id" name="btn_ignore_uncheck_qq"/>
 <item type="id" name="btn_key_redpacket_record"/>

@@ -1,5 +1,6 @@
 package cn.qssq666.robot.utils;
-import cn.qssq666.CoreLibrary0;import android.text.TextUtils;
+
+import android.text.TextUtils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,11 +100,14 @@ public class StringUtils {
     }
 
     public static String getStrCenter(String src, String startStr, String endStr) {
+        return getStrCenter(src,startStr,endStr,false);
+    }
+    public static String getStrCenter(String src, String startStr, String endStr,boolean fromLast) {
         int startPosition = src.indexOf(startStr);
-        if (startPosition == -1) {
+        if (startPosition == -1||startPosition==src.length()-1) {
             return null;
         }
-        int endPosition = src.indexOf(endStr, startPosition);
+        int endPosition =fromLast?src.lastIndexOf(endStr): src.indexOf(endStr, startPosition);
         if (endPosition == -1) {
             return null;
         }
@@ -256,7 +260,7 @@ str2+=str.charAt(i);
 
 
                             try {
-                                stringBuilder.replace(findStrIndex, findStrIndex + rightKuoHao + 1, String.format(replaceWord, (Object[])split));//这里的end有点可疑
+                                stringBuilder.replace(findStrIndex, findStrIndex + rightKuoHao + 1, String.format(replaceWord, (Object[]) split));//这里的end有点可疑
 
                             } catch (Exception e) {
                                 stringBuilder.replace(findStrIndex, findStrIndex + rightKuoHao + 1, replaceWord + "(期望的参数总数为" + paramCount + " 参数错误)");
@@ -481,5 +485,25 @@ str2+=str.charAt(i);
         } else {
             return str;
         }
+    }
+
+    public static String getStrByLen(String deleteHtmlLabel, int len) {
+        int length = deleteHtmlLabel.length();
+        if (len >= length) {
+            return deleteHtmlLabel;
+        }
+        return deleteHtmlLabel.substring(0, len);
+
+    }
+
+    public static String[] splitKeyValue(String content, String split) {
+        int i = content.indexOf(split);
+        if (i > 0&&i<content.length()-1) {
+            String key = content.substring(0, i);
+            String value = content.substring(i+1, content.length());
+            return new String[]{key,value};
+        }
+        return new String[]{};
+
     }
 }

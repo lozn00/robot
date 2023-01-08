@@ -8,6 +8,7 @@ import retrofit2.http.Body;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 /*@FormUrlEncoded
 @POST ("url/myurl")
@@ -45,10 +46,22 @@ public interface OpenAI {
      * @return
      */
 //    @FormUrlEncoded
+
+//    @Headers("Content-Type: application/javascript")
+    @Headers({
+            "Connection: close",
+            "accept-language: zh-CN,zh;q=0.9"
+    })
+//    Connection
     @POST("/backend-api/conversation")
     Call<String> query(
             @Header("Content-Type") String contentType,
             @Header("User-Agent") String userAgent,
+            @Header("Authorization") String authorization,
+                       @Body RequestBody data);
+    //https://api.openai.com/v1/completions
+    @POST("/v1/completions")
+    Call<String> queryByAPI(
             @Header("Authorization") String authorization,
                        @Body RequestBody data);
 }

@@ -384,6 +384,7 @@
 
                     <EditText
                         android:id="@+id/ev_tuting_key"
+                        android:selectAllOnFocus="true"
                         style="@style/Widget.AppCompat.EditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -400,6 +401,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:selectAllOnFocus="true"
                     android:hint="请输入Sercet"
                     android:textSize="12sp" />
 

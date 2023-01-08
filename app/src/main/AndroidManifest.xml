@@ -62,7 +62,7 @@
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.READ_SETTINGS"/>
-
+    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
     <application
 android:requestLegacyExternalStorage="true"
@@ -84,6 +84,16 @@ android:requestLegacyExternalStorage="true"
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".activity.click.NotificationAct"
+            android:theme="@style/NotUiTheme"
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="click.notification" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <provider
             android:name="cn.qssq666.robot.business.RobotContentProvider"
             android:authorities="cn.qssq666.robot"
@@ -138,6 +148,8 @@ android:requestLegacyExternalStorage="true"
         <activity
             android:name="cn.qssq666.robot.activity.KeyWordActivity"
             android:theme="@style/Toolbar"></activity>
+
+
         <activity
             android:name="cn.qssq666.robot.activity.RedPacketRecordActivity"
             android:theme="@style/Toolbar"></activity>
@@ -147,7 +159,7 @@ android:requestLegacyExternalStorage="true"
             android:name="cn.qssq666.robot.activity.AboutActivity"
             android:theme="@style/AppTheme"></activity>
 
-        <activity
+<!--        <activity
             android:name="cn.qssq666.robot.activity.AuthActivity"
             android:exported="true"
             android:theme="@style/AppTheme">
@@ -156,7 +168,7 @@ android:requestLegacyExternalStorage="true"
                 <action android:name="cn.qssq666.robot.auth"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
-        </activity>
+        </activity>-->
 
         <activity
             android:name="cn.qssq666.robot.activity.WatchAdActivity"
@@ -228,12 +240,29 @@ android:requestLegacyExternalStorage="true"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".webview.WebViewActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:theme="@style/AppTheme"></activity>
+        <activity
+            android:name="cn.qssq666.tencent5x.X5WebViewActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MyApplication.App.ContentContainNavigationBarNoActionBar"
+
+            ></activity>
 
 
         <activity
 
             android:name="cn.qssq666.robot.activity.DevToolActivity"
+            android:launchMode="singleInstance"
+            android:supportsPictureInPicture="true"
+            android:theme="@style/AppTheme"></activity>
+
+
+        <activity
+
+            android:name="cn.qssq666.robot.activity.MiscConfigActivity"
             android:launchMode="singleInstance"
             android:supportsPictureInPicture="true"
             android:theme="@style/AppTheme"></activity>

@@ -368,6 +368,20 @@ public class RegexUtils {
         return result;
     }
 
+    public static String deleteHtmlLabelAndFindBody(String str) {
+        if(str!=null&&!str.contains("<")&&str.contains("{")&&!str.contains("html")){
+           return StringUtils.getStrByLen(str,400);
+        }
+        String title = StringUtils.getStrCenter(str, "<title>", "</title>", true);
+        if(str!=null&&str.contains("<body")){
+          str = StringUtils.getStrCenter(str, "<body", "body>", true);
+        }
+        StringBuffer sb=new StringBuffer();
+        sb.append("标题:"+title+"\n");
+        sb.append(deleteHtmlLabel(str));
+        return StringUtils.getStrByLen(sb.toString(),100);
+    }
+
     ////ignore_end
 }
 

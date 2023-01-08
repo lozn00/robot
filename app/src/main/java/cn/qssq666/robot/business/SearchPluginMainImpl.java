@@ -35,7 +35,7 @@ import cn.qssq666.robot.plugin.sdk.interfaces.IMsgModel;
 import cn.qssq666.robot.plugin.sdk.interfaces.PluginControlInterface;
 import cn.qssq666.robot.plugin.sdk.myimpl.PluginControlmpl;
 import cn.qssq666.robot.utils.DensityUtil;
-import cn.qssq666.robot.utils.HttpUtil;
+import cn.qssq666.robot.utils.HttpUtilOld;
 import cn.qssq666.robot.utils.PicPathUtil;
 import cn.qssq666.robot.utils.RegexUtils;
 import okhttp3.Call;
@@ -440,7 +440,7 @@ IllegalArgumentException: unexpected url:
             map.put("Upgrade-Insecure-Requests", "1");
 
 
-            HttpUtil.queryGetData(format, map, false, new Callback() {
+            HttpUtilOld.queryGetData(format, map, false, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
 
@@ -756,7 +756,7 @@ IllegalArgumentException: unexpected url:
         try {
 
 
-            HttpUtil.queryGetData(downloadUrl, map, new Callback() {
+            HttpUtilOld.queryGetData(downloadUrl, map, new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
                     if (enableTip) {

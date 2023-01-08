@@ -55,7 +55,9 @@ import cn.qssq666.robot.constants.AppConstants;
 import cn.qssq666.robot.constants.Cns;
 import cn.qssq666.robot.constants.MsgTypeConstant;
 import cn.qssq666.robot.databinding.ActivityDevToolBinding;
+import cn.qssq666.robot.http.newcache.CookieMemoryPool;
 import cn.qssq666.robot.interfaces.INotify;
+import cn.qssq666.robot.openai.OpenAIBiz;
 import cn.qssq666.robot.service.RemoteService;
 import cn.qssq666.robot.utils.AppUtils;
 import cn.qssq666.robot.utils.DialogUtils;
@@ -218,8 +220,8 @@ public class DevToolActivity extends SuperActivity implements View.OnClickListen
         } else if (defaultReplyIndex == 1) {
             binding.evTutingKey.setHint("请输入key");
         } else {
-            binding.evTutingKey.setHint("请输入key");
-            binding.evReplySecret.setHint("请输入sercret");
+            binding.evTutingKey.setHint("请输入accessToken");
+            binding.evReplySecret.setHint("请输入Cookies");
         }
         String key = AppUtils.getConfigSharePreferences(getApplicationContext()).getString(AppUtils.getRobotReplyKey(defaultReplyIndex), "");
         if (BuildConfig.DEBUG) {
@@ -550,27 +552,14 @@ public class DevToolActivity extends SuperActivity implements View.OnClickListen
 
                 int selectedItemPosition = binding.btnDropdownlist.getSelectedItemPosition();
                 SharedPreferences.Editor edit = AppUtils.getConfigSharePreferences(getApplicationContext()).edit();
-                edit.putString(AppUtils.getRobotReplyKey(selectedItemPosition), binding.evTutingKey.getText().toString());
-                edit.putString(AppUtils.getRobotReplySecret(selectedItemPosition), binding.evReplySecret.getText().toString());
-                /*
 
-
-        /**
-         * Commit your preferences changes back from this Editor to the
-         * {@link SharedPreferences} object it is editing.  This atomically
-         * performs the requested modifications, replacing whatever is currently
-         * in the SharedPreferences.
-         *
-         * <p>Note that when two editors are modifying preferences at the same
-         * time, the last one to call commit wins.
-         *
-         * <p>If you don't care about the return value and you're
-         * using this from your application's main thread, consider
-         * using {@link #apply} instead.
-         *
-         * @return Returns true if the new values were successfully written
-         * to persistent storage.
-         */
+                if (selectedItemPosition == 2) {
+                    edit.putString(AppUtils.getRobotReplyKey(selectedItemPosition), binding.evTutingKey.getText().toString());
+                    OpenAIBiz.updateOpenAICookie(binding.evReplySecret.getText().toString());
+                } else {
+                    edit.putString(AppUtils.getRobotReplyKey(selectedItemPosition), binding.evTutingKey.getText().toString());
+                    edit.putString(AppUtils.getRobotReplySecret(selectedItemPosition), binding.evReplySecret.getText().toString());
+                }
 /**
  *将您的首选项更改从该编辑器返回到@link sharedreferences正在编辑的对象。这个原子执行请求的修改，替换当前在共享的引用中。
  * 请注意，当两个编辑器同时修改首选项时时间，最后一个调用commit的人获胜。

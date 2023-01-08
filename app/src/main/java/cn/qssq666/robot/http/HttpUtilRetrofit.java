@@ -4,7 +4,9 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import cn.qssq666.robot.http.api.ProjectAPI;
-import cn.qssq666.robot.utils.HttpUtil;
+import cn.qssq666.robot.http.newcache.HttpUtil;
+import cn.qssq666.robot.interfaces.INotify;
+import cn.qssq666.robot.utils.HttpUtilOld;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -95,7 +97,7 @@ public class HttpUtilRetrofit {
 
     public static <T> Retrofit buildRetrofit(String baseUrl) {
 
-        OkHttpClient.Builder okHttpClientBuilder = HttpUtil.createOKHttpBuilder();
+        OkHttpClient.Builder okHttpClientBuilder = HttpUtilOld.createOKHttpBuilder();
 //        okHttpBuilder.addHeader(stringStringEntry.getKey(), stringStringEntry.getValue());
         okHttpClientBuilder.connectTimeout(10, TimeUnit.SECONDS).
                 readTimeout(10, TimeUnit.SECONDS).
@@ -112,20 +114,18 @@ public class HttpUtilRetrofit {
         return retrofit;
     }
 
-    public static <T> Retrofit buildLongTimeRetrofit(String baseUrl,boolean isManager) {
+    public static <T> Retrofit buildLongTimeRetrofit(String baseUrl, boolean isManager, INotify<OkHttpClient.Builder> iNotify) {
 
         OkHttpClient.Builder okHttpClientBuilder = HttpUtil.createOKHttpBuilder();
-//        okHttpBuilder.addHeader(stringStringEntry.getKey(), stringStringEntry.getValue());
+        iNotify.onNotify(okHttpClientBuilder);
+//        okHttpClientBuilder.addHeader(stringStringEntry.getKey(), stringStringEntry.getValue());
         okHttpClientBuilder.connectTimeout(70, TimeUnit.SECONDS).
                 readTimeout(isManager?400:70, TimeUnit.SECONDS).
                 callTimeout(isManager?400:70, TimeUnit.SECONDS).
                 writeTimeout(isManager?400:70, TimeUnit.SECONDS);
-        OkHttpClient build = okHttpClientBuilder.build();
-
-
-
+        OkHttpClient client = okHttpClientBuilder.build();
         Retrofit retrofit = new Retrofit.Builder().baseUrl(baseUrl)
-                .client(build)
+                .client(client)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();

@@ -1,6 +1,9 @@
 package cn.qssq666.robot.utils;
 import android.text.TextUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by qssq on 2017/12/3 qssq666@foxmail.com
  */
@@ -280,5 +283,13 @@ public class ParseUtils {
             return "是";
         }
         return "否";
+    }
+
+    public static String formatMap2KeyValue(HashMap<String, String> map) {
+        StringBuffer sb=new StringBuffer();
+        for (Map.Entry<String, String> entry : map.entrySet()) {
+            sb.append(entry.getKey()+":"+entry.getValue()+"\n");
+        }
+        return sb.toString();
     }
 }

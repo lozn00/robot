@@ -15,6 +15,7 @@ import cn.qssq666.robot.interfaces.ICmdIntercept;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 //ignore_start
@@ -132,42 +133,60 @@ public class ShellUtil {
      * @return
      */
     public static Pair<String, Exception> executeAndFetchResultPair(String str, ICmdIntercept<String> iIntercept) {
-        return executeAndFetchResultPair(new String[]{str}, iIntercept,false);
+        return executeAndFetchResultPair(new String[]{str}, false,15, iIntercept);
     }
 
-    public static Pair<String, Exception> executeAndFetchResultPair(String str[], ICmdIntercept<String> iIntercept, boolean atMainThread) {
-//        Log.w("EXECUTE", Log.getStackTraceString(new Throwable()) + str);
-        try {
+    public static Pair<String, Exception> executeAndFetchResultPair(String str,boolean atMainThread,long waitTime, ICmdIntercept<String> iIntercept) {
+        return executeAndFetchResultPair(new String[]{str},  atMainThread,waitTime,iIntercept);
+    }
 
+    public static Pair<String, Exception> executeAndFetchResultPair(String[] str,ICmdIntercept<String> iIntercept) {
+        return executeAndFetchResultPair(str,  false,15,iIntercept);
+    }
+
+    public static Pair<String, Exception> executeAndFetchResultPair(String str[],  boolean atMainThread,long waitTime,ICmdIntercept<String> iIntercept) {
+//        Log.w("EXECUTE", Log.getStackTraceString(new Throwable()) + str);
+        int[] isEnd = {0, 0, 0, 0, 0};
+        try {
             String[] exestrs;
             if (hasRoot()) {
                 String[] strings = new String[str.length + 2];
-                System.arraycopy(str,0,strings,2,str.length);
-                strings[0]="su";
-                strings[1]="-c";
-                exestrs =strings ;
+                System.arraycopy(str, 0, strings, 2, str.length);
+                strings[0] = "su";
+                strings[1] = "-c";
+                exestrs = strings;
             } else {
-                exestrs =str;
+                exestrs = str;
 
             }
             ProcessBuilder processBuilder = new ProcessBuilder(exestrs);
             processBuilder.redirectErrorStream(true);
             java.lang.Process process = processBuilder.start();
             StringBuffer sb = new StringBuffer();
-            Observable<String> stringObservable1 = Observable.create(new ObservableOnSubscribe<String>() {
+            Observable<String> stand = Observable.create(new ObservableOnSubscribe<String>() {
                 @Override
                 public void subscribe(ObservableEmitter<String> emitter) throws Exception {
-                    ShellUtil.loopPrint(sb, process.getInputStream(), iIntercept,"输入流");
+                    ShellUtil.loopPrint(sb, process.getInputStream(), iIntercept, "输入流");
+                    isEnd[1] = 1;
+                    int sleep = 100;
+              /*      while (isEnd[0]!=1) {
+                        isEnd[3] = 50 + isEnd[3];
+
+                        if (isEnd[0] == 1 || isEnd[3] >= sleep * 25) {//>2500
+                            break;
+                        }
+
+                        Thread.sleep(sleep);//避免先删除正确信息又输出错误信息
+
+
+                    }*/
                     emitter.onNext(sb.toString());
 
                 }
             });
 
-            if (!atMainThread) {
-                stringObservable1 = stringObservable1.subscribeOn(Schedulers.io());
-            }
-
-            stringObservable1.subscribe(new Consumer<String>() {
+            stand = stand.subscribeOn(Schedulers.io()).observeOn(Schedulers.io());
+            stand.subscribe(new Consumer<String>() {
                 @Override
                 public void accept(String s) throws Exception {
 
@@ -178,23 +197,26 @@ public class ShellUtil {
 
                 }
             });
-            Observable<String> stringObservable = Observable.create(new ObservableOnSubscribe<String>() {
+            Observable<String> errorStream = Observable.create(new ObservableOnSubscribe<String>() {
                 @Override
                 public void subscribe(ObservableEmitter<String> emitter) throws Exception {
-                    ShellUtil.loopPrint(sb, process.getErrorStream(), iIntercept,"错误流");
-                    emitter.onNext("");
+                    ShellUtil.loopPrint(sb, process.getErrorStream(), iIntercept, "错误流");
+        /*            isEnd[2] = 1;
+                    while ( isEnd[0]!=1) {
+                        Thread.sleep(50);//避免先删除正确信息又输出错误信息
+                        isEnd[4] = 50 + isEnd[4];
 
+                    }*/
+                    emitter.onNext(sb.toString());
                 }
             });
-            if (!atMainThread) {
-                stringObservable = stringObservable.subscribeOn(Schedulers.io());
-            }
-            stringObservable.subscribe(new Consumer<String>() {
-                                           @Override
-                                           public void accept(String s) throws Exception {
+            errorStream = errorStream.subscribeOn(Schedulers.newThread()).observeOn(Schedulers.io());
+            errorStream.subscribe(new Consumer<String>() {
+                                      @Override
+                                      public void accept(String s) throws Exception {
 
-                                           }
-                                       }
+                                      }
+                                  }
                     , new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
@@ -202,26 +224,27 @@ public class ShellUtil {
                         }
                     });
 
-            int timeoutSecond = 10;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                process.waitFor(timeoutSecond, TimeUnit.SECONDS);
+                process.waitFor(waitTime, TimeUnit.SECONDS);
             } else {
-                ShellUtil.waitFor(process, timeoutSecond, TimeUnit.SECONDS);
+                ShellUtil.waitFor(process, waitTime, TimeUnit.SECONDS);
 
             }
-
+            isEnd[0] = 1;
 
             return Pair.create(sb.toString(), null);
         } catch (Exception e) {
+            isEnd[0] = 1;
             return Pair.create(e.getMessage(), e);
         }
 
     }
 
     public static void loopPrint(StringBuffer sb, InputStream stream, ICmdIntercept<String> iIntercept) throws IOException {
-        loopPrint(sb,stream,iIntercept,"");
+        loopPrint(sb, stream, iIntercept, "");
     }
-    public static void loopPrint(StringBuffer sb, InputStream stream, ICmdIntercept<String> iIntercept,String name) throws IOException {
+
+    public static void loopPrint(StringBuffer sb, InputStream stream, ICmdIntercept<String> iIntercept, String name) throws IOException {
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(stream));
 
 
@@ -270,7 +293,7 @@ public class ShellUtil {
 
         }
         bufferedReader.close();
-        if(iIntercept!=null){
+        if (iIntercept != null) {
             iIntercept.onComplete(name);
         }
     }

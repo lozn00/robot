@@ -24,7 +24,7 @@ import cn.qssq666.robot.config.CmdConfig;
 import cn.qssq666.robot.constants.ServiceExecCode;
 import cn.qssq666.robot.remote.RemoteFlag;
 import cn.qssq666.robot.utils.AppUtils;
-import cn.qssq666.robot.utils.CookieUtil;
+import cn.qssq666.robot.utils.CookieLocalFilePool;
 
 public class RemoteService extends Service {
     private static final String TAG = "RemoteService";
@@ -157,7 +157,7 @@ public class RemoteService extends Service {
         public List queryDataStr(int action, boolean flag1, String[] flag) throws RemoteException {
             if (action == RemoteFlag.FLAG_QUERY_COOKIE) {
                 List list = new ArrayList();
-                String cookie = CookieUtil.getCookie(flag[0], flag[1]);
+                String cookie = CookieLocalFilePool.getCookie(flag[0], flag[1]);
                 list.add(cookie);
                 return list;
             }

@@ -5,18 +5,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.net.http.SslError;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.ClientCertRequest;
 import android.webkit.ConsoleMessage;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.HttpAuthHandler;
 import android.webkit.JsPromptResult;
 import android.webkit.JsResult;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
@@ -30,24 +35,50 @@ import com.loopj.android.http.PersistentCookieStore;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
+import java.security.Key;
+import java.security.KeyStore;
+import java.security.PrivateKey;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Enumeration;
+import java.util.HashMap;
+
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
+
 import cn.qssq666.robot.BuildConfig;
 import cn.qssq666.robot.R;
 import cn.qssq666.robot.app.AppContext;
-import cn.qssq666.robot.constants.Cns;
+import cn.qssq666.robot.business.RobotContentProvider;
+import cn.qssq666.robot.http.newcache.MyCookieManager;
 import cn.qssq666.robot.interfaces.INotify;
-import cn.qssq666.robot.utils.CookieUtil;
+import cn.qssq666.robot.openai.OpenAIBiz;
+import cn.qssq666.robot.utils.CookieLocalFilePool;
 import cn.qssq666.robot.utils.DialogUtils;
+import cn.qssq666.robot.utils.LogUtil;
 
 public class WebViewActivity extends AppCompatActivity {
     private static final String TAG = "WebViewActivity";
     private WebView _webView;
     private JavaScriptBridge javascriptBridge;
     private ProgressBar progressBar;
+    private String url;
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        url = intent.getStringExtra("url");
+        CookieLocalFilePool.setWebviewCookie(new String[]{url, CookieLocalFilePool.getDomainRemoveSchame(url)}, _webView);
+        _webView.loadUrl(url, getRequestHeader(url));
+    }
 
     class MyWebChromeClient extends WebChromeClient {
-
         @Override
         public void onProgressChanged(WebView view, int newProgress) {
             //显示进度条
@@ -147,6 +178,7 @@ public class WebViewActivity extends AppCompatActivity {
 
         }
 
+
     }
 
     @Override
@@ -154,7 +186,7 @@ public class WebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_webview);
         _webView = (WebView) findViewById(R.id.webview);
-        String url = getIntent().getStringExtra("url");
+        url = getIntent().getStringExtra("url");
 
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
 //      WebView _webView = (WebView) findViewById(R.id.webview);
@@ -174,13 +206,26 @@ public class WebViewActivity extends AppCompatActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             settings.setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
         }
+        settings.setJavaScriptEnabled(true);
         settings.setJavaScriptCanOpenWindowsAutomatically(true);
+        _webView.getSettings().setUserAgentString(OpenAIBiz.UserAgent);
         _webView.setWebChromeClient(new MyWebChromeClient());
         _webView.setWebViewClient(new WebViewClient() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+                String url1 = request.getUrl().toString();
+                Log.w(TAG, "shouldOverrideUrlLoading LOAD URL:" + url1);
+                view.loadUrl(url1, getRequestHeader(url));
+                return true;
+            }
+
             @Override //防止点击其它页面的时候自动用系统浏览器等打开
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 if (url.startsWith("http:") || url.startsWith("https:") || url.startsWith("ftp:") || url.startsWith("rtmp:") || url.startsWith("rtsp:")) {
-                    return false;
+                    Log.w(TAG, "shouldOverrideUrlLoading LOAD url-:" + url);
+                    view.loadUrl(url, getRequestHeader(url));
+                    return true;
                 } else {
                     try {
                         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -209,8 +254,84 @@ public class WebViewActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+//                super.onReceivedSslError(view, handler, error);
+                handler.proceed();
+            }
+
+            @Override
+            public void onReceivedHttpAuthRequest(WebView view, HttpAuthHandler handler, String host, String realm) {
+//                super.onReceivedHttpAuthRequest(view, handler, host, realm);
+                handler.proceed("", "");
+            }
+
+            @Override
+            public void onReceivedClientCertRequest(WebView view, ClientCertRequest request) {
+//                super.onReceivedClientCertRequest(view, request);
+//https://www.jianshu.com/p/793bba641d8a cookie相关
+                try {
+                    PrivateKey privateKey = null;
+                    X509Certificate[] certificates = null;
+                    InputStream certificateFileStream = new ByteArrayInputStream(Base64.decode("您的证书内容", Base64.DEFAULT));
+                    KeyStore keyStore = KeyStore.getInstance("证书类型");
+                    String password = "您的证书密码";
+                    keyStore.load(certificateFileStream, password.toCharArray());
+
+                    Enumeration<String> aliases = keyStore.aliases();
+                    String alias = aliases.nextElement();
+
+                    Key key = keyStore.getKey(alias, password.toCharArray());
+                    if (key instanceof PrivateKey) {
+                        privateKey = (PrivateKey) key;
+                        Certificate cert = keyStore.getCertificate(alias);
+                        certificates = new X509Certificate[1];
+                        certificates[0] = (X509Certificate) cert;
+                    }
+
+                    final TrustManager[] trustManagers = new TrustManager[]{
+                            new X509TrustManager() {
+                                @Override
+                                public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                                }
+
+                                @Override
+                                public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
+                                }
+
+                                @Override
+                                public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                                    return new java.security.cert.X509Certificate[]{};
+                                }
+                            }
+                    };
+                    certificateFileStream.close();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        request.proceed(privateKey, certificates);
+                    }
+                } catch (Exception e) {
+                }
+            }
+
+            @Override
             public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error) {
                 super.onReceivedError(view, request, error);
+            }
+
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                //获取登陆后的cookie,看是否写入
+                CookieManager cookiemanager = CookieManager.getInstance();
+                String cookie = cookiemanager.getCookie(url);
+
+                LogUtil.writeLog(TAG, "onPageFinishedcookie:" + cookie);
+                MyCookieManager myCookieManager = new MyCookieManager();
+                myCookieManager.addCookies(CookieLocalFilePool.getCookie(url));
+                if (OpenAIBiz.isOpenApiuRL(url)) {
+                    myCookieManager.addCookies(RobotContentProvider.getInstance().robotReplySecret);
+                    OpenAIBiz.updateOpenAICookie(myCookieManager.getCookies());
+                }
+                myCookieManager.getCookies();
             }
 
             @Override
@@ -218,26 +339,24 @@ public class WebViewActivity extends AppCompatActivity {
                 super.onReceivedHttpError(view, request, errorResponse);
             }
         });
-
-//        javascriptBridge = JavaScriptBridge.bind(this, _webView);
-//        AddCookiesInterceptor.getCookie()
-    /*    String[] cookieArray = cookie.split(";");// 多个Cookie是使用分号分隔的
-        for (int i = 0; i < cookieArray.length; i++) {
-            int position = cookieArray[i].indexOf("=");// 在Cookie中键值使用等号分隔
-            String cookieName = cookieArray[i].substring(0, position);// 获取键
-            String cookieValue = cookieArray[i].substring(position + 1);// 获取值
-
-            String value = cookieName + "=" + cookieValue;// 键值对拼接成 value
-            Log.i("cookie", value);
-//            CookieManager.getInstance().setWebViewCookie(getDomainRemoveSchame(cookiesPath), value);// 设置 Cookie
-        }*/
-
-
-        CookieUtil.setCookie(new String[]{url, Cns.ROBOT_DOMAIN}, _webView);
-        _webView.loadUrl(url);
+        CookieLocalFilePool.setWebviewCookie(new String[]{url, CookieLocalFilePool.getDomainRemoveSchame(url)}, _webView);
+        _webView.loadUrl(url, getRequestHeader(url));
 //        _webView.loadUrl("file:////android_asset/webview/test.html");
 
 
+    }
+
+    @NonNull
+    public static HashMap<String, String> getRequestHeader(String url) {
+        if (OpenAIBiz.isOpenApiuRL(url)) {
+            HashMap<String, String> map = OpenAIBiz.genereateBaseHeader();
+            map.put("Authorization","Bearer " + RobotContentProvider.getInstance().robotReplyKey);
+            map.put("Cookie",RobotContentProvider.getInstance().robotReplySecret);
+            return map;
+
+        } else {
+            return new HashMap<>();
+        }
     }
     /*
        CookieManager.getInstance().removeAllCookie();
@@ -294,6 +413,7 @@ public class WebViewActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_menu_refresh:
+                CookieLocalFilePool.setWebviewCookie(new String[]{url, CookieLocalFilePool.getDomainRemoveSchame(url)}, _webView);
                 _webView.reload();
                 break;
             case R.id.action_menu_debug:
