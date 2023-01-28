@@ -205,10 +205,12 @@ public class DataBindHelper {
     }
 
 
+/*
     @InverseBindingAdapter(attribute = "text")
     public static int getTextFromApp(TextView view) {
         return getTextXX(view);
     }
+*/
 
 
     @InverseBindingAdapter(attribute = "text")
@@ -350,7 +352,7 @@ public class DataBindHelper {
         imageView.setImageDrawable(resourceId);
     }
 
-    @BindingAdapter("android:src")
+/*    @BindingAdapter("android:src")
     public static void setSrc(ImageView view, int resId) {
         view.setImageResource(resId);
     }
@@ -358,7 +360,7 @@ public class DataBindHelper {
     @BindingAdapter("android:text")
     public static void setSrc(TextView view, int resId) {
         view.setText(resId);
-    }
+    }*/
 
     @BindingConversion
     public static String convertDate(Date date) {

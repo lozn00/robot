@@ -1,7 +1,8 @@
 package cn.qssq666.robot;
+import cn.qssq666.robot.RobotCallBinder;
 import java.util.List;
 import java.util.Map;
-interface ICallBack {
+ interface ICallBack {
     void actionPerformed (int actionId);
 //基本数据类型默认为in  can be an out type, so you must declare it as in, out or inout. 'out String flag2' can only be an in parameter.
      void onReceiveMsg( int flag, int what,boolean flag1,   String flag2,in Map map,in List list);

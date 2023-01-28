@@ -13,6 +13,12 @@ import java.text.SimpleDateFormat
 //def appId = rootProject.ext.appId
 def asPlugin = false
 android {
+    namespace 'cn.qssq666.robot'
+    lint {
+        abortOnError false
+    }
+}
+android {
 
 
     defaultConfig {
@@ -22,11 +28,11 @@ android {
                 JPUSH_CHANNEL: "default", //暂时填写默认值即可.
         ]
         applicationId "cn.qssq666.robot"
-        compileSdkVersion 29
-        buildToolsVersion '30.0.3'
+        compileSdkVersion 32
+        buildToolsVersion "$buildToolVersion"
         minSdkVersion 15
 
-        targetSdkVersion 29
+        targetSdkVersion targetSdk
         multiDexEnabled asPlugin ? false : true
         buildConfigField "long", "BUILD_TIME", System.currentTimeMillis() + "L"
         buildConfigField "boolean", "AS_PLUGIN", "" + asPlugin
@@ -207,19 +213,13 @@ android {
 }
 
 
-android {
-    lintOptions {
-        abortOnError false
-    }
-}
-
 //kapt {
 //    generateStubs = true
 //}
 def dbflow_version = "4.8"
 dependencies {
     implementation 'cn.jiguang.sdk:jpush:3.1.6'
-
+    implementation "androidx.appcompat:appcompat:$appcompat_version"
     // 此处以JPush 3.1.6 版本为例。
     implementation 'cn.jiguang.sdk:jcore:1.2.5'
     // 此处以JCore 1.2.5 版本为例。
@@ -230,7 +230,7 @@ dependencies {
     implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
     implementation 'org.greenrobot:eventbus:3.0.0'
     implementation 'com.google.android.material:material:1.0.0'
-    implementation 'androidx.cardview:cardview:1.0.0'
+//    implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.0'
     implementation project(':customcrashlibrary')
@@ -251,9 +251,12 @@ dependencies {
 //    compileOnly 'de.robv.android.xposed:api:82'
 
     compileOnly 'de.robv.android.xposed:api:82:sources'
-    debugApi 'com.squareup.leakcanary:leakcanary-android:1.5'
-    releaseApi 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
-    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+//    debugApi 'com.squareup.leakcanary:leakcanary-android:1.5'
+    // https://mvnrepository.com/artifact/com.squareup.leakcanary/leakcanary-android
+    implementation group: 'com.squareup.leakcanary', name: 'leakcanary-android', version: '2.10'
+
+//    releaseApi 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
+//    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 
 //    implementation 'com.google.android.gms:play-services-ads:17.1.2'
 
@@ -301,7 +304,7 @@ dependencies {
      })*/
     androidTestImplementation 'androidx.test.espresso:espresso-core:' + rootProject.espressoVersion;
     implementation 'androidx.annotation:annotation:' + rootProject.androidxLibVersion;
-    implementation 'com.google.guava:guava:' + rootProject.guavaVersion
+  //  implementation 'com.google.guava:guava:' + rootProject.guavaVersion
     // Testing-only dependencies
     androidTestImplementation 'androidx.test:core:' + rootProject.coreVersion;
     androidTestImplementation 'androidx.test.ext:junit:' + rootProject.extJUnitVersion;

@@ -81,6 +81,7 @@ import cn.qssq666.robot.utils.HttpUtilOld;
 import cn.qssq666.robot.utils.MediaUtils;
 import cn.qssq666.robot.utils.PermissionUtil;
 import cn.qssq666.robot.xbean.HomeMenu;
+import lozn.FloatWindowUtil;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -120,6 +121,7 @@ public class MainActivity extends SuperActivity implements View.OnClickListener 
             }
         }
     };
+    private FloatWindowUtil floatWindowUtil;
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState, @NonNull PersistableBundle outPersistentState) {
@@ -212,8 +214,6 @@ public class MainActivity extends SuperActivity implements View.OnClickListener 
         checkUpdate();
 
 
-        initAd();
-
         if (!BatteryUtil.ignoreBatteryOptimization(this)) {
 
 
@@ -231,6 +231,11 @@ public class MainActivity extends SuperActivity implements View.OnClickListener 
 
                 }
             });
+        }
+
+        if (sharedPreferences.getBoolean(Cns.MISC_FLOATING_WINDOW, false)) {
+            floatWindowUtil = new FloatWindowUtil();
+            floatWindowUtil.startRequestFlowWindow(this);
         }
 
 
@@ -317,55 +322,6 @@ public class MainActivity extends SuperActivity implements View.OnClickListener 
     public static boolean hasHook() {
         return false;
     }
-
-    private void initAd() {
-/*
-
-
-        MobileAds.initialize(this, AppContext.getInstance().getResources().getString(R.string.google_app_id_));
-        adView = findViewById(R.id.ad_view);
-
-
-        BannerUtils.getInstance().show(adView);
-
-        interstitialAdUtil = new InterstitialAdUtil();
-        interstitialAdUtil.init(this);
-        interstitialAdUtil.startRequest();
-
-        interstitialAdUtil.setOnListener(new InterstitialAdUtil.OnListener() {
-            @Override
-            public void onSHow() {
-                if (clickId > 0) {
-
-
-                }
-            }
-
-            @Override
-            public void onClose() {
-
-            }
-
-            @Override
-            public void onFailLoad(int i) {
-
-            }
-
-            @Override
-            public void onLoaded() {
-                if (!BuildConfig.DEBUG) {
-                    interstitialAdUtil.show();
-                }
-
-
-            }
-        });
-*/
-
-
-    }
-
-
 
 
     @Override
@@ -619,12 +575,11 @@ public class MainActivity extends SuperActivity implements View.OnClickListener 
 
             }
             break;
-            case R.id.btn_misc_config:
-            {
+            case R.id.btn_misc_config: {
                 Intent intent = new Intent(this, MiscConfigActivity.class);
                 startActivity(intent);
             }
-                break;
+            break;
 
             case R.id.btn_win_money: {
                 AppUtils.openWebView(this, "https://qssq666.gitee.io/software/s.html");
@@ -804,10 +759,11 @@ public class MainActivity extends SuperActivity implements View.OnClickListener 
         super.onPause();
 //        AppContext.getHandler().removeCallbacks(rAutoLaunch);
     }
+
     @Override
     public void onResume() {
         super.onResume();
-            startUpdateTime();
+        startUpdateTime();
 
     }
 

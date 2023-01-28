@@ -1,28 +1,31 @@
 package cn.qssq666.robot.activity;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
-import android.view.View;
+import android.widget.CompoundButton;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
-import javax.mail.MessagingException;
-
 import cn.qssq666.robot.R;
+import cn.qssq666.robot.app.AppContext;
 import cn.qssq666.robot.asynctask.QssqTask;
 import cn.qssq666.robot.business.RobotContentProvider;
 import cn.qssq666.robot.config.MiscConfig;
 import cn.qssq666.robot.constants.Cns;
 import cn.qssq666.robot.constants.MsgTypeConstant;
-import cn.qssq666.robot.databinding.ActivityMiscConfigBinding;
 import cn.qssq666.robot.utils.AppUtils;
 import cn.qssq666.robot.utils.DialogUtils;
 import cn.qssq666.robot.utils.ParseUtils;
 import cn.qssq666.robot.utils.ProxySendAlertUtil;
+import lozn.FloatWindowUtil;
+import lozn.FloatingPermissionUtils;
 
 public class MiscConfigActivity extends SuperActivity {
 
@@ -45,17 +48,32 @@ public class MiscConfigActivity extends SuperActivity {
 
 
         binding.cbMsgTip.setChecked(configSharePreferences.getBoolean(Cns.MISC_TIP_ENABLE, binding.cbMsgTip.isChecked()));
+        binding.cbKeepFloatWindow.setChecked(configSharePreferences.getBoolean(Cns.MISC_FLOATING_WINDOW, binding.cbKeepFloatWindow.isChecked()));
         binding.cbEanbleMailForward.setChecked(configSharePreferences.getBoolean(Cns.MISC_EMAIL_FORWARD_ENABLE, binding.cbEanbleMailForward.isChecked()));
 
         binding.evProxyRedirectAccount.setText(configSharePreferences.getString(Cns.PROXY_SEND_ACCOUNT, ""));
         binding.cbProxyRedirectAccountIsgroup.setChecked(configSharePreferences.getBoolean(Cns.PROXY_SEND_ACCOUNT_IS_GROUP, false));//  binding.evEmailContent.getText().toString());
-
+        binding.cbKeepFloatWindow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (!FloatingPermissionUtils.hasPermission(MiscConfigActivity.this)) {
+                            FloatingPermissionUtils.requestPermission(MiscConfigActivity.this);
+                        /*    Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + AppContext.getInstance().getPackageName()));
+                            startActivity(intent);*/
+                        }
+                    }
+                }
+            }
+        });
         binding.btnSave.setOnClickListener((vv) -> {
             SharedPreferences.Editor edit = AppUtils.getConfigSharePreferences(getApplicationContext()).edit();
             edit.putString(Cns.MISC_TIP_KEYWORD, binding.evOutCallMsgKeyword.getText().toString());
             edit.putBoolean(Cns.MISC_TIP_ENABLE, binding.cbMsgTip.isChecked());
             edit.putBoolean(Cns.MISC_EMAIL_FORWARD_ENABLE, binding.cbEanbleMailForward.isChecked());
             edit.putBoolean(Cns.PROXY_SEND_ACCOUNT_IS_GROUP, binding.cbProxyRedirectAccountIsgroup.isChecked());
+            edit.putBoolean(Cns.MISC_FLOATING_WINDOW, binding.cbKeepFloatWindow.isChecked());
             edit.putString(Cns.MISC_EMAIL_SENDER_EMAIL, binding.evSenderEmail.getText().toString());
             edit.putString(Cns.MISC_EMAIL_SENDER_EMAIL_PWD, binding.evSenderEmailPwd.getText().toString());
             edit.putString(Cns.MISC_EMAIL_RECEIVER_EMAIL, binding.evReceiverEmailAddress.getText().toString());

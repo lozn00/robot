@@ -1,81 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="cn.qssq666.robot"
-    xmlns:dist="http://schemas.android.com/apk/distribution">
+    xmlns:dist="http://schemas.android.com/apk/distribution"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <dist:module dist:instant="true" />
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
-    <uses-permission android:name="android.permission.DEVICE_POWER" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission
+        android:name="android.permission.DEVICE_POWER"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
-    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission
+        android:name="android.permission.READ_LOGS"
+        tools:ignore="ProtectedPermissions" />
     <!-- 在SDCard中创建与删除文件权限 -->
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission
+        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+        tools:ignore="ProtectedPermissions" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_USER_DICTIONARY" />
     <!--28需要下面的权限-->
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
-    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
 
 
     <!--为了插件需要增加更多权限-->
 
-    <uses-feature android:name="android.hardware.camera" android:required="true"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="com.aicoin.phone.permission.JPUSH_MESSAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT"/>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"/>
-    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS"/>
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_SETTINGS"/>
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.aicoin.phone.permission.JPUSH_MESSAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission
+        android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission
+        android:name="android.permission.WRITE_SETTINGS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_SETTINGS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />
+
     <application
-android:requestLegacyExternalStorage="true"
         android:name=".app.AppContext"
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
         android:icon="@mipmap/ic_launcher"
         android:label="情迁聊天机器人"
         android:networkSecurityConfig="@xml/network_security_config_qssq"
+        android:requestLegacyExternalStorage="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:appComponentFactory,android:label"
-        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
-        >
+        tools:replace="android:appComponentFactory,android:label">
         <activity
             android:name="cn.qssq666.robot.activity.MainActivity"
+            android:launchMode="singleTop"
+            android:exported="true"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -86,14 +107,16 @@ android:requestLegacyExternalStorage="true"
 
         <activity
             android:name=".activity.click.NotificationAct"
-            android:theme="@style/NotUiTheme"
-            android:screenOrientation="portrait">
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/NotUiTheme">
 
             <intent-filter>
                 <action android:name="click.notification" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
         <provider
             android:name="cn.qssq666.robot.business.RobotContentProvider"
             android:authorities="cn.qssq666.robot"
@@ -159,16 +182,16 @@ android:requestLegacyExternalStorage="true"
             android:name="cn.qssq666.robot.activity.AboutActivity"
             android:theme="@style/AppTheme"></activity>
 
-<!--        <activity
-            android:name="cn.qssq666.robot.activity.AuthActivity"
-            android:exported="true"
-            android:theme="@style/AppTheme">
+        <!--        <activity
+                    android:name="cn.qssq666.robot.activity.AuthActivity"
+                    android:exported="true"
+                    android:theme="@style/AppTheme">
 
-            <intent-filter>
-                <action android:name="cn.qssq666.robot.auth"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>-->
+                    <intent-filter>
+                        <action android:name="cn.qssq666.robot.auth"/>
+                        <category android:name="android.intent.category.DEFAULT"/>
+                    </intent-filter>
+                </activity>-->
 
         <activity
             android:name="cn.qssq666.robot.activity.WatchAdActivity"
@@ -240,13 +263,13 @@ android:requestLegacyExternalStorage="true"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:name=".webview.WebViewActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"></activity>
         <activity
             android:name="cn.qssq666.tencent5x.X5WebViewActivity"
-            android:screenOrientation="portrait"
             android:launchMode="singleTop"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.MyApplication.App.ContentContainNavigationBarNoActionBar"
 
             ></activity>
@@ -268,8 +291,6 @@ android:requestLegacyExternalStorage="true"
             android:theme="@style/AppTheme"></activity>
 
 
-
-
         <activity
 
 
@@ -286,13 +307,14 @@ android:requestLegacyExternalStorage="true"
             android:theme="@style/Toolbar">
 
 
-
         </activity>
 
 
         <activity
             android:name=".activity.intent.ImportLuaActivity"
+
             android:excludeFromRecents="true"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="导入Lua到机器人"
             android:theme="@style/NotUiTheme">
@@ -316,6 +338,7 @@ android:requestLegacyExternalStorage="true"
         <activity
             android:name=".activity.intent.ImportJSActivity"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="导入JS到机器人"
             android:theme="@style/NotUiTheme">
@@ -339,6 +362,7 @@ android:requestLegacyExternalStorage="true"
         <activity
             android:name=".activity.intent.RunLuaActivity"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="运行Lua机器人插件"
             android:theme="@style/NotUiTheme">
@@ -363,6 +387,7 @@ android:requestLegacyExternalStorage="true"
         <activity
             android:name=".activity.intent.RunJSActivity"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="运行JS机器人插件"
             android:theme="@style/NotUiTheme">
@@ -387,6 +412,7 @@ android:requestLegacyExternalStorage="true"
         <activity
             android:name=".activity.intent.RunRobotApiCodeLuaActivity"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="测试lua机器人Api"
             android:theme="@style/NotUiTheme">
@@ -411,6 +437,7 @@ android:requestLegacyExternalStorage="true"
         <activity
             android:name=".activity.intent.RunRobotApiCodeJSActivity"
             android:excludeFromRecents="true"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="测试JS机器人Api"
             android:theme="@style/NotUiTheme">
@@ -432,8 +459,8 @@ android:requestLegacyExternalStorage="true"
         </activity>
 
         <activity
-
             android:name="cn.qssq666.robot.activity.LuaEditCodeActivity"
+            android:exported="true"
 
             android:icon="@mipmap/ic_launcher"
             android:label="编辑Lua机器人插件"
@@ -461,8 +488,8 @@ android:requestLegacyExternalStorage="true"
 
 
         <activity
-
             android:name="cn.qssq666.robot.activity.JSEditCodeActivity"
+            android:exported="true"
 
             android:icon="@mipmap/ic_launcher"
             android:label="编辑JS机器人插件"
@@ -490,8 +517,8 @@ android:requestLegacyExternalStorage="true"
 
 
         <activity
-
             android:name="cn.qssq666.robot.activity.JSEditCodeNActivity"
+            android:exported="true"
 
             android:icon="@mipmap/ic_launcher"
             android:label="编辑JS机器人插件X"
@@ -519,8 +546,8 @@ android:requestLegacyExternalStorage="true"
 
 
         <activity
-
             android:name="cn.qssq666.robot.activity.intent.EditAnyCodeActivity"
+            android:exported="true"
 
             android:icon="@mipmap/ic_launcher"
             android:label="编辑代码"
@@ -576,29 +603,32 @@ android:requestLegacyExternalStorage="true"
 
 
         <activity
-
-
             android:name="cn.qssq666.robot.activity.ErrorActivity"
+
+            android:exported="true"
             android:theme="@style/AppTheme"></activity>
 
         <activity
-
-
             android:name=".activity.PluginManagerActivity"
+
+            android:exported="true"
             android:theme="@style/Toolbar"></activity>
 
 
         <activity
             android:name="cn.qssq666.robot.activity.AddWordActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Toolbar"></activity>
 
         <activity
             android:name="cn.qssq666.robot.activity.ImportWordActivity"
+            android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Toolbar"></activity>
 
         <meta-data
+
             android:name="plugin_info"
             android:resource="@layout/as_plugin_load_info" />
         <meta-data
@@ -607,13 +637,13 @@ android:requestLegacyExternalStorage="true"
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="baiducloud" />
-<!--        <activity
-            android:name="com.google.android.gms.ads.AdActivity"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            tools:replace="android:theme" />
-        <meta-data
-            android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-6391307239504132~6124388718" />-->
+        <!--        <activity
+                    android:name="com.google.android.gms.ads.AdActivity"
+                    android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+                    tools:replace="android:theme" />
+                <meta-data
+                    android:name="com.google.android.gms.ads.APPLICATION_ID"
+                    android:value="ca-app-pub-6391307239504132~6124388718" />-->
 
         <service
             android:name="cn.qssq666.robot.service.RemoteService"
@@ -625,14 +655,18 @@ android:requestLegacyExternalStorage="true"
             </intent-filter>
         </service>
 
-     <!--   <service
-            android:name=".service.DaemonService$InnerService"
-            android:process="@string/engine_process_name" />-->
+        <!--   <service
+               android:name=".service.DaemonService$InnerService"
+               android:process="@string/engine_process_name" />-->
         <service
             android:name=".service.DaemonService"
-            android:process="@string/engine_process_name" />
+            android:exported="true" />
+        <service
+            android:name="lozn.FloatWinfowServices"
+            android:exported="true" />
 
         <service
+
             android:name=".service.DaemonJobService"
             android:enabled="true"
             android:exported="true"

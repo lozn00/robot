@@ -7,7 +7,7 @@ import android.os.Looper;
 import android.os.StrictMode;
 import android.widget.Toast;
 
-import com.squareup.leakcanary.LeakCanary;
+//import com.squareup.leakcanary.LeakCanary;
 import com.umeng.analytics.MobclickAgent;
 
 import java.security.SecureRandom;
@@ -125,12 +125,12 @@ public class AppContext extends MultiDexApplication {
         return handler;
     }
 
-    private void initLeakCanary() {
+  /*  private void initLeakCanary() {
         if (LeakCanary.isInAnalyzerProcess(this)) {
             return;
         }
         LeakCanary.install(this);
-    }
+    }*/
 
     @Override
     public void onCreate() {
@@ -204,7 +204,7 @@ public class AppContext extends MultiDexApplication {
         JPushInterface.init(this);
 
         if (BuildConfig.DEBUG) {
-            initLeakCanary();
+//            initLeakCanary();
 
       /*      StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
                     .detectAll()//监测所有内容

@@ -140,6 +140,13 @@ public class ProxySendAlertUtil {
         transport.close();
     }
 
+    public static boolean isAlerting() {
+        if(mMediaPlayer!=null&&mMediaPlayer.isPlaying()){
+            return true;
+        }
+        return false;
+    }
+
     /**
      * huò qǔ de shì líng shēng xiāng yìng de Ringtone
      *

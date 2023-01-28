@@ -1017,20 +1017,26 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
             String message = item.getMessage();
             if (_miscConfig.enableOutProgramVoiceAlert) {
                 if (!TextUtils.isEmpty(_miscConfig.outProgramVoiceKeyword)) {
-                    String[] split = _miscConfig.outProgramVoiceKeyword.split(",");
-                    findKeyword:
-                    for (String s : split) {
-                        if (message.contains(s)) {
-                            ProxySendAlertUtil.vibrate(AppContext.getContext(), 30);
-                            ProxySendAlertUtil.PlayRingTone(AppContext.getContext(), RingtoneManager.TYPE_ALARM, 60);
-                            ProxySendAlertUtil.emailAlert(this, message);
-                            break findKeyword;
+                    if (_miscConfig.outProgramVoiceKeyword.equals("all") || _miscConfig.outProgramVoiceKeyword.equals("any") || _miscConfig.outProgramVoiceKeyword.equals("全部")) {
+                        ProxySendAlertUtil.vibrate(AppContext.getContext(), 30);
+                        ProxySendAlertUtil.PlayRingTone(AppContext.getContext(), RingtoneManager.TYPE_ALARM, 60);
+                        ProxySendAlertUtil.emailAlert(this, message);
+                    } else {
+
+                        String[] split = _miscConfig.outProgramVoiceKeyword.split("\\,");
+                        if (split != null && split.length > 0) {
+                            findKeyword:
+                            for (String s : split) {
+                                if (message.toLowerCase().contains(s.toLowerCase())) {
+                                    ProxySendAlertUtil.vibrate(AppContext.getContext(), 30);
+                                    ProxySendAlertUtil.PlayRingTone(AppContext.getContext(), RingtoneManager.TYPE_ALARM, 60);
+                                    ProxySendAlertUtil.emailAlert(this, message);
+                                    break findKeyword;
+                                }
+                            }
                         }
+
                     }
-                } else {
-                    ProxySendAlertUtil.vibrate(AppContext.getContext(), 30);
-                    ProxySendAlertUtil.PlayRingTone(AppContext.getContext(), RingtoneManager.TYPE_ALARM, 60);
-                    ProxySendAlertUtil.emailAlert(this, message);
                 }
 
             }
@@ -4171,7 +4177,7 @@ System.out.println(m.group());//输出“水货”“正品”
         if (TextUtils.isEmpty(argStr)) {
             args = new String[]{};
         } else {
-          String   temp=argStr.replace("  "," ");
+            String temp = argStr.replace("  ", " ");
             args = temp.split(" ");
         }
 
@@ -6044,10 +6050,10 @@ System.out.println(m.group());//输出“水货”“正品”
                         public String onRunBackgroundThread(StringBuffer[] params) {
                             StringBuffer sb = params[0];
                             boolean[] waiting = {true, true};
-                            String cmd="awk '{gsub(/"+waitReplace+"/,\""+replaceContent+"\")}1' "+file+"";
-                            sb.append("\n执行命令:"+cmd);
-                            sb.append("\n被操作的文件:"+file);
-                            sb.append("\n把:"+waitReplace+"替换为"+replaceContent+"\n");
+                            String cmd = "awk '{gsub(/" + waitReplace + "/,\"" + replaceContent + "\")}1' " + file + "";
+                            sb.append("\n执行命令:" + cmd);
+                            sb.append("\n被操作的文件:" + file);
+                            sb.append("\n把:" + waitReplace + "替换为" + replaceContent + "\n");
                             Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{cmd}, new ICmdIntercept<String>() {
                                 //                        Pair<String, Exception> stringExceptionPair = ShellUtil.executeAndFetchResultPair(new String[]{"echo before adb.tcp.port;getprop service.adb.tcp.port;frpc.sh"}, new ICmdIntercept<String>() {
                                 @Override
@@ -6229,14 +6235,14 @@ System.out.println(m.group());//输出“水货”“正品”
                 }
                 String value = item.getMessage().replace(CmdConfig.SERCERT_UPDATE, "").trim();
                 if (TextUtils.isEmpty(value)) {
-                    MsgReCallUtil.notifyHasDoWhileReply(this, "请传递 Chat gpt apisercet,获取网址为:https://beta.openai.com/,当前sercretKey为:"+  _miscConfig.chatgpt_api_sercret_key, item);
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请传递 Chat gpt apisercet,获取网址为:https://beta.openai.com/,当前sercretKey为:" + _miscConfig.chatgpt_api_sercret_key, item);
 
                     return true;
                 }
-                String beforeValue=_miscConfig.chatgpt_api_sercret_key;
-                _miscConfig.chatgpt_api_sercret_key=value;
-                sharedPreferences.edit().putString(Cns.CHAT_GPT_API_SERCRET,value);
-                MsgReCallUtil.notifyHasDoWhileReply(this, "更新完成\n之前值:"+ beforeValue+"\n现在值:"+value, item);
+                String beforeValue = _miscConfig.chatgpt_api_sercret_key;
+                _miscConfig.chatgpt_api_sercret_key = value;
+                sharedPreferences.edit().putString(Cns.CHAT_GPT_API_SERCRET, value);
+                MsgReCallUtil.notifyHasDoWhileReply(this, "更新完成\n之前值:" + beforeValue + "\n现在值:" + value, item);
                 return true;
             }
             case CmdConfig.BROWSER_ACCESS_INNER: {
