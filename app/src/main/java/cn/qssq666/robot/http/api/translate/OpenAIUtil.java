@@ -4,6 +4,8 @@ import android.text.TextUtils;
 
 import java.util.UUID;
 
+import cn.qssq666.robot.utils.AppUtils;
+
 public class OpenAIUtil {
     public static String parentMessageID = "";
 
@@ -42,6 +44,15 @@ public class OpenAIUtil {
                 "    \"temperature\": 1,\n" +
                 "    \"max_tokens\": 1000\n" +
                 "}";
+    }
+    public static String GenereateBodyByTextUseApiGPT3_5( String text) {
+        return "{\n" +
+                "  \"model\": \"gpt-3.5-turbo\",\n" +
+                "  \"messages\": [{\"role\": \"system\", \"content\": \""+ AppUtils.encodeUrl(text) +"\"}],\n" +
+                "  \"temperature\": 0.7\n" +
+                "}";
+
+
     }
 
 

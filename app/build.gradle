@@ -28,8 +28,8 @@ android {
                 JPUSH_CHANNEL: "default", //暂时填写默认值即可.
         ]
         applicationId "cn.qssq666.robot"
-        compileSdkVersion 32
-        buildToolsVersion "$buildToolVersion"
+        compileSdk 32
+//        buildToolsVersion "31.0.0"
         minSdkVersion 15
 
         targetSdkVersion targetSdk
@@ -253,7 +253,7 @@ dependencies {
     compileOnly 'de.robv.android.xposed:api:82:sources'
 //    debugApi 'com.squareup.leakcanary:leakcanary-android:1.5'
     // https://mvnrepository.com/artifact/com.squareup.leakcanary/leakcanary-android
-    implementation group: 'com.squareup.leakcanary', name: 'leakcanary-android', version: '2.10'
+    debugImplementation group: 'com.squareup.leakcanary', name: 'leakcanary-android', version: '2.10'
 
 //    releaseApi 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'
 //    testImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5'

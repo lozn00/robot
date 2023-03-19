@@ -33,7 +33,8 @@ public class Cns {
          查询二维码生成的结果
      */
     public static final String QUERY_ORDER_APP_URL = ROBOT_DOMAIN+"/queryorder?order=%s&type=%d&token=%s";
-    public static final String MISC_TIP_KEYWORD = "KEY_MISC_TIP_KEYWORD";
+    public static final String MISC_TIP_VOICE_EMAIL_TIP_KEYWORD = "KEY_MISC_TIP_KEYWORD";
+    public static final String MISC_TIP_IGNORE_KEYWORD = "KEY_MISC_TIP_IGNORE_KEYWORD";
     public static final String MISC_EMAIL_FORWARD_ENABLE = "KEY_EMAIL_FORWARD_ENABLE";
     public static final String MISC_EMAIL_SENDER_EMAIL = "KEY_EMAIL_SENDER_EMAIL";
     public static final String MISC_EMAIL_SENDER_EMAIL_PWD = "KEY_EMAIL_SENDER_EMAIL_PWD";

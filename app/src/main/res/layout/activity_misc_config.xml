@@ -19,16 +19,18 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+
                 <TextView
+                    android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:text="外部关键词震动提醒" />
+                    android:text="外部调用关键词额外提醒"
+                    android:textColor="@color/colorPrimaryBlack" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="外部程序震动提醒关键词(多个用,隔开)">
+                    android:hint="外部调用提醒关键词(多个用,隔开)">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/ev_out_call_msg_keyword"
@@ -44,7 +46,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="外部程序消息代发消息关键字震动提醒"
+                    android:hint="声音和震动提醒"
                     android:selectAllOnFocus="true"
                     android:textSize="12sp" />
 
@@ -59,7 +61,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="外部程序发送目标重定向账户">
+                        android:hint="外部程序发送目标重定向账号">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/ev_proxy_redirect_account"
@@ -77,11 +79,27 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <TextView
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="关键词忽略">
 
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ev_keyword_ignore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:selectAllOnFocus="true"
+                        android:textSize="12sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <TextView
+                    android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="代发消息转邮箱" />
+                    android:text="代发消息转邮箱"
+                    android:textColor="@color/colorPrimaryBlack" />
 
                 <CheckBox
                     android:id="@+id/cb_eanble_mail_forward"
@@ -170,11 +188,11 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/ev_email_content"
-                        android:singleLine="false"
-                        android:minLines="3"
-                        android:gravity="top|left"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:gravity="top|left"
+                        android:minLines="3"
+                        android:singleLine="false" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -195,15 +213,17 @@
                         android:layout_height="wrap_content" />
 
                 </com.google.android.material.textfield.TextInputLayout>
+
                 <TextView
-                    android:text="----------------------------------------"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="----------------------------------------" />
+
                 <CheckBox
                     android:id="@+id/cb_keep_float_window"
-                    android:text="悬浮窗运行(重启生效)"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:text="悬浮窗运行(重启生效)" />
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -1,12 +1,10 @@
 package cn.qssq666.robot.activity;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.widget.CompoundButton;
 
@@ -14,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
 import cn.qssq666.robot.R;
-import cn.qssq666.robot.app.AppContext;
 import cn.qssq666.robot.asynctask.QssqTask;
 import cn.qssq666.robot.business.RobotContentProvider;
 import cn.qssq666.robot.config.MiscConfig;
@@ -24,7 +21,6 @@ import cn.qssq666.robot.utils.AppUtils;
 import cn.qssq666.robot.utils.DialogUtils;
 import cn.qssq666.robot.utils.ParseUtils;
 import cn.qssq666.robot.utils.ProxySendAlertUtil;
-import lozn.FloatWindowUtil;
 import lozn.FloatingPermissionUtils;
 
 public class MiscConfigActivity extends SuperActivity {
@@ -37,7 +33,8 @@ public class MiscConfigActivity extends SuperActivity {
         setTitle("杂项配置");
         binding = DataBindingUtil.setContentView(this, R.layout.activity_misc_config);
         SharedPreferences configSharePreferences = AppUtils.getConfigSharePreferences(getApplicationContext());
-        binding.evOutCallMsgKeyword.setText(configSharePreferences.getString(Cns.MISC_TIP_KEYWORD, ""));
+        binding.evOutCallMsgKeyword.setText(configSharePreferences.getString(Cns.MISC_TIP_VOICE_EMAIL_TIP_KEYWORD, ""));
+        binding.evKeywordIgnore.setText(configSharePreferences.getString(Cns.MISC_TIP_IGNORE_KEYWORD, ""));
         binding.evSenderEmail.setText(configSharePreferences.getString(Cns.MISC_EMAIL_SENDER_EMAIL, ""));
         binding.evSenderEmailPwd.setText(configSharePreferences.getString(Cns.MISC_EMAIL_SENDER_EMAIL_PWD, ""));
         binding.evReceiverEmailAddress.setText(configSharePreferences.getString(Cns.MISC_EMAIL_RECEIVER_EMAIL, ""));
@@ -69,13 +66,14 @@ public class MiscConfigActivity extends SuperActivity {
         });
         binding.btnSave.setOnClickListener((vv) -> {
             SharedPreferences.Editor edit = AppUtils.getConfigSharePreferences(getApplicationContext()).edit();
-            edit.putString(Cns.MISC_TIP_KEYWORD, binding.evOutCallMsgKeyword.getText().toString());
+            edit.putString(Cns.MISC_TIP_VOICE_EMAIL_TIP_KEYWORD, binding.evOutCallMsgKeyword.getText().toString());
             edit.putBoolean(Cns.MISC_TIP_ENABLE, binding.cbMsgTip.isChecked());
             edit.putBoolean(Cns.MISC_EMAIL_FORWARD_ENABLE, binding.cbEanbleMailForward.isChecked());
             edit.putBoolean(Cns.PROXY_SEND_ACCOUNT_IS_GROUP, binding.cbProxyRedirectAccountIsgroup.isChecked());
             edit.putBoolean(Cns.MISC_FLOATING_WINDOW, binding.cbKeepFloatWindow.isChecked());
             edit.putString(Cns.MISC_EMAIL_SENDER_EMAIL, binding.evSenderEmail.getText().toString());
             edit.putString(Cns.MISC_EMAIL_SENDER_EMAIL_PWD, binding.evSenderEmailPwd.getText().toString());
+            edit.putString(Cns.MISC_TIP_IGNORE_KEYWORD, binding.evKeywordIgnore.getText().toString());
             edit.putString(Cns.MISC_EMAIL_RECEIVER_EMAIL, binding.evReceiverEmailAddress.getText().toString());
             edit.putString(Cns.MISC_EMAIL_SERVER_ADDRESS, binding.evEmailServerAddress.getText().toString());
             edit.putInt(Cns.MISC_EMAIL_SERVER_PORT, ParseUtils.parseInt(binding.evEmailPort.getText().toString(), 25));

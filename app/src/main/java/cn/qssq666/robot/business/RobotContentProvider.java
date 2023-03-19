@@ -838,7 +838,8 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 
     private void initMiscConfig() {
 //        mCfBaseEnableOutProgramVoiceKeyword
-        _miscConfig.outProgramVoiceKeyword = sharedPreferences.getString(Cns.MISC_TIP_KEYWORD, "实盘");
+        _miscConfig.outProgramVoiceKeyword = sharedPreferences.getString(Cns.MISC_TIP_VOICE_EMAIL_TIP_KEYWORD, "实盘");
+        _miscConfig.ignoreKeyword = sharedPreferences.getString(Cns.MISC_TIP_IGNORE_KEYWORD, "");
         _miscConfig.enableOutProgramVoiceAlert = sharedPreferences.getBoolean(Cns.MISC_TIP_ENABLE, false);
         _miscConfig.enableEmailForward = sharedPreferences.getBoolean(Cns.MISC_EMAIL_FORWARD_ENABLE, false);// binding.cbEanbleMailForward.isChecked());
         _miscConfig.sender = sharedPreferences.getString(Cns.MISC_EMAIL_SENDER_EMAIL, "");// binding.evSenderEmail.getText().toString());
@@ -984,14 +985,12 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 
     @Nullable
     private Uri doOnReceiveMesg(final ContentValues values) {
-        if (mForceUpdate) {
-            return getFailUri("please update");
-        }
 
         final MsgItem item = RobotUtil.contentValuesToMsgItem(values);
 
 
         initSelfAccont(item);
+
         if ("proxy_send_msg".equals(item.getApptype())) {
             if (mItem != null && !mItem.getSelfuin().equals(item.getSelfuin())) {
                 String robot = mItem.getSelfuin();
@@ -1015,30 +1014,45 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
                 item.setFrienduin(_miscConfig.redirectProxySendAccount.trim());
             }
             String message = item.getMessage();
-            if (_miscConfig.enableOutProgramVoiceAlert) {
-                if (!TextUtils.isEmpty(_miscConfig.outProgramVoiceKeyword)) {
-                    if (_miscConfig.outProgramVoiceKeyword.equals("all") || _miscConfig.outProgramVoiceKeyword.equals("any") || _miscConfig.outProgramVoiceKeyword.equals("全部")) {
-                        ProxySendAlertUtil.vibrate(AppContext.getContext(), 30);
-                        ProxySendAlertUtil.PlayRingTone(AppContext.getContext(), RingtoneManager.TYPE_ALARM, 60);
-                        ProxySendAlertUtil.emailAlert(this, message);
-                    } else {
 
-                        String[] split = _miscConfig.outProgramVoiceKeyword.split("\\,");
-                        if (split != null && split.length > 0) {
-                            findKeyword:
-                            for (String s : split) {
-                                if (message.toLowerCase().contains(s.toLowerCase())) {
-                                    ProxySendAlertUtil.vibrate(AppContext.getContext(), 30);
-                                    ProxySendAlertUtil.PlayRingTone(AppContext.getContext(), RingtoneManager.TYPE_ALARM, 60);
-                                    ProxySendAlertUtil.emailAlert(this, message);
-                                    break findKeyword;
-                                }
-                            }
+            if (!TextUtils.isEmpty(_miscConfig.ignoreKeyword)) {
+                String[] split = _miscConfig.ignoreKeyword.split("\\,");
+                if (split != null && split.length > 0) {
+                    findKeyword:
+                    for (String s : split) {
+                        if (message.toLowerCase().contains(s.toLowerCase())) {
+                            return getSuccUri("外部消息调用,忽略,包含忽略关键词:" + s+",来自:"+item.getNickname());
                         }
-
                     }
                 }
+            }
 
+            if (!TextUtils.isEmpty(_miscConfig.outProgramVoiceKeyword)) {
+                if (_miscConfig.outProgramVoiceKeyword.equals("all") || _miscConfig.outProgramVoiceKeyword.equals("any") || _miscConfig.outProgramVoiceKeyword.equals("全部")) {
+
+                    if (_miscConfig.enableOutProgramVoiceAlert) {
+                        ProxySendAlertUtil.vibrate(AppContext.getContext(), 30);
+                        ProxySendAlertUtil.PlayRingTone(AppContext.getContext(), RingtoneManager.TYPE_ALARM, 60);
+                    }
+                    ProxySendAlertUtil.emailAlert(this, message);
+                } else {
+
+                    String[] split = _miscConfig.outProgramVoiceKeyword.split("\\,");
+                    if (split != null && split.length > 0) {
+                        findKeyword:
+                        for (String s : split) {
+                            if (message.toLowerCase().contains(s.toLowerCase())) {
+                                if (_miscConfig.enableOutProgramVoiceAlert) {
+                                    ProxySendAlertUtil.vibrate(AppContext.getContext(), 30);
+                                    ProxySendAlertUtil.PlayRingTone(AppContext.getContext(), RingtoneManager.TYPE_ALARM, 60);
+                                }
+                                ProxySendAlertUtil.emailAlert(this, message);
+                                break findKeyword;
+                            }
+                        }
+                    }
+
+                }
             }
 
 

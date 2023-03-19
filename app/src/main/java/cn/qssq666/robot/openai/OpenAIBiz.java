@@ -59,6 +59,7 @@ import retrofit2.Retrofit;
 
 public class OpenAIBiz {
     public static String UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36";
+    private static int currentIndex;
 
     //    static MapUrlCookie storeCookies = new MapUrlCookie();
     public static void updateOpenAICookie(String cookie) {
@@ -207,9 +208,15 @@ public class OpenAIBiz {
                         OpenAI projectAPI = retrofit.create(OpenAI.class);
                         ResultBean resultBean = new ResultBean();
                         try {
-                            String content = OpenAIUtil.GenereateBodyByTextUseApi(ask);
+                            String content = OpenAIUtil.GenereateBodyByTextUseApiGPT3_5(ask);
                             RequestBody requestBody = RequestBody.create(MediaType.parse("application/json; charset=utf-8"), content);
-                            Call<String> call1 = projectAPI.queryByAPI( "Bearer " +robotContentProvider._miscConfig.chatgpt_api_sercret_key, requestBody);
+                            String chatgptApiSercretKey = robotContentProvider._miscConfig.chatgpt_api_sercret_key;
+                            String[] split = chatgptApiSercretKey.split("\\|");
+                            currentIndex++;
+                            if(currentIndex>=split.length){
+                                currentIndex=0;
+                            }
+                            Call<String> call1 = projectAPI.queryByAPI("Bearer " + split[currentIndex], requestBody);
                             Response<String> response = call1.execute();
                             if (!response.isSuccessful()) {
                                 if (!RobotContentProvider.getInstance().isManager(msgItem)) {
@@ -328,14 +335,18 @@ public class OpenAIBiz {
     }
 
     public static void doOpenAI(final RobotContentProvider robotContentProvider, final MsgItem msgItem, RequestBean bean, GroupWhiteNameBean whiteNameBean, final IIntercept<ResultBean> intercept) {
-        if (TextUtils.isEmpty(robotContentProvider._miscConfig.chatgpt_api_sercret_key)) {
+      /*  if (TextUtils.isEmpty(robotContentProvider._miscConfig.chatgpt_api_sercret_key)) {
             OpenAIBiz.doOpenAIByWebChatGPT(robotContentProvider, msgItem, bean, whiteNameBean, intercept);
 
-        } else {
+        } else {*/
+        if (!TextUtils.isEmpty(robotContentProvider._miscConfig.chatgpt_api_sercret_key)) {
             OpenAIBiz.doOpenAIByPayAPISercret(robotContentProvider, msgItem, bean, whiteNameBean, intercept);
+
         }
+//        }
     }
-    public static void   doOpenAIByWebChatGPT(final RobotContentProvider robotContentProvider, final MsgItem msgItem, RequestBean bean, GroupWhiteNameBean whiteNameBean, final IIntercept<ResultBean> intercept) {
+
+    public static void doOpenAIByWebChatGPT(final RobotContentProvider robotContentProvider, final MsgItem msgItem, RequestBean bean, GroupWhiteNameBean whiteNameBean, final IIntercept<ResultBean> intercept) {
         Observable.create(new ObservableOnSubscribe<ResultBean>() {
                     @Override
                     public void subscribe(ObservableEmitter<ResultBean> emitter) throws Exception {

@@ -2,6 +2,7 @@ package cn.qssq666.robot.config;
 
 public class MiscConfig {
     public String chatgpt_api_sercret_key="";
+    public String ignoreKeyword="";
 
     public String getSender() {
         return sender;
