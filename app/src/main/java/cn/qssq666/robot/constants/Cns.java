@@ -43,6 +43,10 @@ public class Cns {
     public static final String MISC_EMAIL_SERVER_PORT = "KEY_EMAIL_SERVER_PORT";
     public static final String MISC_EMAIL_CONTENT = "KEY_EMAIL_CONTENT";
     public static final String MISC_TIP_ENABLE = "KEY_MISC_TIP_ENABLE";
+    public static final String MISC_URL_FORWARD_ENABLE = "KEY_MISC_URL_FORWARD_ENABLE";
+    public static final String MISC_URL_FORWARD_URL = "MISC_URL_FORWARD_URL";
+    public static final String MISC_URL_FORWARD_URL_KEYWORD = "MISC_URL_FORWARD_URL_KEYWORD";
+    public static final String MISC_ALERT_ALLOW_HOUR = "MISC_ALERT_ALLOW_HOUR";
     public static final String MISC_FLOATING_WINDOW = "KEY_FLOATING_WINDOW_ENABLE";
     public static final String PROXY_SEND_ACCOUNT = "KEY_PROXY_SEND_ACCOUNT";
     public static final String PROXY_SEND_ACCOUNT_IS_GROUP = "KEY_PROXY_SEND_ACCOUNT_ISGROUP";

@@ -18,13 +18,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
-
-
                 <TextView
-                    android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="外部调用关键词额外提醒"
+                    android:layout_marginLeft="10dp"
+                    android:text="全局提醒时间段(为空允许所有时间段)"
+                    android:textColor="@color/colorPrimaryBlack" />
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="01,02,03,22,55或06-22,3">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ev_alert_time"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:selectAllOnFocus="true"
+                        android:textSize="12sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="全局外部调用关键词额外提醒"
                     android:textColor="@color/colorPrimaryBlack" />
 
                 <com.google.android.material.textfield.TextInputLayout
@@ -93,11 +110,53 @@
                         android:textSize="12sp" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-
                 <TextView
-                    android:layout_marginLeft="10dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="代发消息转接口(实现语音音箱朗读)"
+                    android:textColor="@color/colorPrimaryBlack" />
+
+
+                <CheckBox
+                    android:id="@+id/cb_url_forward"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="启用" />
+
+
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="网址传递,支持变量为$msg 或[msg]">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="url提醒关键词">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/ev_out_call_url_keyword"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:selectAllOnFocus="true"
+                            android:textSize="12sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/ev_out_call_url"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:selectAllOnFocus="true"
+                        android:textSize="12sp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
                     android:text="代发消息转邮箱"
                     android:textColor="@color/colorPrimaryBlack" />
 

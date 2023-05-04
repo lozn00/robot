@@ -3,6 +3,7 @@ package cn.qssq666.robot.config;
 public class MiscConfig {
     public String chatgpt_api_sercret_key="";
     public String ignoreKeyword="";
+    public String keyword_alert_hour ="";
 
     public String getSender() {
         return sender;
@@ -59,8 +60,11 @@ public  boolean enableEmailForward;
     public  int emailPort;
    public  String emailServer;
    public  String emailContent;
+    public  boolean enableForwardUrl;
+   public  String forwardUrl;
+   public  String forwardUrlKeyword;
   public   boolean enableOutProgramVoiceAlert;
-  public boolean redirectProxyAccountIsGroup;
+    public boolean redirectProxyAccountIsGroup;
   public String redirectProxySendAccount;
     public  String outProgramVoiceKeyword;
     public String getOutProgramVoiceKeyword() {

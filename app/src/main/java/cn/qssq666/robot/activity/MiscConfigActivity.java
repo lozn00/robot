@@ -40,12 +40,16 @@ public class MiscConfigActivity extends SuperActivity {
         binding.evReceiverEmailAddress.setText(configSharePreferences.getString(Cns.MISC_EMAIL_RECEIVER_EMAIL, ""));
         binding.evEmailServerAddress.setText(configSharePreferences.getString(Cns.MISC_EMAIL_SERVER_ADDRESS, ""));
         binding.evEmailContent.setText(configSharePreferences.getString(Cns.MISC_EMAIL_CONTENT, ""));
+        binding.evOutCallUrl.setText(configSharePreferences.getString(Cns.MISC_URL_FORWARD_URL, ""));
+        binding.evOutCallUrlKeyword.setText(configSharePreferences.getString(Cns.MISC_URL_FORWARD_URL_KEYWORD, ""));
+        binding.evAlertTime.setText(configSharePreferences.getString(Cns.MISC_ALERT_ALLOW_HOUR, ""));
         binding.evChatgptApikey.setText(configSharePreferences.getString(Cns.CHAT_GPT_API_SERCRET, ""));
         binding.evEmailPort.setText(configSharePreferences.getInt(Cns.MISC_EMAIL_SERVER_PORT, 25) + "");
 
 
         binding.cbMsgTip.setChecked(configSharePreferences.getBoolean(Cns.MISC_TIP_ENABLE, binding.cbMsgTip.isChecked()));
         binding.cbKeepFloatWindow.setChecked(configSharePreferences.getBoolean(Cns.MISC_FLOATING_WINDOW, binding.cbKeepFloatWindow.isChecked()));
+        binding.cbUrlForward.setChecked(configSharePreferences.getBoolean(Cns.MISC_URL_FORWARD_ENABLE, binding.cbUrlForward.isChecked()));
         binding.cbEanbleMailForward.setChecked(configSharePreferences.getBoolean(Cns.MISC_EMAIL_FORWARD_ENABLE, binding.cbEanbleMailForward.isChecked()));
 
         binding.evProxyRedirectAccount.setText(configSharePreferences.getString(Cns.PROXY_SEND_ACCOUNT, ""));
@@ -67,7 +71,11 @@ public class MiscConfigActivity extends SuperActivity {
         binding.btnSave.setOnClickListener((vv) -> {
             SharedPreferences.Editor edit = AppUtils.getConfigSharePreferences(getApplicationContext()).edit();
             edit.putString(Cns.MISC_TIP_VOICE_EMAIL_TIP_KEYWORD, binding.evOutCallMsgKeyword.getText().toString());
-            edit.putBoolean(Cns.MISC_TIP_ENABLE, binding.cbMsgTip.isChecked());
+            edit.putBoolean(Cns.MISC_URL_FORWARD_ENABLE, binding.cbUrlForward.isChecked());
+            edit.putString(Cns.MISC_URL_FORWARD_URL, binding.evOutCallUrl.getText().toString());
+            String urlkeyword=binding.evOutCallUrlKeyword.getText().toString();
+            edit.putString(Cns.MISC_URL_FORWARD_URL_KEYWORD,urlkeyword);
+            edit.putString(Cns.MISC_ALERT_ALLOW_HOUR, binding.evAlertTime.getText().toString());
             edit.putBoolean(Cns.MISC_EMAIL_FORWARD_ENABLE, binding.cbEanbleMailForward.isChecked());
             edit.putBoolean(Cns.PROXY_SEND_ACCOUNT_IS_GROUP, binding.cbProxyRedirectAccountIsgroup.isChecked());
             edit.putBoolean(Cns.MISC_FLOATING_WINDOW, binding.cbKeepFloatWindow.isChecked());

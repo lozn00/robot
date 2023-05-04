@@ -1,8 +1,7 @@
 package cn.qssq666.robot.utils;
 
-import cn.qssq666.CoreLibrary0;
-
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -73,8 +72,13 @@ public class DateUtils {
         }
     }
 
-    public static String getTime(long time) {
-        return new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss").format(new Date(time));
+
+    public static String getCurrentHour() {
+        return new SimpleDateFormat("HH").format(System.currentTimeMillis());
+    }
+
+    public static String getTime(long mStatupTime) {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis());
     }
 
     public static String getTimeEightFormatStr(Date date) {
@@ -222,7 +226,7 @@ public class DateUtils {
 
 
     /**
-     * @param nowTime
+     * @param
      * @return
      */
     public static String getAboutTimeDistance(long nowTime) {
@@ -352,10 +356,10 @@ public class DateUtils {
         if (ms < 60) {
             return ms + "ms";
         } else {
-           long seconds = ms / 1000;
-           long minutes = seconds / 60;
-           long hours = minutes / 60;
-           long days = hours / 24;
+            long seconds = ms / 1000;
+            long minutes = seconds / 60;
+            long hours = minutes / 60;
+            long days = hours / 24;
             if (days > 0) {
                 builder.append(days);
                 builder.append("天");
@@ -375,5 +379,38 @@ public class DateUtils {
             return builder.toString();
         }
     }
+
+    public static String getNowWeek() {
+        Calendar calendar = Calendar.getInstance();
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        return getWeekday(dayOfWeek);
+    }
+    public static int getNowWeekInt() {
+        Calendar calendar = Calendar.getInstance();
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        return dayOfWeek;
+    }
+    private static String getWeekday(int dayOfWeek) {
+        switch (dayOfWeek) {
+            case 0:
+                return "Sunday";
+            case 1:
+                return "Monday";
+            case 2:
+                return "Tuesday";
+            case 3:
+                return "Wednesday";
+            case 4:
+                return "Thursday";
+            case 5:
+                return "Friday";
+            case 6:
+                return "Saturday";
+            default:
+                return "";
+        }
+    }
+
+
     //ignore_send
 }

@@ -25,6 +25,12 @@ public class StringUtils {
         }
         return o;
     }
+    public static String  removeZeroStart(String src) {
+        while (src.startsWith("0") && src.length() > 1) {
+            src = src.substring(1);
+        }
+        return src;
+    }
 
     /**
      * 可以去掉全角的首尾空格

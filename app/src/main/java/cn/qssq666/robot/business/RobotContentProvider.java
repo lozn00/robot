@@ -848,6 +848,10 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
         _miscConfig.emailServer = sharedPreferences.getString(Cns.MISC_EMAIL_SERVER_ADDRESS, "");// binding.evEmailServerAddress.getText().toString());
         _miscConfig.emailPort = sharedPreferences.getInt(Cns.MISC_EMAIL_SERVER_PORT, 25);//inding.evEmailServerAddress.getText().toString());
         _miscConfig.emailContent = sharedPreferences.getString(Cns.MISC_EMAIL_CONTENT, "");//  binding.evEmailContent.getText().toString());
+        _miscConfig.keyword_alert_hour = sharedPreferences.getString(Cns.MISC_ALERT_ALLOW_HOUR, "");//  binding.evEmailContent.getText().toString());
+        _miscConfig.enableForwardUrl = sharedPreferences.getBoolean(Cns.MISC_URL_FORWARD_ENABLE, false);
+        _miscConfig.forwardUrl = sharedPreferences.getString(Cns.MISC_URL_FORWARD_URL, "");//  binding.evEmailContent.getText().toString());
+        _miscConfig.forwardUrlKeyword = sharedPreferences.getString(Cns.MISC_URL_FORWARD_URL_KEYWORD, "");//  binding.evEmailContent.getText().toString());
         _miscConfig.redirectProxySendAccount = sharedPreferences.getString(Cns.PROXY_SEND_ACCOUNT, "");//  binding.evEmailContent.getText().toString());
         _miscConfig.redirectProxyAccountIsGroup = sharedPreferences.getBoolean(Cns.PROXY_SEND_ACCOUNT_IS_GROUP, false);//  binding.evEmailContent.getText().toString());
         _miscConfig.chatgpt_api_sercret_key = sharedPreferences.getString(Cns.CHAT_GPT_API_SERCRET, "");//  binding.evEmailContent.getText().toString());
@@ -1021,22 +1025,48 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
                     findKeyword:
                     for (String s : split) {
                         if (message.toLowerCase().contains(s.toLowerCase())) {
-                            return getSuccUri("外部消息调用,忽略,包含忽略关键词:" + s+",来自:"+item.getNickname());
+                            return getSuccUri("外部消息调用,忽略,包含忽略关键词:" + s + ",来自:" + item.getNickname());
+                        }
+                    }
+                }
+            }
+            boolean isAllowTime = true;
+            if (!TextUtils.isEmpty(_miscConfig.keyword_alert_hour)) {
+                isAllowTime = false;
+                String[] split = _miscConfig.keyword_alert_hour.split("\\,");
+                if (split != null && split.length > 0) {
+                    findKeyword:
+                    for (String s : split) {
+                        s = s.trim();
+                        if (s.contains("-")) {
+                            int strLeft = ParseUtils.parseInt(StringUtils.removeZeroStart(StringUtils.getStrLeft(s, "-")), -1);
+                            int strRight = ParseUtils.parseInt(StringUtils.removeZeroStart(StringUtils.getStrRight(s, "-")), -1);
+                            int hour = ParseUtils.parseInt(StringUtils.removeZeroStart(DateUtils.getCurrentHour()));
+                            if (hour >= strLeft && hour <= strRight) {
+                                isAllowTime = true;
+                            }
+
+                        } else if (StringUtils.removeZeroStart(s).equals(StringUtils.removeZeroStart(DateUtils.getCurrentHour()))) {
+                            isAllowTime = true;
+                            break;
                         }
                     }
                 }
             }
 
-            if (!TextUtils.isEmpty(_miscConfig.outProgramVoiceKeyword)) {
+
+            if (!TextUtils.isEmpty(_miscConfig.outProgramVoiceKeyword) && isAllowTime) {
                 if (_miscConfig.outProgramVoiceKeyword.equals("all") || _miscConfig.outProgramVoiceKeyword.equals("any") || _miscConfig.outProgramVoiceKeyword.equals("全部")) {
 
                     if (_miscConfig.enableOutProgramVoiceAlert) {
                         ProxySendAlertUtil.vibrate(AppContext.getContext(), 30);
                         ProxySendAlertUtil.PlayRingTone(AppContext.getContext(), RingtoneManager.TYPE_ALARM, 60);
                     }
+                    if (_miscConfig.enableForwardUrl) {
+                        ProxySendAlertUtil.urlForward(_miscConfig.forwardUrl, message);
+                    }
                     ProxySendAlertUtil.emailAlert(this, message);
                 } else {
-
                     String[] split = _miscConfig.outProgramVoiceKeyword.split("\\,");
                     if (split != null && split.length > 0) {
                         findKeyword:
@@ -1046,12 +1076,105 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
                                     ProxySendAlertUtil.vibrate(AppContext.getContext(), 30);
                                     ProxySendAlertUtil.PlayRingTone(AppContext.getContext(), RingtoneManager.TYPE_ALARM, 60);
                                 }
+
+                                if (_miscConfig.enableForwardUrl && TextUtils.isEmpty(_miscConfig.forwardUrlKeyword)) {//如果没设置关键词,就采用全局的
+                                    ProxySendAlertUtil.urlForward(_miscConfig.forwardUrl, message);
+                                }
+
                                 ProxySendAlertUtil.emailAlert(this, message);
+
+
                                 break findKeyword;
+                            } else if (_miscConfig.enableForwardUrl && s.contains("xiaoai") || s.contains("url")) {//如果没设置关键词,就采用全局的 url,就是全局的
+
+
+                                if (_miscConfig.enableForwardUrl && TextUtils.isEmpty(_miscConfig.forwardUrlKeyword)) {
+                                    ProxySendAlertUtil.urlForward(_miscConfig.forwardUrl, message);
+                                }
+
+                            } else {
+
+
                             }
                         }
                     }
 
+
+                }
+            }
+            if (_miscConfig.enableForwardUrl && !TextUtils.isEmpty(_miscConfig.forwardUrlKeyword)) {//全局不匹配就针对它的匹配进行处理
+                int nowWeekInt = DateUtils.getNowWeekInt();
+                nowWeekInt = nowWeekInt == 1 ? 7 : nowWeekInt - 1;// js从0(星期日)到6 转为星期1到7 java
+                String[] split = _miscConfig.forwardUrlKeyword.split("\\,");
+                if (split != null && split.length > 0) {
+                    for (String parentCurrent : split) {
+                        if (message.toLowerCase().contains(parentCurrent.toLowerCase())) {
+                            ProxySendAlertUtil.urlForward(_miscConfig.forwardUrl, message);
+                            break;
+                        } else {
+                            String[] childsplit = parentCurrent.split("\\.");
+
+                                int matchWeek = -1;//未定义
+                                boolean matchHour = false;
+                            for (int i = 0; i < childsplit.length; i++) {
+                                String current = childsplit[i];
+                                if (current.contains("-")) {
+                                    String strLeft = StringUtils.getStrLeft(current, "-");
+                                    String strRight = StringUtils.getStrRight(current, "-");
+                                    if (strLeft.startsWith("星期")) {
+                                        if (matchWeek == 1) {//如果没定义过就标记一下表示发现了星期描述
+                                            continue;
+                                        }
+                                        int weekStart = ParseUtils.parseInt(strLeft.trim().replace("星期", ""));
+                                        int weekEnd = ParseUtils.parseInt(strRight.trim().replace("星期", ""));
+                                        if (nowWeekInt >= weekStart && nowWeekInt <= weekEnd) {
+                                            matchWeek = 1;
+                                        } else {
+                                            matchWeek = 0;
+                                        }
+
+
+                                    } else {
+                                        if (matchHour) {
+                                            continue;
+                                        }
+                                        int intLft = ParseUtils.parseInt(StringUtils.removeZeroStart(strLeft), -1);
+                                        int intRight = ParseUtils.parseInt(StringUtils.removeZeroStart(strRight), -1);
+                                        int hour = ParseUtils.parseInt(StringUtils.removeZeroStart(DateUtils.getCurrentHour()));
+                                        if (hour >= intLft && hour <= intRight) {
+                                            matchHour = true;
+                                        }
+
+                                    }
+
+                                } else if (parentCurrent.trim().startsWith("星期")) {
+                                    if (matchWeek == 1) {//如果没定义过就标记一下表示发现了星期描述
+                                        continue;
+                                    }
+                                    int week = ParseUtils.parseInt(parentCurrent.trim().replace("星期", ""));
+                                    if (nowWeekInt == week) {
+                                        matchWeek = 1;
+                                    } else {
+                                        matchWeek = 0;
+                                    }
+
+
+                                } else if (RegexUtils.checkDigit(parentCurrent.trim()) && StringUtils.removeZeroStart(parentCurrent.trim()).equals(StringUtils.removeZeroStart(DateUtils.getCurrentHour()))) {
+//                                    ProxySendAlertUtil.urlForward(_miscConfig.forwardUrl, message);
+                                    matchHour = true;
+                                }
+
+                            }
+                            if ((matchWeek == -1 || matchWeek == 1) && matchHour) {
+                                for (String s : _miscConfig.forwardUrl.split(",")) {
+                                    ProxySendAlertUtil.urlForward(s, message);
+                                }
+                                break;
+                            }
+
+
+                        }
+                    }
                 }
             }
 
@@ -3450,6 +3573,7 @@ System.out.println(m.group());//输出“水货”“正品”
                 break;
             case CODE_UPDATE_MISC:
 //                String key = values.getAsString(Cns.UPDATE_KEY);
+                String s = JSON.toJSONString(_miscConfig);
                 initMiscConfig();
               /*  _miscConfig.outProgramVoiceKeyword = sharedPreferences.getString(Cns.MISC_TIP_KEYWORD, "实盘");
                 _miscConfig.enableOutProgramVoiceAlert = sharedPreferences.getBoolean(Cns.MISC_TIP_ENABLE, false);
@@ -3463,7 +3587,14 @@ System.out.println(m.group());//输出“水货”“正品”
                 _miscConfig.emailContent = sharedPreferences.getString(Cns.MISC_EMAIL_CONTENT, "");//  binding.evEmailContent.getText().toString());*/
 
 //                defaultReplyIndex = sharedPreferences.getInt(Cns.SP_DEFAULT_REPLY_API_INDEX, 0);
-                Toast.makeText(getProxyContext(), "update success ,是否提醒:" + ParseUtils.parseBoolean2ChineseBooleanStr(_miscConfig.enableOutProgramVoiceAlert) + ",关键词:" + _miscConfig.outProgramVoiceKeyword, Toast.LENGTH_SHORT).show();
+                String s1 = JSON.toJSONString(_miscConfig);
+                if (!s.equals(s1)) {
+                    Toast.makeText(getProxyContext(), "更新成功," + s, Toast.LENGTH_LONG).show();
+
+                } else {
+
+                    Toast.makeText(getProxyContext(), "更新失败,内容无改动," + s, Toast.LENGTH_LONG).show();
+                }
                 break;
         }
         return -1;
@@ -4173,7 +4304,8 @@ System.out.println(m.group());//输出“水货”“正品”
 
 
         String beforeArg = item.getMessage();
-        final Pair<String, String> param = CmdConfig.fitParam(item.getMessage());
+        beforeArg = StringUtils.replaceAllByStr(beforeArg, "斜杠", "/");
+        final Pair<String, String> param = CmdConfig.fitParam(beforeArg);
         if (param == null) {
             return false;
         } else {
@@ -5832,7 +5964,7 @@ System.out.println(m.group());//输出“水货”“正品”
                     MsgReCallUtil.notifyHasDoWhileReply(this, "请从电脑中提取adbkey.pub内容然后作为参数传递", item);
                     return true;
                 }
-                value = StringUtils.replaceAllByStr(value, "斜杠", "/");
+
                 {
                     String finalCmd = value.trim();
                     long start = System.currentTimeMillis();
@@ -8377,7 +8509,7 @@ System.out.println(m.group());//输出“水货”“正品”
                     return false;
                 }
                 String cmdContent = item.getMessage().replace(CmdConfig.QUERY_iP, "").trim();
-                String url = "http://ip-api.com/json/?lang=zh-CN";
+                String url = "https://ipinfo.io/json";//http://ip-api.com/json/?lang=zh-CN";
                 HttpUtilOld.queryData(url, new RequestListener() {
                     @Override
                     public void onSuccess(String str) {

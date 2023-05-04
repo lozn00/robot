@@ -7,8 +7,10 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Vibrator;
 import android.text.TextUtils;
-import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import java.io.IOException;
 import java.util.Date;
 import java.util.Properties;
 
@@ -22,7 +24,10 @@ import javax.mail.internet.MimeMultipart;
 
 import cn.qssq666.robot.app.AppContext;
 import cn.qssq666.robot.business.RobotContentProvider;
-import cn.qssq666.robot.constants.Cns;
+import cn.qssq666.robot.http.newcache.HttpUtil;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class ProxySendAlertUtil {
 
@@ -66,7 +71,7 @@ public class ProxySendAlertUtil {
             String content;
             if (TextUtils.isEmpty(robotContentProvider._miscConfig.emailContent)) {
                 content = message;
-            } else if (robotContentProvider._miscConfig.emailContent.contains("--")||robotContentProvider._miscConfig.emailContent.contains("__")) {
+            } else if (robotContentProvider._miscConfig.emailContent.contains("--") || robotContentProvider._miscConfig.emailContent.contains("__")) {
                 content = robotContentProvider._miscConfig.emailContent + "\n" + message;
             } else {
                 content = robotContentProvider._miscConfig.emailContent;
@@ -141,10 +146,73 @@ public class ProxySendAlertUtil {
     }
 
     public static boolean isAlerting() {
-        if(mMediaPlayer!=null&&mMediaPlayer.isPlaying()){
+        if (mMediaPlayer != null && mMediaPlayer.isPlaying()) {
             return true;
         }
         return false;
+    }
+
+    public static void urlForward(String forwardUrl, String message) {
+        int titleIndex = message.indexOf("标题");
+
+        int startIndex = message.indexOf("内容");
+        int enddex;
+        String temp="";
+        if (titleIndex >= 0 && startIndex > 0) {
+            int  enddex1 = startIndex;
+            int startIndex1 = titleIndex + 3;
+            temp= message.substring(startIndex1, enddex1)+" ";
+        }
+        {
+            if(startIndex<0){
+                startIndex=0;
+            }else{
+                startIndex=startIndex+3;
+            }
+            enddex = message.lastIndexOf("时间");
+            if (enddex < 0 || enddex < startIndex) {
+                enddex = message.length();
+            }
+        }
+        message =temp+ message.substring(startIndex, enddex);
+        if (TextUtils.isEmpty(forwardUrl)) {
+            LogUtil.writeLoge("转发请求失败,转发url不正确" + forwardUrl);
+            return;
+        }
+        String replacement = AppUtils.encodeUrl(message);
+        if (!forwardUrl.startsWith("http")) {
+            forwardUrl = "http://" + forwardUrl;
+        }
+        String url;
+        if (forwardUrl.contains("message")) {
+            url = forwardUrl.replace("[message]", replacement);
+            url = url.replace("$message", replacement);
+
+        } else if (forwardUrl.contains("msg")) {
+            url = forwardUrl.replace("[msg]", replacement);
+            url = url.replace("msg", replacement);
+
+        }else{
+            url=forwardUrl.lastIndexOf("/")==forwardUrl.length()-1? forwardUrl+message :forwardUrl+"/"+message;
+        }
+        String finalUrl = url;
+        HttpUtil.queryGetData(url, new Callback() {
+            @Override
+            public void onFailure(@NonNull Call call, @NonNull IOException e) {
+                LogUtil.writeLoge("转发请求失败" + finalUrl, e);
+            }
+
+            @Override
+            public void onResponse(@NonNull Call call, @NonNull Response response) throws IOException {
+                try {
+                    LogUtil.writeLog("转发请求结果::" + response.body().string());
+
+                } catch (Throwable e) {
+
+                    LogUtil.writeLoge("转发请求失败" + finalUrl, e);
+                }
+            }
+        });
     }
 
     /**
