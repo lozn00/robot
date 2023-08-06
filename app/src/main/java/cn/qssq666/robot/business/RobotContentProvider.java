@@ -840,7 +840,7 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 //        mCfBaseEnableOutProgramVoiceKeyword
         _miscConfig.outProgramVoiceKeyword = sharedPreferences.getString(Cns.MISC_TIP_VOICE_EMAIL_TIP_KEYWORD, "实盘");
         _miscConfig.ignoreKeyword = sharedPreferences.getString(Cns.MISC_TIP_IGNORE_KEYWORD, "");
-        _miscConfig.enableOutProgramVoiceAlert = sharedPreferences.getBoolean(Cns.MISC_TIP_ENABLE, false);
+        _miscConfig.enableOutProgramVoiceAlert = sharedPreferences.getBoolean(Cns.MISC_VOICE_TIP_ENABLE, false);
         _miscConfig.enableEmailForward = sharedPreferences.getBoolean(Cns.MISC_EMAIL_FORWARD_ENABLE, false);// binding.cbEanbleMailForward.isChecked());
         _miscConfig.sender = sharedPreferences.getString(Cns.MISC_EMAIL_SENDER_EMAIL, "");// binding.evSenderEmail.getText().toString());
         _miscConfig.senderPwd = sharedPreferences.getString(Cns.MISC_EMAIL_SENDER_EMAIL_PWD, "");// binding.evSenderEmailPwd.getText().toString());
@@ -925,9 +925,7 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
     }
 
     private String printBaseonfig() {
-        return "reply need at:" + mCfBaseReplyNeedAite + ",replyshownickname"
-                + mCfBaseReplyShowNickName + "white name mode otheraite enable reply:" + mCfNotWhiteNameReplyIfAite + ",white name not aite:"
-                + mCfBaseWhiteNameReplyNotNeedAite;
+        return "reply need at:" + mCfBaseReplyNeedAite + ",replyshownickname" + mCfBaseReplyShowNickName + "white name mode otheraite enable reply:" + mCfNotWhiteNameReplyIfAite + ",white name not aite:" + mCfBaseWhiteNameReplyNotNeedAite;
 
 
     }
@@ -993,28 +991,34 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
         final MsgItem item = RobotUtil.contentValuesToMsgItem(values);
 
 
-        initSelfAccont(item);
-
         if ("proxy_send_msg".equals(item.getApptype())) {
-            if (mItem != null && !mItem.getSelfuin().equals(item.getSelfuin())) {
-                String robot = mItem.getSelfuin();
+            initSelfAccont(item, true);
+//                mRobotQQ = SPUtils.getValue(getContext(), AppConstants.CONFIG_SELFUIN, "");
+         /*   if (!item.getSelfuin().equals(mRobotQQ)) {
+                if (item.getSelfuin().equals(mRobotQQ)) {
+                    LogUtil.writeLoge("proxy_send_msg传递过来的机器人账户 " + item.getSelfuin() + "和当前内部本身维护的账户" + mRobotQQ + "不一致，已默认改为当前内部账户，建议切换账号时手动同步。");
+                    item.setSelfuin(mRobotQQ);
+                }
+           *//*     String robot = mItem.getSelfuin();
                 if (item.getSenderuin().equals(item.getSelfuin())) {
                     item.setSenderuin(robot);
                 }
-                item.setSelfuin(robot);
+                item.setSelfuin(robot);*//*
 
 
             } else {
 
 
-            }
+            }*/
             if (!TextUtils.isEmpty(_miscConfig.redirectProxySendAccount)) {
+
                 if (_miscConfig.redirectProxyAccountIsGroup) {
                     item.setIstroop(1);
                 } else {
 
                     item.setIstroop(0);
                 }
+
                 item.setFrienduin(_miscConfig.redirectProxySendAccount.trim());
             }
             String message = item.getMessage();
@@ -1114,8 +1118,8 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
                         } else {
                             String[] childsplit = parentCurrent.split("\\.");
 
-                                int matchWeek = -1;//未定义
-                                boolean matchHour = false;
+                            int matchWeek = -1;//未定义
+                            boolean matchHour = false;
                             for (int i = 0; i < childsplit.length; i++) {
                                 String current = childsplit[i];
                                 if (current.contains("-")) {
@@ -1182,17 +1186,8 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
             this.notifyChange(RobotUtil.msgItemToUri(item), null);
             return getSuccUri("代理发送消息成功[由其它程序调用]");
         } else {
-            if (RemoteService.isIsInit() && TextUtils.isEmpty(mRobotQQ)) {
-                mRobotQQ = RemoteService.queryLoginQQ();
-                if (!TextUtils.isEmpty(mRobotQQ) && !mRobotQQ.equals(item.getSelfuin())) {
+            initSelfAccont(item, false);
 
-                    if (item.getSenderuin().equals(item.getSelfuin())) {
-                        item.setSenderuin(mRobotQQ);
-                    }
-                    item.setSelfuin(mRobotQQ);
-                }
-
-            }
         }
 
         mItem = item;
@@ -1555,22 +1550,46 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 
     }
 
-    private void initSelfAccont(MsgItem item) {
+    private void initSelfAccont(MsgItem item, boolean proxyMsg) {
         if (mRobotQQ == null) {
-            if (!TextUtils.isEmpty(item.getSelfuin())) {
-                mRobotQQ = item.getSelfuin();
-                SPUtils.setValue(getContext(), AppConstants.CONFIG_SELFUIN, mRobotQQ);
-            } else {
-                mRobotQQ = SPUtils.getValue(getContext(), AppConstants.CONFIG_SELFUIN, "");
+            if (RemoteService.isIsInit()) {
+                mRobotQQ = RemoteService.queryLoginQQ();
+
+                if (mRobotQQ != null) {
+                    if (!mRobotQQ.equals(item.getSelfuin())) {
+
+                        if (item.getSenderuin().equals(item.getSelfuin())) {
+                            item.setSenderuin(mRobotQQ);
+                        }
+                        item.setSelfuin(mRobotQQ);
+                        SPUtils.setValue(getContext(), AppConstants.CONFIG_SELFUIN, mRobotQQ);
+                    }
+                    return;
+
+                }
+            }
+
+        /*    if (!proxyMsg) {
+                if (!TextUtils.isEmpty(item.getSelfuin())) {
+                    mRobotQQ = item.getSelfuin();
+                    SPUtils.setValue(getContext(), AppConstants.CONFIG_SELFUIN, mRobotQQ);
+                } else {
+                    mRobotQQ = SPUtils.getValue(getContext(), AppConstants.CONFIG_SELFUIN, "");
+                }
+            }else{
+                //proxy 过来的可能是错误的self uin
+            }*/
+
+
+            if (TextUtils.isEmpty(item.getSenderuin())) {
+                item.setSenderuin(mRobotQQ);
+            }
+
+            if (TextUtils.isEmpty(item.getSelfuin())) {
+                item.setSelfuin(mRobotQQ);
             }
         }
-        if (TextUtils.isEmpty(item.getSenderuin())) {
-            item.setSenderuin(mRobotQQ);
-        }
 
-        if (TextUtils.isEmpty(item.getSelfuin())) {
-            item.setSelfuin(mRobotQQ);
-        }
     }
 
     public static boolean isIgnoreAccount(MsgItem item) {
@@ -3715,182 +3734,180 @@ System.out.println(m.group());//输出“水货”“正品”
 
 
         Observable.create(new ObservableOnSubscribe<ResultBean>() {
-                    @Override
-                    public void subscribe(ObservableEmitter<ResultBean> emitter) throws Exception {
-                        Retrofit retrofit = HttpUtilRetrofit.buildRetrofit(Cns.ROBOT_REPLY_MOLI_DOMAIN);
-                        MoLiAPI projectAPI = retrofit.create(MoLiAPI.class);
-                        HashMap<String, String> forms = new HashMap<>();
-                        String ask = bean.getInfo();
-                        if (ask == null) {
+            @Override
+            public void subscribe(ObservableEmitter<ResultBean> emitter) throws Exception {
+                Retrofit retrofit = HttpUtilRetrofit.buildRetrofit(Cns.ROBOT_REPLY_MOLI_DOMAIN);
+                MoLiAPI projectAPI = retrofit.create(MoLiAPI.class);
+                HashMap<String, String> forms = new HashMap<>();
+                String ask = bean.getInfo();
+                if (ask == null) {
 
-                        } else {
+                } else {
 
-                            if (ask.contains("财神爷灵签")) {
-                                bean.setInfo("财神爷灵签");
-                            } else if (ask.contains("月老灵签")) {
-                                bean.setInfo("月老灵签");
-                            } else if (ask.contains("观音灵签")) {
-                                bean.setInfo("观音灵签");
-                            } else if (ask.contains("笑话")) {
-                                bean.setInfo("笑话");
-                            }
-                        }
-                        forms.put("question", bean.getInfo().trim());
-                        forms.put("limit", (new Random().nextInt(3)) + "");
-                        forms.put("api_key", robotContentProvider.robotReplyKey);
-                        forms.put("api_secret", robotContentProvider.robotReplySecret);
-                        Call<String> call1 = projectAPI.query(forms);
-                        Response<String> response = call1.execute();
-                        String str = response.body();
-                        ResultBean resultBean = new ResultBean();
-                        if (str.startsWith("{")) {
-                            str = str.replace("&nbsp;", " ");
-                            str = str.replace("&amp;", "&");
-                            resultBean.setNeedTranslate(false);
-                            if (bean.getInfo().contains("笑话")) {
-                                JSONObject jsonObject = new JSONObject(str);
-                                StringBuffer sb = new StringBuffer();
-                                sb.append("标题:" + jsonObject.optString("title"));
-                                sb.append("\n内容:" + jsonObject.optString("content"));
-                                resultBean.setText(sb.toString());
-                            } else if (bean.getInfo().contains("观音灵签")) {
-                                JSONObject jsonObject = new JSONObject(str);
-                                StringBuffer sb = new StringBuffer();
-                                sb.append("您抽取的是第" + jsonObject.optString("number2") + "签");
-                                RobotFormatUtil.appendIfNotNull("签位", "haohua", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("签语", "qianyu", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("诗意解签", "shiyi", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("百合解签", "jieqian", jsonObject, sb);
-                                resultBean.setText(sb.toString());
-                            } else if (bean.getInfo().contains("月老")) {
-                                JSONObject jsonObject = new JSONObject(str);
-                                StringBuffer sb = new StringBuffer();
-                                sb.append("您抽取的是第" + jsonObject.optString("number2") + "签");
-                                RobotFormatUtil.appendIfNotNull("签位", "haohua", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("诗意", "shiyi", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("解签", "jieqian", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("注释", "zhushi", jsonObject, sb);
-                                resultBean.setText(sb.toString());
-                            } else if (bean.getInfo().contains("财神")) {//财神爷灵签
-                                JSONObject jsonObject = new JSONObject(str);
-                                StringBuffer sb = new StringBuffer();
-                                sb.append("您抽取的是第" + jsonObject.optString("number2") + "签");
+                    if (ask.contains("财神爷灵签")) {
+                        bean.setInfo("财神爷灵签");
+                    } else if (ask.contains("月老灵签")) {
+                        bean.setInfo("月老灵签");
+                    } else if (ask.contains("观音灵签")) {
+                        bean.setInfo("观音灵签");
+                    } else if (ask.contains("笑话")) {
+                        bean.setInfo("笑话");
+                    }
+                }
+                forms.put("question", bean.getInfo().trim());
+                forms.put("limit", (new Random().nextInt(3)) + "");
+                forms.put("api_key", robotContentProvider.robotReplyKey);
+                forms.put("api_secret", robotContentProvider.robotReplySecret);
+                Call<String> call1 = projectAPI.query(forms);
+                Response<String> response = call1.execute();
+                String str = response.body();
+                ResultBean resultBean = new ResultBean();
+                if (str.startsWith("{")) {
+                    str = str.replace("&nbsp;", " ");
+                    str = str.replace("&amp;", "&");
+                    resultBean.setNeedTranslate(false);
+                    if (bean.getInfo().contains("笑话")) {
+                        JSONObject jsonObject = new JSONObject(str);
+                        StringBuffer sb = new StringBuffer();
+                        sb.append("标题:" + jsonObject.optString("title"));
+                        sb.append("\n内容:" + jsonObject.optString("content"));
+                        resultBean.setText(sb.toString());
+                    } else if (bean.getInfo().contains("观音灵签")) {
+                        JSONObject jsonObject = new JSONObject(str);
+                        StringBuffer sb = new StringBuffer();
+                        sb.append("您抽取的是第" + jsonObject.optString("number2") + "签");
+                        RobotFormatUtil.appendIfNotNull("签位", "haohua", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("签语", "qianyu", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("诗意解签", "shiyi", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("百合解签", "jieqian", jsonObject, sb);
+                        resultBean.setText(sb.toString());
+                    } else if (bean.getInfo().contains("月老")) {
+                        JSONObject jsonObject = new JSONObject(str);
+                        StringBuffer sb = new StringBuffer();
+                        sb.append("您抽取的是第" + jsonObject.optString("number2") + "签");
+                        RobotFormatUtil.appendIfNotNull("签位", "haohua", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("诗意", "shiyi", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("解签", "jieqian", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("注释", "zhushi", jsonObject, sb);
+                        resultBean.setText(sb.toString());
+                    } else if (bean.getInfo().contains("财神")) {//财神爷灵签
+                        JSONObject jsonObject = new JSONObject(str);
+                        StringBuffer sb = new StringBuffer();
+                        sb.append("您抽取的是第" + jsonObject.optString("number2") + "签");
 //                        RobotFormatUtil.appendIfNotNull("签位", "haohua", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("签语", "qianyu", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("注释", "zhushi", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("解签", "jieqian", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("解说", "jieshuo", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("结果", "jieguo", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("婚姻", "hunyin", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("事业", "shiye", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("功名", "gongming", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("失物", "shiwu", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("外出移居", "cwyj", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("运途", "yuntu", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("交易", "jiaoyi", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("求财", "qiucai", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("六甲", "liujia", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("诉讼", "susong", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("疾病", "jibin", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("合伙做生意", "moushi", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("某事", "hhzsy", jsonObject, sb);
-                                RobotFormatUtil.appendIfNotNull("事端", "yuntu", jsonObject, sb);
-                                resultBean.setText(sb.toString());
-                            } else {
-                                JSONObject jsonObject = new JSONObject(str);
-                                JSONArray names = jsonObject.names();
-                                StringBuffer sb = new StringBuffer();
-                                for (int i = 0; i < names.length(); i++) {
-                                    String key = names.getString(i);
-                                    sb.append(key + ":" + jsonObject.getString(key));
-                                }
-                                resultBean.setText(sb.toString());
-
-                            }
-                        } else {
-                            resultBean.setText(str);
+                        RobotFormatUtil.appendIfNotNull("签语", "qianyu", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("注释", "zhushi", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("解签", "jieqian", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("解说", "jieshuo", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("结果", "jieguo", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("婚姻", "hunyin", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("事业", "shiye", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("功名", "gongming", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("失物", "shiwu", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("外出移居", "cwyj", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("运途", "yuntu", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("交易", "jiaoyi", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("求财", "qiucai", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("六甲", "liujia", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("诉讼", "susong", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("疾病", "jibin", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("合伙做生意", "moushi", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("某事", "hhzsy", jsonObject, sb);
+                        RobotFormatUtil.appendIfNotNull("事端", "yuntu", jsonObject, sb);
+                        resultBean.setText(sb.toString());
+                    } else {
+                        JSONObject jsonObject = new JSONObject(str);
+                        JSONArray names = jsonObject.names();
+                        StringBuffer sb = new StringBuffer();
+                        for (int i = 0; i < names.length(); i++) {
+                            String key = names.getString(i);
+                            sb.append(key + ":" + jsonObject.getString(key));
                         }
-                        resultBean.setCode(TuLingType.NORMAL);
-                        emitter.onNext(resultBean);
+                        resultBean.setText(sb.toString());
+
                     }
-                }).subscribeOn(Schedulers.io())
-                .map(new Function<ResultBean, ResultBean>() {
-                    @Override
-                    public ResultBean apply(ResultBean resultBean) throws Exception {
-                        if ((resultBean.getText() + "").contains("QQ")) {
-                            String tep = "我只有爸爸,我爸爸是人类,他叫情迁,现在还单身呢?";
-                            resultBean.setText(tep);
-                        } else if (RegexUtils.isContaineQQOrPhone(resultBean.getText())) {
-                            resultBean.setText("检测到当前问题[" + msgItem.getMessage() + "]触发第三方网络词库发送垃圾广告,如QQ 手机号码,情迁聊天机器人已自动屏蔽!");
+                } else {
+                    resultBean.setText(str);
+                }
+                resultBean.setCode(TuLingType.NORMAL);
+                emitter.onNext(resultBean);
+            }
+        }).subscribeOn(Schedulers.io()).map(new Function<ResultBean, ResultBean>() {
+            @Override
+            public ResultBean apply(ResultBean resultBean) throws Exception {
+                if ((resultBean.getText() + "").contains("QQ")) {
+                    String tep = "我只有爸爸,我爸爸是人类,他叫情迁,现在还单身呢?";
+                    resultBean.setText(tep);
+                } else if (RegexUtils.isContaineQQOrPhone(resultBean.getText())) {
+                    resultBean.setText("检测到当前问题[" + msgItem.getMessage() + "]触发第三方网络词库发送垃圾广告,如QQ 手机号码,情迁聊天机器人已自动屏蔽!");
 
-                        } else if (resultBean.getText().contains("http")) {
-                            resultBean.setText("监测网络词库有垃圾广告到，屏蔽..");
-                        }
-                        return resultBean;
+                } else if (resultBean.getText().contains("http")) {
+                    resultBean.setText("监测网络词库有垃圾广告到，屏蔽..");
+                }
+                return resultBean;
+            }
+        }).map(RXUtil.mapTranslateFunction(whiteNameBean)).observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ResultBean>() {
+            @Override
+            public void accept(ResultBean resultBean) throws Exception {
+
+                if (robotContentProvider.mAllowReponseSelfCommand) {
+                    if (resultBean.getText().length() < 10) {
+                        resultBean.setText("." + resultBean.getText());
+
                     }
-                }).map(RXUtil.mapTranslateFunction(whiteNameBean))
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ResultBean>() {
-                    @Override
-                    public void accept(ResultBean resultBean) throws Exception {
+                }
 
-                        if (robotContentProvider.mAllowReponseSelfCommand) {
-                            if (resultBean.getText().length() < 10) {
-                                resultBean.setText("." + resultBean.getText());
+                if (resultBean.getText().equals("[cqname]")) {
+                    String tep = "我暂时没有名字,请主人打开情迁聊天机器人进入高级调试->设置机器人key哦！";
+                    resultBean.setText(tep);
+                }
 
-                            }
+
+                resultBean.setText(resultBean.getText().replace("[cqname]", RobotContentProvider.getInstance().mLocalRobotName));
+                resultBean.setText(resultBean.getText().replace("[name]", NickNameUtils.formatNickname(msgItem)));
+
+                if (resultBean.getCode() == TuLingType.NORMAL || resultBean.getCode() == TuLingType.LINK) {
+                    String message = resultBean.getDetailMsg();
+
+
+                    if (intercept != null && intercept.isNeedIntercept(resultBean)) {
+
+                        return;
+                    }
+                    if (MsgTypeConstant.MSG_ISTROP_GROUP_PRIVATE_MSG_1 == msgItem.getIstroop() || MsgTypeConstant.MSG_ISTROOP__GROUP_PRIVATE_MSG == msgItem.getIstroop() || 0 == msgItem.getIstroop()) {
+                        if (!msgItem.getSenderuin().equals(msgItem.getSelfuin()) && !msgItem.getFrienduin().equals(msgItem.getSelfuin())) {
+                            //
+                            msgItem.setExtrajson(msgItem.getSelfuin());//避免反反复复的回复消息。
+
                         }
-
-                        if (resultBean.getText().equals("[cqname]")) {
-                            String tep = "我暂时没有名字,请主人打开情迁聊天机器人进入高级调试->设置机器人key哦！";
-                            resultBean.setText(tep);
-                        }
+                    }
+                    MsgReCallUtil.notifyHasDoWhileReply(robotContentProvider, message, msgItem);
 
 
-                        resultBean.setText(resultBean.getText().replace("[cqname]", RobotContentProvider.getInstance().mLocalRobotName));
-                        resultBean.setText(resultBean.getText().replace("[name]", NickNameUtils.formatNickname(msgItem)));
-
-                        if (resultBean.getCode() == TuLingType.NORMAL || resultBean.getCode() == TuLingType.LINK) {
-                            String message = resultBean.getDetailMsg();
-
-
-                            if (intercept != null && intercept.isNeedIntercept(resultBean)) {
-
-                                return;
-                            }
-                            if (MsgTypeConstant.MSG_ISTROP_GROUP_PRIVATE_MSG_1 == msgItem.getIstroop() || MsgTypeConstant.MSG_ISTROOP__GROUP_PRIVATE_MSG == msgItem.getIstroop() || 0 == msgItem.getIstroop()) {
-                                if (!msgItem.getSenderuin().equals(msgItem.getSelfuin()) && !msgItem.getFrienduin().equals(msgItem.getSelfuin())) {
-                                    //
-                                    msgItem.setExtrajson(msgItem.getSelfuin());//避免反反复复的回复消息。
-
-                                }
-                            }
-                            MsgReCallUtil.notifyHasDoWhileReply(robotContentProvider, message, msgItem);
-
-
-                        } else if (ErrorHelper.isNotSupportMsgType(resultBean.getCode())) {
+                } else if (ErrorHelper.isNotSupportMsgType(resultBean.getCode())) {
 //                    MsgItem msgItem1 = msgItem.setMessage("网络词库无法处理消息" + msgItem.getMessage() + "" + resultBean.getText()).setCode(-1);
 //                    notifyHasDoWhileReply(msgItem1);
-                            LogUtil.writeLog("网络词库不支持" + resultBean);
+                    LogUtil.writeLog("网络词库不支持" + resultBean);
 
-                        } else {
+                } else {
 //                    String msg = msgItem.setMessage("网络词库无法处理消息" + msgItem.getMessage() + ",type:" + msgItem.getType() + "  " + msgItem.getMessage() + ErrorHelper.codeToMessage(resultBean.getCode())).setCode(-1;
-                            LogUtil.writeLog("网络词库不支持 -e" + resultBean);
+                    LogUtil.writeLog("网络词库不支持 -e" + resultBean);
 //                    notifyHasDoWhileReply());
-                        }
-                        LogUtil.writeLog("onResponse" + Thread.currentThread());
+                }
+                LogUtil.writeLog("onResponse" + Thread.currentThread());
 
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        Log.e(TAG, "茉莉词库", throwable);
-                        if (!RobotContentProvider.getInstance().mCfBaseNetReplyErrorNotWarn) {
-                            MsgReCallUtil.notifyHasDoWhileReply(robotContentProvider, "无法回复 出现错误" + throwable.toString(), msgItem);
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                Log.e(TAG, "茉莉词库", throwable);
+                if (!RobotContentProvider.getInstance().mCfBaseNetReplyErrorNotWarn) {
+                    MsgReCallUtil.notifyHasDoWhileReply(robotContentProvider, "无法回复 出现错误" + throwable.toString(), msgItem);
 
-                        }
+                }
 
-                    }
-                });
+            }
+        });
 
 
 /*
@@ -3988,9 +4005,7 @@ System.out.println(m.group());//输出“水货”“正品”
     public static void doTuLing(final RobotContentProvider robotContentProvider, final MsgItem msgItem, RequestBean bean, GroupWhiteNameBean whiteNameBean, final IIntercept<ResultBean> intercept) {
 
         Retrofit retrofit = HttpUtilRetrofit.buildRetrofit(Cns.ROBOT_REPLY_TULING_URL);
-        retrofit.create(TuLingAPI.class).query(bean.getKey(), bean.getInfo().trim(), bean.getUserid())
-                .subscribeOn(Schedulers.io())
-                .map((s -> {
+        retrofit.create(TuLingAPI.class).query(bean.getKey(), bean.getInfo().trim(), bean.getUserid()).subscribeOn(Schedulers.io()).map((s -> {
                     return JSON.parseObject(s, ResultBean.class);
                 }))
 
@@ -4005,8 +4020,7 @@ System.out.println(m.group());//输出“水货”“正品”
                             observer.onNext("错误替换的消息");
                             observer.onComplete();
                         }
-                    })*/
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ResultBean>() {
+                    })*/.observeOn(AndroidSchedulers.mainThread()).subscribe(new Consumer<ResultBean>() {
                     @Override
                     public void accept(ResultBean resultBean) throws Exception {
 
@@ -4624,15 +4638,13 @@ System.out.println(m.group());//输出“水货”“正品”
                 }
 
                 if (!isManagerLestThanOrEqalMe(item, accountMe, accountDelte)) {
-                    MsgReCallUtil.notifyHasDoWhileReply(this, "" + NickNameUtils.formatNickname(item) + " 很抱歉,你无法撤销管理" + NickNameUtils.formatNickname(item.getFrienduin(), accountDelte.getAccount()) + ",他的等级和你相当或更高,你的权限等级是" + accountMe.getLevel() + ",他的权限等级是:" + accountDelte.getLevel() + "(机器人自身管理权限最大)", item)
-                    ;
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "" + NickNameUtils.formatNickname(item) + " 很抱歉,你无法撤销管理" + NickNameUtils.formatNickname(item.getFrienduin(), accountDelte.getAccount()) + ",他的等级和你相当或更高,你的权限等级是" + accountMe.getLevel() + ",他的权限等级是:" + accountDelte.getLevel() + "(机器人自身管理权限最大)", item);
                     return true;
                 }
                 int i = DBHelper.getSuperManager(AppContext.getDbUtils()).deleteByColumn(AdminBean.class, FieldCns.FIELD_ACCOUNT, arg1);
                 if (i > 0) {
                     AccountUtil.removeAccount(mSuperManagers, arg1);
-                    MsgReCallUtil.notifyHasDoWhileReply(this, "请求删除管理员" + NickNameUtils.formatNickname(item.getFrienduin(), arg1) + "成功", item)
-                    ;
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "请求删除管理员" + NickNameUtils.formatNickname(item.getFrienduin(), arg1) + "成功", item);
 
                 } else {
 
@@ -4774,8 +4786,7 @@ System.out.println(m.group());//输出“水货”“正品”
                 } else {
                     nameBean.setAdmins(AccountUtil.addValueByArray(arg1, ",", admins));
                     int update = DBHelper.getQQGroupWhiteNameDBUtil(_dbUtils).update(nameBean);
-                    MsgReCallUtil.notifyHasDoWhileReply(this, "操作结果:" + ((update > 0) ? "成功" : "失败"), item)
-                    ;
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "操作结果:" + ((update > 0) ? "成功" : "失败"), item);
                     return true;
                 }
 
@@ -5310,8 +5321,7 @@ System.out.println(m.group());//输出“水货”“正品”
                 if (isgroupMsg && nameBean != null) {
                     if (!nameBean.isAllowzan()) {
                         if (!isManager && StringUtils.isEqualStr(beforeArg, commend)) {
-                            MsgReCallUtil.smartReplyMsg(
-                                    AppConstants.ACTION_OPERA_TIP + commend + AppConstants.FUNC_IS_DISABLE_TIP, isgroupMsg, nameBean, item);
+                            MsgReCallUtil.smartReplyMsg(AppConstants.ACTION_OPERA_TIP + commend + AppConstants.FUNC_IS_DISABLE_TIP, isgroupMsg, nameBean, item);
 
                             return true;
 
@@ -5496,8 +5506,7 @@ System.out.println(m.group());//输出“水货”“正品”
                                         public void onEnd(List<AtBean> atBeanList, String info) {
 
 
-                                            info = info + " \n管理员" + NickNameUtils.queryMatchNicknameAndNullReturnDefault(item.getFrienduin(), item.getSenderuin(), item.getNickname()) +
-                                                    "给你们点了" + finalCount + "个赞,请注意查收哦!";
+                                            info = info + " \n管理员" + NickNameUtils.queryMatchNicknameAndNullReturnDefault(item.getFrienduin(), item.getSenderuin(), item.getNickname()) + "给你们点了" + finalCount + "个赞,请注意查收哦!";
 
                                             if (ConfigUtils.isDisableAtFunction(RobotContentProvider.getInstance())) {
                                                 MsgReCallUtil.notifyJoinMsgNoJumpDisableAt(RobotContentProvider.getInstance(), info, item);
@@ -6638,8 +6647,7 @@ System.out.println(m.group());//输出“水货”“正品”
 
 
                 if (args.length == 0) {
-                    MsgReCallUtil.notifyHasDoWhileReply(this, "如何使用任务命令？任务后面 加上踢人，发消息，禁言，以及时间参数\n举例:\n[禁言 QQ 1分钟 5分钟]表示5分钟之后禁言qq 1分钟\n [踢 QQ 0 5分钟]表示5分钟之后踢掉禁言某Q,非用就,\n[发消息 QQ 我爱你 5分钟]表示5分钟之后发送我爱你给指定QQ" +
-                            "\n清除任务发送[" + CmdConfig.CLEAR_TASK + " 任务ID]", item);
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "如何使用任务命令？任务后面 加上踢人，发消息，禁言，以及时间参数\n举例:\n[禁言 QQ 1分钟 5分钟]表示5分钟之后禁言qq 1分钟\n [踢 QQ 0 5分钟]表示5分钟之后踢掉禁言某Q,非用就,\n[发消息 QQ 我爱你 5分钟]表示5分钟之后发送我爱你给指定QQ" + "\n清除任务发送[" + CmdConfig.CLEAR_TASK + " 任务ID]", item);
                 } else {
                     String firstCmd = ParamParseUtil.getArgByArgArr(args, ParamParseUtil.sArgFirst);//命令名称
 
@@ -6743,22 +6751,14 @@ System.out.println(m.group());//输出“水货”“正品”
 
                                 TaskUtils.insertGagMultiTaskFromAtMsg(this, cancelCmd, clone, atPair.second.second, exeucuteTimeSecond * 1000, gagTime);
 
-                                MsgReCallUtil.notifyHasDoWhileReply(this, "加入任务成功" +
-                                        "\n执行时间:" + DateUtils.getGagTime(exeucuteTimeSecond) + "后" +
-                                        (isgroupMsg ? "" : "\n操作群:" + sendOrGroup) +
-                                        "\n操作:禁言多个群成员(总数:" + atPair.second.second.size() + ")" +
-                                        "\n提示:发送[" + CmdConfig.CLEAR_TASK + cancelCmd + "]可取消此任务", item);
+                                MsgReCallUtil.notifyHasDoWhileReply(this, "加入任务成功" + "\n执行时间:" + DateUtils.getGagTime(exeucuteTimeSecond) + "后" + (isgroupMsg ? "" : "\n操作群:" + sendOrGroup) + "\n操作:禁言多个群成员(总数:" + atPair.second.second.size() + ")" + "\n提示:发送[" + CmdConfig.CLEAR_TASK + cancelCmd + "]可取消此任务", item);
                             } else {
 
 
                                 TaskUtils.insertGagTask(this, cancelCmd, clone, exeucuteTimeSecond * 1000, gagTime);
 
 
-                                MsgReCallUtil.notifyHasDoWhileReply(this, "加入任务成功" +
-                                        "\n执行时间:" + DateUtils.getGagTime(exeucuteTimeSecond) + "后" +
-                                        (isgroupMsg ? "" : "\n操作群:" + sendOrGroup) +
-                                        "\n操作:禁言QQ" + senderuin + " " + DateUtils.getGagTime(gagTime) + "  " +
-                                        "\n提示:发送[" + CmdConfig.CLEAR_TASK + cancelCmd + "]可取消此任务", item);
+                                MsgReCallUtil.notifyHasDoWhileReply(this, "加入任务成功" + "\n执行时间:" + DateUtils.getGagTime(exeucuteTimeSecond) + "后" + (isgroupMsg ? "" : "\n操作群:" + sendOrGroup) + "\n操作:禁言QQ" + senderuin + " " + DateUtils.getGagTime(gagTime) + "  " + "\n提示:发送[" + CmdConfig.CLEAR_TASK + cancelCmd + "]可取消此任务", item);
 
                             }
 
@@ -6777,11 +6777,7 @@ System.out.println(m.group());//输出“水货”“正品”
 
                             TaskUtils.insertRedpacketKickTask(this, cancelCmd, clone, exeucuteTimeSecond * 1000, forver);
 
-                            MsgReCallUtil.notifyHasDoWhileReply(this, "加入任务成功" +
-                                    "\n执行时间:" + DateUtils.getGagTime(exeucuteTimeSecond) + "后" +
-                                    "\n操作:踢出" + sendOrGroup + "群成员" + senderuin + "" +
-                                    "\n是否永久:" + forver + "" +
-                                    "\n提示:发送" + CmdConfig.CLEAR_TASK + cancelCmd + "可取消此任务", item);
+                            MsgReCallUtil.notifyHasDoWhileReply(this, "加入任务成功" + "\n执行时间:" + DateUtils.getGagTime(exeucuteTimeSecond) + "后" + "\n操作:踢出" + sendOrGroup + "群成员" + senderuin + "" + "\n是否永久:" + forver + "" + "\n提示:发送" + CmdConfig.CLEAR_TASK + cancelCmd + "可取消此任务", item);
 
 
                         }
@@ -6813,17 +6809,11 @@ System.out.println(m.group());//输出“水货”“正品”
                             TaskUtils.insertSendMsgKickTask(this, cancelCmd, clone, exeucuteTimeSecond * 1000, messageContent);
 
                             if (clone.getIstroop() == 1) {
-                                MsgReCallUtil.notifyHasDoWhileReply(this, "加入发消息任务成功" +
-                                        "\n执行时间:\n" + DateUtils.getGagTime(exeucuteTimeSecond) + "后" +
-                                        "\n行为:发送消息" + messageContent + "给群" + sendOrGroup + "\n提示:发送" + CmdConfig.CLEAR_TASK + cancelCmd + "可取消此任务", item);
+                                MsgReCallUtil.notifyHasDoWhileReply(this, "加入发消息任务成功" + "\n执行时间:\n" + DateUtils.getGagTime(exeucuteTimeSecond) + "后" + "\n行为:发送消息" + messageContent + "给群" + sendOrGroup + "\n提示:发送" + CmdConfig.CLEAR_TASK + cancelCmd + "可取消此任务", item);
 
 
                             } else {
-                                MsgReCallUtil.notifyHasDoWhileReply(this, "加入发消息任务成功" +
-                                        "\n执行时间:" +
-                                        "\n" + DateUtils.getGagTime(exeucuteTimeSecond) + "后" +
-                                        "\n行为:发送消息" + messageContent + "给好友" + senderuin + "" +
-                                        "\n提示:发送" + CmdConfig.CLEAR_TASK + cancelCmd + "可取消此任务", item);
+                                MsgReCallUtil.notifyHasDoWhileReply(this, "加入发消息任务成功" + "\n执行时间:" + "\n" + DateUtils.getGagTime(exeucuteTimeSecond) + "后" + "\n行为:发送消息" + messageContent + "给好友" + senderuin + "" + "\n提示:发送" + CmdConfig.CLEAR_TASK + cancelCmd + "可取消此任务", item);
 
                             }
 
@@ -7037,37 +7027,7 @@ System.out.println(m.group());//输出“水货”“正品”
 
                 String argFirst = ParamParseUtil.getArgByArgArr(args, ParamParseUtil.sArgFirst);
                 if (TextUtils.isEmpty(argFirst)) {
-                    MsgReCallUtil.notifyHasDoWhileReply(this, "支持修改的子命令有[" + String.format("%s %s %s %s|%s %s %s %s %s %s %s %s %s %s %s %s %s  %s(部分命令操作教程需要输入子命令方可查看)",
-                            CmdConfig.ChildCmd.CONFIG_ADD_VAR,
-                            CmdConfig.ChildCmd.CONFIG_DELETE_VAR,
-                            CmdConfig.ChildCmd.CONFIG_MODIFY_VAR,
-                            CmdConfig.ChildCmd.CONFIG_MODIFY,
-                            CmdConfig.ChildCmd.CONFIG_GROUP_INFO,
-                            CmdConfig.ChildCmd.CONFIG_USER_CARD,
-                            CmdConfig.FECTCH_MUSIC,
-                            CmdConfig.ChildCmd.CONFIG_PRINT,
-                            CmdConfig.ChildCmd.CONFIG_RELOAD,
-                            CmdConfig.ChildCmd.CONFIG_SHOW,
-                            CmdConfig.ChildCmd.CONFIG_CARD,
-                            CmdConfig.ChildCmd.CONFIG_USER_CARD,
-                            CmdConfig.ChildCmd.CONFIG_EXIT_DISCUSSION,
-                            CmdConfig.ChildCmd.CONFIG_EXIT_GROUP,
-                            CmdConfig.ChildCmd.CONFIG_CAST_URI_DECODE,
-                            CmdConfig.ChildCmd.CONFIG_CAST_URI_DECODE,
-                            CmdConfig.ChildCmd.CONFIG_WEB_ENCODE,
-                            "\n" + CmdConfig.CONFIG + "" + CmdConfig.ChildCmd.CONFIG_RELOAD +
-                                    "\n" + CmdConfig.CONFIG + "" + CmdConfig.ChildCmd.CONFIG_RESTART +
-                                    "\n" + CmdConfig.CONFIG + "" + CmdConfig.ChildCmd.CONFIG_MODIFY +
-                                    "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_SHOW +
-                                    "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_EXIT_GROUP +
-                                    "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_EXIT_DISCUSSION +
-                                    "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_EXECUTE + " shell命令" +
-                                    "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_OPEN + "  schame或url" +
-                                    "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_SCREENCAP + "  截图" +
-                                    "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_LAUNCHER_APP + "  应用包名" +
-                                    CmdConfig.ChildCmd.CONFIG_SQL) + "【可脱离ui修改任意设置】最新版插件支持载入本机器人软件作为插件进行加载提高稳定性,但是ui界面失效，那么本命令将变成一款神器了.]\n具体演示\n" +
-                            "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_SQL + " select * from $管理员 limit 0,1(更多命令输入`" + CmdConfig.CONFIG + "SQL`" + ")" +
-                            "", item);
+                    MsgReCallUtil.notifyHasDoWhileReply(this, "支持修改的子命令有[" + String.format("%s %s %s %s|%s %s %s %s %s %s %s %s %s %s %s %s %s  %s(部分命令操作教程需要输入子命令方可查看)", CmdConfig.ChildCmd.CONFIG_ADD_VAR, CmdConfig.ChildCmd.CONFIG_DELETE_VAR, CmdConfig.ChildCmd.CONFIG_MODIFY_VAR, CmdConfig.ChildCmd.CONFIG_MODIFY, CmdConfig.ChildCmd.CONFIG_GROUP_INFO, CmdConfig.ChildCmd.CONFIG_USER_CARD, CmdConfig.FECTCH_MUSIC, CmdConfig.ChildCmd.CONFIG_PRINT, CmdConfig.ChildCmd.CONFIG_RELOAD, CmdConfig.ChildCmd.CONFIG_SHOW, CmdConfig.ChildCmd.CONFIG_CARD, CmdConfig.ChildCmd.CONFIG_USER_CARD, CmdConfig.ChildCmd.CONFIG_EXIT_DISCUSSION, CmdConfig.ChildCmd.CONFIG_EXIT_GROUP, CmdConfig.ChildCmd.CONFIG_CAST_URI_DECODE, CmdConfig.ChildCmd.CONFIG_CAST_URI_DECODE, CmdConfig.ChildCmd.CONFIG_WEB_ENCODE, "\n" + CmdConfig.CONFIG + "" + CmdConfig.ChildCmd.CONFIG_RELOAD + "\n" + CmdConfig.CONFIG + "" + CmdConfig.ChildCmd.CONFIG_RESTART + "\n" + CmdConfig.CONFIG + "" + CmdConfig.ChildCmd.CONFIG_MODIFY + "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_SHOW + "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_EXIT_GROUP + "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_EXIT_DISCUSSION + "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_EXECUTE + " shell命令" + "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_OPEN + "  schame或url" + "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_SCREENCAP + "  截图" + "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_LAUNCHER_APP + "  应用包名" + CmdConfig.ChildCmd.CONFIG_SQL) + "【可脱离ui修改任意设置】最新版插件支持载入本机器人软件作为插件进行加载提高稳定性,但是ui界面失效，那么本命令将变成一款神器了.]\n具体演示\n" + "\n" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_SQL + " select * from $管理员 limit 0,1(更多命令输入`" + CmdConfig.CONFIG + "SQL`" + ")" + "", item);
 
 
                     return true;
@@ -7720,34 +7680,13 @@ System.out.println(m.group());//输出“水货”“正品”
 
                         if (TextUtils.isEmpty(argSecond)) {
 
-                            MsgReCallUtil.notifyHasDoWhileReply(this, "sql语句帮助:\n支持变量$g=群号 $u=QQ $s=机器人自身QQ " +
-                                            "\n表[群配置:groupconfig,luckmoney:收到的红包,var:表量表,vr:违规记录,vwr:群友触发的违规词记录,floor:楼层数据]" +
-                                            "[" + DBHelper.getSuperManager(getDbUtils()).getTableName(AdminBean.class) + ":超管表," +
-                                            "[" + DBHelper.getQQGroupManagerDBUtil(getDbUtils()).getTableName(TwoBean.class) + ":群管表," +
-                                            "," + DBHelper.getKeyWordDBUtil(getDbUtils()).getTableName(ReplyWordBean.class) + ":词库表," +
-                                            "," + DBHelper.getVarTableUtil(getDbUtils()).getTableName(VarBean.class) + ":变量表]" +
-                                            "\n查询当前群配置" +
-                                            "\n" + CmdConfig.CONFIG + "SQL select * from groupconfig where account=" + "\"$g\"" +// ignore_include
-                                            "\n查询管理员" +
-                                            "\n" + CmdConfig.CONFIG + "SQL select * from admin" +// ignore_include
-                                            "\n禁用网络词库" +
-                                            "\n" + CmdConfig.CONFIG + "SQL " + SQLCns.SQL_CONSTANT_DISENABLE_NET_WORK +
+                            MsgReCallUtil.notifyHasDoWhileReply(this, "sql语句帮助:\n支持变量$g=群号 $u=QQ $s=机器人自身QQ " + "\n表[群配置:groupconfig,luckmoney:收到的红包,var:表量表,vr:违规记录,vwr:群友触发的违规词记录,floor:楼层数据]" + "[" + DBHelper.getSuperManager(getDbUtils()).getTableName(AdminBean.class) + ":超管表," + "[" + DBHelper.getQQGroupManagerDBUtil(getDbUtils()).getTableName(TwoBean.class) + ":群管表," + "," + DBHelper.getKeyWordDBUtil(getDbUtils()).getTableName(ReplyWordBean.class) + ":词库表," + "," + DBHelper.getVarTableUtil(getDbUtils()).getTableName(VarBean.class) + ":变量表]" + "\n查询当前群配置" + "\n" + CmdConfig.CONFIG + "SQL select * from groupconfig where account=" + "\"$g\"" +// ignore_include
+                                    "\n查询管理员" + "\n" + CmdConfig.CONFIG + "SQL select * from admin" +// ignore_include
+                                    "\n禁用网络词库" + "\n" + CmdConfig.CONFIG + "SQL " + SQLCns.SQL_CONSTANT_DISENABLE_NET_WORK +
 
-                                            "\n修改所有违规词禁言时长" +
-                                            "\n" + CmdConfig.CONFIG + "SQL update " + DBHelper.getGagKeyWord(getDbUtils()).getTableName(GagAccountBean.class) + " set duration=60" +
-                                            "\n群违规强制中断逻辑" +
-                                            "\n" + CmdConfig.CONFIG + "SQL update groupconfig set breaklogic=1" +
+                                    "\n修改所有违规词禁言时长" + "\n" + CmdConfig.CONFIG + "SQL update " + DBHelper.getGagKeyWord(getDbUtils()).getTableName(GagAccountBean.class) + " set duration=60" + "\n群违规强制中断逻辑" + "\n" + CmdConfig.CONFIG + "SQL update groupconfig set breaklogic=1" +
 
-                                            "\n删除词库" +
-                                            "\n" + CmdConfig.CONFIG + "SQL delete from " + DBHelper.getKeyWordDBUtil(getDbUtils()).getTableName(ReplyWordBean.class) + " where answer like %红包% or ask like %红包%" +
-                                            "\n添加变量name" +
-                                            "\n" + CmdConfig.CONFIG + "SQL insert into " + DBHelper.getVarTableUtil(getDbUtils()).getTableName(VarBean.class) + "(name,value) values('你好" + new Random().nextInt(500) + "','测试变量数据')" +
-                                            " \n如果列数据太多,您可以输入参数指定格式\n" +
-                                            "-width 10表示每个单元格宽度为10" +
-                                            "\n -fontlength 表示每个单元格字体不得超过多少的长度 " +
-                                            "\n-format web 表示用网页来浏览 如果使用网页浏览，默认字体限制会自动调整足够大,避免挤在一坨",
-                                    "\n更新生效需要执行:" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_RELOAD,
-                                    item);
+                                    "\n删除词库" + "\n" + CmdConfig.CONFIG + "SQL delete from " + DBHelper.getKeyWordDBUtil(getDbUtils()).getTableName(ReplyWordBean.class) + " where answer like %红包% or ask like %红包%" + "\n添加变量name" + "\n" + CmdConfig.CONFIG + "SQL insert into " + DBHelper.getVarTableUtil(getDbUtils()).getTableName(VarBean.class) + "(name,value) values('你好" + new Random().nextInt(500) + "','测试变量数据')" + " \n如果列数据太多,您可以输入参数指定格式\n" + "-width 10表示每个单元格宽度为10" + "\n -fontlength 表示每个单元格字体不得超过多少的长度 " + "\n-format web 表示用网页来浏览 如果使用网页浏览，默认字体限制会自动调整足够大,避免挤在一坨", "\n更新生效需要执行:" + CmdConfig.CONFIG + CmdConfig.ChildCmd.CONFIG_RELOAD, item);
 
 
                             return true;
@@ -7845,8 +7784,7 @@ System.out.println(m.group());//输出“水货”“正品”
 
                                                 sbMapHeader.append("<caption>"
                                                         //ignore-end
-                                                        + "情迁聊天机器人数据库查询"
-                                                        + "</caption>");
+                                                        + "情迁聊天机器人数据库查询" + "</caption>");
                                             }
 
                                             //多上行也就是多少map 就会有多少buffer
@@ -8247,11 +8185,7 @@ System.out.println(m.group());//输出“水货”“正品”
                             }
                         }
 
-                        MsgReCallUtil.notifyHasDoWhileReply(this, "操作完成\n是否首次提交:" + containKey
-                                + "\n是否成功:" + result
-                                + "\n键名 :" + argSecond
-                                + "\n键值 :" + writeValue
-                                + "\n数据类型:" + type + "\n上次的值:" + beforeObj, item);
+                        MsgReCallUtil.notifyHasDoWhileReply(this, "操作完成\n是否首次提交:" + containKey + "\n是否成功:" + result + "\n键名 :" + argSecond + "\n键值 :" + writeValue + "\n数据类型:" + type + "\n上次的值:" + beforeObj, item);
 
 
                         return true;
@@ -8424,8 +8358,7 @@ System.out.println(m.group());//输出“水货”“正品”
                             sb.append("\n");
                             sb.append("是否支持踢人:" + "支持");
                         } else if (code == 69) {
-                            if (apptype.contains("1.5.2"))
-                                sb.append("是否支持禁言:" + "支持");
+                            if (apptype.contains("1.5.2")) sb.append("是否支持禁言:" + "支持");
                             sb.append("\n");
                             sb.append("是否支持踢人:" + "支持");
                             sb.append("\n");
@@ -8996,8 +8929,7 @@ System.out.println(m.group());//输出“水货”“正品”
             } catch (Exception e) {
                 String message = e.getMessage();
 
-                MsgReCallUtil.notifyHasDoWhileReply(this, "执行失败" + message
-                        , item);
+                MsgReCallUtil.notifyHasDoWhileReply(this, "执行失败" + message, item);
 
 
             }
@@ -9015,9 +8947,7 @@ System.out.println(m.group());//输出“水货”“正品”
         return isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isGroupMsg, nameBean, false);
     }
 
-    public boolean isNeedIgnoreManagerCommand(MsgItem
-                                                      item, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair, Integer
-                                                      flag, boolean isManager, boolean isGroupMsg, GroupWhiteNameBean nameBean, boolean allowAt) {
+    public boolean isNeedIgnoreManagerCommand(MsgItem item, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair, Integer flag, boolean isManager, boolean isGroupMsg, GroupWhiteNameBean nameBean, boolean allowAt) {
 
 
         if (flag < INeedReplayLevel.ANY) {//如果是屏蔽本群指令的除非艾特了否则不想要，也就是说会返回true通知忽略
@@ -9085,9 +9015,7 @@ System.out.println(m.group());//输出“水货”“正品”
      * @return
      */
 
-    public boolean isNeedIgnoreNormalCommand(MsgItem
-                                                     item, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair, Integer
-                                                     flag, boolean isManager, boolean selfMsg, boolean isgroupMsg, GroupWhiteNameBean nameBean) {
+    public boolean isNeedIgnoreNormalCommand(MsgItem item, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair, Integer flag, boolean isManager, boolean selfMsg, boolean isgroupMsg, GroupWhiteNameBean nameBean) {
 
 
         if (flag < INeedReplayLevel.INTERCEPT_ALL_HEIGHT) {//如果是屏蔽本群指令的除非艾特了否则不想要，也就是说会返回true通知忽略
@@ -9136,9 +9064,7 @@ System.out.println(m.group());//输出“水货”“正品”
 
     }
 
-    public boolean isNeedIgnoreXManagerCommand(MsgItem
-                                                       item, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair, Integer
-                                                       flag, boolean isManager, GroupWhiteNameBean nameBean) {
+    public boolean isNeedIgnoreXManagerCommand(MsgItem item, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair, Integer flag, boolean isManager, GroupWhiteNameBean nameBean) {
 
         return isNeedIgnoreXManagerCommand(item, atPair, flag, isManager, nameBean, false);
 
@@ -9154,9 +9080,7 @@ System.out.println(m.group());//输出“水货”“正品”
      * @param nameBean
      * @return
      */
-    public boolean isNeedIgnoreXManagerCommand(MsgItem
-                                                       item, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair, Integer
-                                                       flag, boolean isManager, GroupWhiteNameBean nameBean, boolean checkLocalManager) {
+    public boolean isNeedIgnoreXManagerCommand(MsgItem item, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair, Integer flag, boolean isManager, GroupWhiteNameBean nameBean, boolean checkLocalManager) {
 
         if (flag < INeedReplayLevel.INTERCEPT_ALL_HEIGHT) {//如果是屏蔽本群指令的除非艾特了否则不想要，也就是说会返回true通知忽略
             if (atPair.first && atPair.second.first) {
@@ -9210,9 +9134,7 @@ System.out.println(m.group());//输出“水货”“正品”
         return doGagCmd(item, isManager, args, group, ParamParseUtil.sArgSecond, ParamParseUtil.sArgThrid, false, null, null);
     }
 
-    private boolean doGagFromGroupMsgCmd(MsgItem item, boolean isManager, String[]
-            args, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair, GroupWhiteNameBean
-                                                 nameBean) {
+    private boolean doGagFromGroupMsgCmd(MsgItem item, boolean isManager, String[] args, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair, GroupWhiteNameBean nameBean) {
         return doGagCmd(item, isManager, args, item.getFrienduin(), ParamParseUtil.sArgFirst, ParamParseUtil.sArgSecond, true, atPair, nameBean);
     }
 
@@ -9233,14 +9155,12 @@ System.out.println(m.group());//输出“水货”“正品”
         return true;
     }
 
-    private boolean doKickFromGroupMsgCmd(MsgItem item, boolean isManager, GroupWhiteNameBean nameBean, String[]
-            args, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair) {
+    private boolean doKickFromGroupMsgCmd(MsgItem item, boolean isManager, GroupWhiteNameBean nameBean, String[] args, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair) {
         return doKickCmd(item, isManager, nameBean, args, item.getFrienduin(), ParamParseUtil.sArgFirst, ParamParseUtil.sArgSecond, atPair);
 
     }
 
-    private boolean doKickCmd(MsgItem item, boolean isManager, GroupWhiteNameBean nameBean, String[] args, String group, int accountIndex,
-                              int forverIndex, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair) {
+    private boolean doKickCmd(MsgItem item, boolean isManager, GroupWhiteNameBean nameBean, String[] args, String group, int accountIndex, int forverIndex, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair) {
 
 
         String account = ParamParseUtil.getArgByArgArr(args, accountIndex);
@@ -9418,9 +9338,7 @@ System.out.println(m.group());//输出“水货”“正品”
     }
 
 
-    private boolean doGagCmd(MsgItem item, boolean isManager, String[] args, String group, int accountIndex,
-                             int gagTimeIndex, boolean groupMsg, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair, GroupWhiteNameBean
-                                     nameBean) {
+    private boolean doGagCmd(MsgItem item, boolean isManager, String[] args, String group, int accountIndex, int gagTimeIndex, boolean groupMsg, androidx.core.util.Pair<Boolean, androidx.core.util.Pair<Boolean, List<GroupAtBean>>> atPair, GroupWhiteNameBean nameBean) {
 
 
         String paramStr1 = ParamParseUtil.getArgByArgArr(args, accountIndex);
@@ -9686,8 +9604,7 @@ System.out.println(m.group());//输出“水货”“正品”
         return doAtCmd(item, isManager, args, group, ParamParseUtil.sArgSecond, ParamParseUtil.sArgThrid);
     }
 
-    public boolean doAtCmd(MsgItem item, boolean isManager, String[] args, String group, int gagPersonArgPosition,
-                           int gagMsgPosition) {
+    public boolean doAtCmd(MsgItem item, boolean isManager, String[] args, String group, int gagPersonArgPosition, int gagMsgPosition) {
         String first;
         first = ParamParseUtil.getArgByArgArr(args, gagPersonArgPosition);
         String second = ParamParseUtil.getArgByArgArr(args, gagMsgPosition);

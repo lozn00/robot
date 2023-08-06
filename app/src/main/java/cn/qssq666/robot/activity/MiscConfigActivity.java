@@ -47,7 +47,7 @@ public class MiscConfigActivity extends SuperActivity {
         binding.evEmailPort.setText(configSharePreferences.getInt(Cns.MISC_EMAIL_SERVER_PORT, 25) + "");
 
 
-        binding.cbMsgTip.setChecked(configSharePreferences.getBoolean(Cns.MISC_TIP_ENABLE, binding.cbMsgTip.isChecked()));
+        binding.cbMsgTip.setChecked(configSharePreferences.getBoolean(Cns.MISC_VOICE_TIP_ENABLE, binding.cbMsgTip.isChecked()));
         binding.cbKeepFloatWindow.setChecked(configSharePreferences.getBoolean(Cns.MISC_FLOATING_WINDOW, binding.cbKeepFloatWindow.isChecked()));
         binding.cbUrlForward.setChecked(configSharePreferences.getBoolean(Cns.MISC_URL_FORWARD_ENABLE, binding.cbUrlForward.isChecked()));
         binding.cbEanbleMailForward.setChecked(configSharePreferences.getBoolean(Cns.MISC_EMAIL_FORWARD_ENABLE, binding.cbEanbleMailForward.isChecked()));
@@ -72,6 +72,7 @@ public class MiscConfigActivity extends SuperActivity {
             SharedPreferences.Editor edit = AppUtils.getConfigSharePreferences(getApplicationContext()).edit();
             edit.putString(Cns.MISC_TIP_VOICE_EMAIL_TIP_KEYWORD, binding.evOutCallMsgKeyword.getText().toString());
             edit.putBoolean(Cns.MISC_URL_FORWARD_ENABLE, binding.cbUrlForward.isChecked());
+            edit.putBoolean(Cns.MISC_VOICE_TIP_ENABLE, binding.cbMsgTip.isChecked());
             edit.putString(Cns.MISC_URL_FORWARD_URL, binding.evOutCallUrl.getText().toString());
             String urlkeyword=binding.evOutCallUrlKeyword.getText().toString();
             edit.putString(Cns.MISC_URL_FORWARD_URL_KEYWORD,urlkeyword);

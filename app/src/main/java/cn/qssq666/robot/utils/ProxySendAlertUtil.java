@@ -179,6 +179,7 @@ public class ProxySendAlertUtil {
             LogUtil.writeLoge("转发请求失败,转发url不正确" + forwardUrl);
             return;
         }
+        message=message.replace(" ","");
         String replacement = AppUtils.encodeUrl(message);
         if (!forwardUrl.startsWith("http")) {
             forwardUrl = "http://" + forwardUrl;
