@@ -3254,7 +3254,11 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 
 //        if(IGnoreConfig.distanceNetHistoryTimeIgnore)
 
-        long nettimeDistance = getTimeDistance(TYPE_SECOND, nowTime, item.getTime());
+        long time = item.getTime();
+        if(String.valueOf(time).length()<String.valueOf(nowTime).length()){
+            time=time*1000;
+        }
+        long nettimeDistance = getTimeDistance(TYPE_SECOND, nowTime, time);
 
         if (IGnoreConfig.distanceNetHistoryTimeIgnore > 0 && nettimeDistance >= IGnoreConfig.distanceNetHistoryTimeIgnore) {//超过 指定描述的消息不进行处理
             errMsg = "历史消息忽略(意思是上次登录的离线消息距离)间隔秒:" + nettimeDistance + ",设置的间隔时间是大于" + IGnoreConfig.distanceNetHistoryTimeIgnore + "则忽略,上次时间:" + DateUtils.getTime(item.getTime());
