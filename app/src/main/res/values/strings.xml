@@ -482,6 +482,7 @@
     <string name="change_orientation">切换屏幕方向</string>
     <string name="actionbar_webview_open">打开指定地址</string>
     <string name="action_share">分享</string>
+    <string name="recent_msg">最近消息</string>
 
     <string-array name="root_chat_api">
      <item>茉莉机器人</item>

@@ -137,6 +137,8 @@ public class MsgReCallUtil {
         atbean.setMsg(msg);
         atbean.setSenderuin(qq);
         msgItem.setMessage(JSON.toJSONString(atbean));
+        MsgItem msgItem1 = (MsgItem) msgItem;
+        msgItem1.setDirection(1);
         adjectSenderUin(msgItem);
 //        msgItem.setSenderuin(msgItem.getSelfuin());//由于是机器人自身发的，所以这个消息要防止再次回流，所以把这个消息的发送者标示为自己就可以解决这个问题
         contentProvider.notifyChange(replyFinalWrap(contentProvider, msgItem), null);
@@ -159,6 +161,8 @@ public class MsgReCallUtil {
         msgItem.setExtstr(msg);
         String atListJson = JSON.toJSONString(atBeanList);
         msgItem.setMessage(atListJson);
+        MsgItem msgItem1 = (MsgItem) msgItem;
+        msgItem1.setDirection(1);
         //LogUtil.writeLog("[发送批量艾特给宿主]" + msgItem.toString());
         contentProvider.notifyChange(replyFinalWrap(contentProvider, msgItem), null);
 
@@ -229,6 +233,8 @@ public class MsgReCallUtil {
 //            msgItem.setSenderuin(msgItem.getSelfuin());//文本消息都应该把发发送者改成自己，而禁言和踢人是用来接收参数 ，只有发言消息需要这么做 因为这种消息会回流自身
 
             adjectSenderUin(msgItem);
+            MsgItem msgItem1 = (MsgItem) msgItem;
+            msgItem1.setDirection(1);
             contentProvider.notifyChange(replyFinalWrap(contentProvider, msgItem), null);
 
         }
@@ -278,9 +284,13 @@ public class MsgReCallUtil {
         if (RemoteService.isIsInit()) {
             String s = RemoteService.gagUser(msgItem.getFrienduin(), msgItem.getSenderuin(), gagDuration);
             if (s != null) {
+                MsgItem msgItem1 = (MsgItem) msgItem;
+                msgItem1.setDirection(1);
                 contentProvider.notifyChange(RobotUtil.msgItemToUri(msgItem), null);
             }
         } else {
+            MsgItem msgItem1 = (MsgItem) msgItem;
+            msgItem1.setDirection(1);
             contentProvider.notifyChange(RobotUtil.msgItemToUri(msgItem), null);
         }
     }
@@ -293,6 +303,8 @@ public class MsgReCallUtil {
 
         msgItem.setFrienduin(group);
         msgItem.setCode(ControlCode.QUIT_GROUP);
+        MsgItem msgItem1 = (MsgItem) msgItem;
+        msgItem1.setDirection(1);
         //LogUtil.writeLog("[发送禁言请求给宿主:]禁言时间:" + gagDuration + ",所在群:" + msgItem.getFrienduin() + ",QQ:" + msgItem.getSenderuin() + "," + msgItem.getNickname() + ",禁言分钟" + msgItem.getMessage());
         contentProvider.notifyChange(RobotUtil.msgItemToUri(msgItem), null);
     }
@@ -304,6 +316,8 @@ public class MsgReCallUtil {
 
         msgItem.setFrienduin(group);
         msgItem.setCode(ControlCode.QUIT_DISCUSSION);
+        MsgItem msgItem1 = (MsgItem) msgItem;
+        msgItem1.setDirection(1);
         //LogUtil.writeLog("[发送禁言请求给宿主:]禁言时间:" + gagDuration + ",所在群:" + msgItem.getFrienduin() + ",QQ:" + msgItem.getSenderuin() + "," + msgItem.getNickname() + ",禁言分钟" + msgItem.getMessage());
         contentProvider.notifyChange(RobotUtil.msgItemToUri(msgItem), null);
     }
@@ -314,6 +328,8 @@ public class MsgReCallUtil {
         }
         msgItem.setCode(ControlCode.PIC);
         msgItem.setMessage(path + "");
+        MsgItem msgItem1 = (MsgItem) msgItem;
+        msgItem1.setDirection(1);
         //LogUtil.writeLog("[发送禁言请求给宿主:]禁言时间:" + gagDuration + ",所在群:" + msgItem.getFrienduin() + ",QQ:" + msgItem.getSenderuin() + "," + msgItem.getNickname() + ",禁言分钟" + msgItem.getMessage());
         contentProvider.notifyChange(RobotUtil.msgItemToUri(msgItem), null);
     }
@@ -322,6 +338,8 @@ public class MsgReCallUtil {
         msgItem.setCode(ControlCode.VOICE_CALL);
         msgItem.setMessage(qq + "");
         msgItem.setSenderuin(qq);
+        MsgItem msgItem1 = (MsgItem) msgItem;
+        msgItem1.setDirection(1);
         //LogUtil.writeLog("[发送禁言请求给宿主:]禁言时间:" + gagDuration + ",所在群:" + msgItem.getFrienduin() + ",QQ:" + msgItem.getSenderuin() + "," + msgItem.getNickname() + ",禁言分钟" + msgItem.getMessage());
         contentProvider.notifyChange(RobotUtil.msgItemToUri(msgItem), null);
     }
@@ -338,6 +356,8 @@ public class MsgReCallUtil {
 
         msgItem.setCode(type);
         msgItem.setMessage(message + "");
+        MsgItem msgItem1 = (MsgItem) msgItem;
+        msgItem1.setDirection(1);
         //LogUtil.writeLog("[发送禁言请求给宿主:]禁言时间:" + gagDuration + ",所在群:" + msgItem.getFrienduin() + ",QQ:" + msgItem.getSenderuin() + "," + msgItem.getNickname() + ",禁言分钟" + msgItem.getMessage());
         contentProvider.notifyChange(RobotUtil.msgItemToUri(msgItem), null);
     }
@@ -366,6 +386,8 @@ public class MsgReCallUtil {
         }
         msgItem.setCode(ControlCode.KICK);
         msgItem.setMessage(forverkick + "");
+        MsgItem msgItem1 = (MsgItem) msgItem;
+        msgItem1.setDirection(1);
         //LogUtil.writeLog("[发送踢人请求给宿主:]所在群:" + msgItem.getFrienduin() + ",QQ:" + msgItem.getSenderuin() + ",是否永久踢出：" + forverkick);
         contentProvider.notifyChange(RobotUtil.msgItemToUri(msgItem), null);
     }
@@ -389,6 +411,8 @@ public class MsgReCallUtil {
         msgItem.setCode(ControlCode.StrucMSG);
         msgItem.setMessage(xmlInfo + "");
         adjectSenderUin(msgItem);
+        MsgItem msgItem1 = (MsgItem) msgItem;
+        msgItem1.setDirection(1);
 
         //LogUtil.writeLog("[发送结构体消息给宿主:]所在群:" + msgItem.getFrienduin() + ",QQ:" + msgItem.getSenderuin() + ",结构体：" + xmlInfo);
         contentProvider.notifyChange(RobotUtil.msgItemToUri(msgItem), null);
@@ -417,6 +441,8 @@ public class MsgReCallUtil {
         msgItem.setSenderuin("153016267");
         msgItem.setFrienduin(isgroupMsg ? "153016267" : "1000000");
         msgItem.setFrienduin(msgItem.getSenderuin());
+        MsgItem msgItem1 = (MsgItem) msgItem;
+        msgItem1.setDirection(1);
         robotContentProvider.notifyChange(RobotUtil.msgItemToUri(msgItem), null);
     }
 
@@ -425,15 +451,18 @@ public class MsgReCallUtil {
         IMsgModel msgItem = clone;
         msgItem.setCode(ControlCode.MODIFY_GROUP_MEMBER_CARD_NAME);
         msgItem.setMessage(text + "");
+        MsgItem msgItem1 = (MsgItem) msgItem;
+        msgItem1.setDirection(1);
         robotContentProvider.notifyChange(RobotUtil.msgItemToUri(msgItem), null);
     }
 
 
     public static void notifyZanPerson(RobotContentProvider robotContentProvider, MsgItem clone, String qq, int zancount) {
-        IMsgModel msgItem = clone;
+        MsgItem msgItem = clone;
         msgItem.setCode(ControlCode.ADD_LIKE);
         msgItem.setSenderuin(qq);
         msgItem.setMessage(zancount + ",1");//忽略点赞检查！
+        msgItem.setDirection(1);
         robotContentProvider.notifyChange(RobotUtil.msgItemToUri(msgItem), null);
     }
 
@@ -496,12 +525,13 @@ public class MsgReCallUtil {
      */
     public static void notifyRevokeMsgJump(RobotContentProvider robotContentProvider, String group, String qq, long messageID, String typeData, MsgItem item) {
 
-        IMsgModel msgItem = item.clone();
+        MsgItem msgItem = item.clone();
         msgItem.setCode(ControlCode.REVOKE_MSG_1);
         msgItem.setSenderuin(qq);
         msgItem.setFrienduin(group);
         msgItem.setMessage(typeData);
         ((MsgItem) msgItem).setMessagID(messageID);//忽略点赞检查
+        msgItem.setDirection(1);
         robotContentProvider.notifyChange(RobotUtil.msgItemToUri(msgItem), null);
     }
 }

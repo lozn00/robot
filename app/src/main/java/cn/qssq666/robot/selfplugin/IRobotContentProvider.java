@@ -16,6 +16,8 @@ import java.util.List;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import cn.qssq666.robot.bean.MsgItem;
+
 /**
  * Created by qssq on 2018/5/9 qssq666@foxmail.com
  */
@@ -38,6 +40,8 @@ public interface IRobotContentProvider {
     boolean hasDisablePlugin(IPluginHolder holder);
 
     boolean disablePlugin(IPluginHolder  holder, boolean isChecked);
+
+    List<MsgItem> getRecentMsgs();
 
     interface IContentProviderNotify {
         void notifyChange(@NonNull Uri uri, @Nullable IRobotContentProvider observer);

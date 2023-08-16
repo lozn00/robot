@@ -34,6 +34,7 @@ public class MiscConfigActivity extends SuperActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_misc_config);
         SharedPreferences configSharePreferences = AppUtils.getConfigSharePreferences(getApplicationContext());
         binding.evOutCallMsgKeyword.setText(configSharePreferences.getString(Cns.MISC_TIP_VOICE_EMAIL_TIP_KEYWORD, ""));
+        binding.evMaxRecordMsg.setText(configSharePreferences.getInt(Cns.SP_RECENT_MSG_RECORD_COUNT, 0)+"");
         binding.evKeywordIgnore.setText(configSharePreferences.getString(Cns.MISC_TIP_IGNORE_KEYWORD, ""));
         binding.evSenderEmail.setText(configSharePreferences.getString(Cns.MISC_EMAIL_SENDER_EMAIL, ""));
         binding.evSenderEmailPwd.setText(configSharePreferences.getString(Cns.MISC_EMAIL_SENDER_EMAIL_PWD, ""));
@@ -72,6 +73,7 @@ public class MiscConfigActivity extends SuperActivity {
             SharedPreferences.Editor edit = AppUtils.getConfigSharePreferences(getApplicationContext()).edit();
             edit.putString(Cns.MISC_TIP_VOICE_EMAIL_TIP_KEYWORD, binding.evOutCallMsgKeyword.getText().toString());
             edit.putBoolean(Cns.MISC_URL_FORWARD_ENABLE, binding.cbUrlForward.isChecked());
+            edit.putInt(Cns.SP_RECENT_MSG_RECORD_COUNT, ParseUtils.parseInt(binding.evMaxRecordMsg.getText().toString()));
             edit.putBoolean(Cns.MISC_VOICE_TIP_ENABLE, binding.cbMsgTip.isChecked());
             edit.putString(Cns.MISC_URL_FORWARD_URL, binding.evOutCallUrl.getText().toString());
             String urlkeyword=binding.evOutCallUrlKeyword.getText().toString();

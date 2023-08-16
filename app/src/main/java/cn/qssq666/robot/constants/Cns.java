@@ -161,6 +161,7 @@ public class Cns {
     public static final String ALL_PERSON_1 = "全体";
     public static final String CUSTOM_DB_PATH = "key_app_db_path";
     public static final String SP_DEFAULT_REPLY_API_INDEX = "SP_DEFAULT_REPLY_API_INDEX";
+    public static final String SP_RECENT_MSG_RECORD_COUNT = "SP_RECENT_MSG_RECORD_COUNT";
     public static final String TIP_PLEASE_GROUP_CHAT = "请在群里发送此命令";
     public static final String DEFAULT_GAG_RAG_GLOBAL_DISABLE_WEBSITE = "greghttp|\\.cn|\\.com|\\.org|\\.net|\\.tk|\\.me";
     public static String DEFAULT_GROUP = "225832062";

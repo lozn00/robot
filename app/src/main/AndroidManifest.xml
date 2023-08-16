@@ -121,16 +121,6 @@
             android:name="cn.qssq666.robot.business.RobotContentProvider"
             android:authorities="cn.qssq666.robot"
             android:exported="true" />
-        <!--        <provider
-                    android:name="android.support.v4.content.FileProvider"
-                    android:authorities="${applicationId}.fileprovider"
-                    android:exported="false"
-                    android:grantUriPermissions="true">
-                    <meta-data
-                        android:name="android.support.FILE_PROVIDER_PATHS"
-                        android:resource="@xml/file_provider_paths" />
-                </provider>
-                　-->
 
         <provider
             android:name="androidx.core.content.FileProvider"
@@ -175,6 +165,9 @@
 
         <activity
             android:name="cn.qssq666.robot.activity.RedPacketRecordActivity"
+            android:theme="@style/Toolbar"></activity>
+        <activity
+            android:name="cn.qssq666.robot.activity.msg.RecentMsgAct"
             android:theme="@style/Toolbar"></activity>
 
 

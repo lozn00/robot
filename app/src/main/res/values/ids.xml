@@ -3,6 +3,7 @@
 <item type="id" name="btn_set"/>
 <item type="id" name="btn_misc_config"/>
 <item type="id" name="btn_group_white_names"/>
+<item type="id" name="recent_msg"/>
 <item type="id" name="btn_ignore_uncheck_qq"/>
 <item type="id" name="btn_key_redpacket_record"/>
 <item type="id" name="btn_nickname"/>

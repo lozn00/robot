@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="handler"
+            type="cn.qssq666.robot.handler.AccountClickHandler" />
+
+
+        <variable
+            name="model"
+            type="cn.qssq666.robot.bean.MsgItem" />
+
+        <import type="cn.qssq666.robot.utils.DateUtils" />
+        <import type="cn.qssq666.robot.constants.ControlCode" />
+
+        <import type="android.view.View" />
+    </data>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+
+                android:layout_weight="0.8"
+                android:text="时间:"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:text="@{DateUtils.getShortTime(model.time)}" />
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/tv_tag3"
+                android:visibility="@{model.apptype.contains(`proxy_send_msg`)?View.VISIBLE:View.GONE}"
+                android:layout_marginRight="@dimen/theme_margin"
+                android:background="@color/colorRed"
+                android:text="代发"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/tv_tag1"
+                android:visibility="@{model.selfuin.equals(model.senderuin)?View.VISIBLE:View.GONE}"
+                android:layout_marginRight="@dimen/theme_margin"
+                android:background="@color/colorRed"
+                android:text="IM自回"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                />
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/tv_tag"
+                android:layout_marginRight="@dimen/theme_margin"
+                app:text="@{model.direction==0?`IM下发`:`机器人回应`}"
+                android:background="@{model.direction==0?@color/colorGreen:@color/colorRed}"
+                android:textSize="15sp"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                />
+
+
+<!--                android:textColor="@color/white"-->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+
+                android:layout_marginRight="@dimen/theme_margin"
+                android:text="消息类型:群消息"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:text="@{`消息类型:`+(model.istroop==1?`群消息`:`好友消息`)}" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/theme_margin"
+
+
+                android:layout_weight="0.5"
+                android:text="群号:123"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:visibility="@{model.istroop==1?View.VISIBLE:View.GONE}"
+                app:text="@{`群号:`+model.frienduin}"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="@dimen/theme_margin"
+
+                android:layout_weight="0.5"
+                android:text="发送人:123"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:text="@{`发送人:`+model.senderuin}"
+
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+
+                android:layout_marginRight="@dimen/theme_margin"
+
+                android:layout_weight="1"
+                android:text="昵称:机器人"
+                android:textColor="@color/colorPrimary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:text="@{`昵称:`+model.nickname}"
+
+                />
+
+
+        </LinearLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:maxLines="4"
+            android:text="消息内容:"
+            android:textColor="@color/colorPrimary"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:text="@{`消息内容:`+model.message}" />
+
+
+    </LinearLayout>
+
+
+</layout>

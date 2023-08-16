@@ -1,4 +1,5 @@
 package cn.qssq666.robot.utils;
+
 import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Environment;
@@ -125,18 +126,18 @@ public class RobotUtil {
     }
 
     public static void insertDefaultGagWrod(DBUtils dbUtils) {
-        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_WORD.replace(",",ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("1天")));
-        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_QSSQ.replace(",",ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("1天")));
-        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_RAG.replace(",",ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("1天")));
-        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_RAG_FULL.replace(",",ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("1天")));
+        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_WORD.replace(",", ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("1天")));
+        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_QSSQ.replace(",", ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("1天")));
+        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_RAG.replace(",", ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("1天")));
+        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_RAG_FULL.replace(",", ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("1天")));
 //        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_RAG_GLOBAL_DISABLE_NUMBER).setDuration(ParseUtils.parseGagStr2Secound("1天")));
-        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_RAG_GLOBAL_DISABLE_WEBSITE.replace(",",ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("1天")).setReason("禁止发外链"));
-        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_SHUAPIN.replace(",",ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("1小时")).setReason("禁止发QQ等号码"));
-        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_WORD1.replace(",",ClearUtil.wordSplit)).setDuration(60 * 60));
+        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_RAG_GLOBAL_DISABLE_WEBSITE.replace(",", ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("1天")).setReason("禁止发外链"));
+        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_SHUAPIN.replace(",", ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("1小时")).setReason("禁止发QQ等号码"));
+        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_WORD1.replace(",", ClearUtil.wordSplit)).setDuration(60 * 60));
         //静默演示
-        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_SILENCE.replace(",",ClearUtil.wordSplit)).setDuration(60 * 60 * 60));
-        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_KICK.replace(",",ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("30分钟")).setAction(GAGTYPE.KICK));
-        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_KICK_FOVER.replace(",",ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("30分钟")).setAction(GAGTYPE.KICK_FORVER))
+        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_SILENCE.replace(",", ClearUtil.wordSplit)).setDuration(60 * 60 * 60));
+        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_KICK.replace(",", ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("30分钟")).setAction(GAGTYPE.KICK));
+        dbUtils.insert(new GagAccountBean().setAccount(Cns.DEFAULT_GAG_KICK_FOVER.replace(",", ClearUtil.wordSplit)).setDuration(ParseUtils.parseGagStr2Secound("30分钟")).setAction(GAGTYPE.KICK_FORVER))
         ;
     }
 
@@ -207,6 +208,7 @@ public class RobotUtil {
         //
         //LogUtil.writeLog("ContentValues:" + values.toString());
         Integer code = values.getAsInteger(MsgTypeConstant.code);
+        Integer direction = values.getAsInteger(MsgTypeConstant.direction);
         String extraStr = values.getAsString(MsgTypeConstant.extstr);
         String extraJson = values.getAsString(MsgTypeConstant.extrajson);
         Integer isstroop = values.getAsInteger(MsgTypeConstant.istroop);
@@ -222,6 +224,7 @@ public class RobotUtil {
         Long time = values.getAsLong(MsgTypeConstant.time);
         MsgItem item = new MsgItem();
         item.setIstroop(isstroop == null ? 0 : isstroop);
+        item.setDirection(direction == null ? 0 : direction);
         item.setType(type);
         item.setSenderuin(senderUin);
         item.setFrienduin(friendUin);
@@ -232,11 +235,18 @@ public class RobotUtil {
         item.setVersion(version);
         item.setApptype(apptype);
         item.setNickname(nickname);
-        item.setMessagID(msgID==null?0:msgID);
+        item.setMessagID(msgID == null ? 0 : msgID);
         item.setTime(time == null ? 0 : time);
         item.setCode(code == null ? 0 : code);
         return item;
     }
+
+    public static Uri contentValuesToUri(ContentValues values) {
+        //
+        MsgItem msgItem = contentValuesToMsgItem(values);
+        return msgItemToUri(msgItem);
+    }
+
 
     public static MsgItem uriToMsgItem(Uri uri) {
         String istroopStr = uri.getQueryParameter(MsgTypeConstant.istroop);
@@ -252,11 +262,13 @@ public class RobotUtil {
         String timeStr = uri.getQueryParameter(MsgTypeConstant.time);
         String version = uri.getQueryParameter(MsgTypeConstant.version);
         String apptype = uri.getQueryParameter(MsgTypeConstant.apptype);
-        String msgId= uri.getQueryParameter(MsgTypeConstant.messageID);
+        String msgId = uri.getQueryParameter(MsgTypeConstant.messageID);
+        String direction = uri.getQueryParameter(MsgTypeConstant.direction);
         MsgItem item = new MsgItem();
         item.setIstroop(TextUtils.isEmpty(istroopStr) ? -1 : Integer.parseInt(istroopStr));
+        item.setDirection(TextUtils.isEmpty(direction) ? -1 : Integer.parseInt(direction));
         item.setType(TextUtils.isEmpty(typeStr) ? -1 : Integer.parseInt(typeStr));
-        item.setMessagID(TextUtils.isEmpty(msgId) ? 0: Long.parseLong(msgId));
+        item.setMessagID(TextUtils.isEmpty(msgId) ? 0 : Long.parseLong(msgId));
         item.setSenderuin(senderUin);
         item.setSelfuin(selfUin);
         item.setExtstr(extStr);
@@ -269,10 +281,6 @@ public class RobotUtil {
         item.setVersion(version);
         item.setApptype(apptype);
         item.setTime(timeStr == null ? 0 : Long.parseLong(timeStr));
-      /*  try {
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }*/
         return item;
     }
 
@@ -282,12 +290,14 @@ public class RobotUtil {
     }
 
     public static Uri msgItemToUri(IMsgModel item, String message) {
+        int direction = ((MsgItem) item).getDirection();
         return Uri.parse(MsgTypeConstant.AUTHORITY_CONTENT).buildUpon().appendPath(RobotContentProvider.ACTION_MSG).appendQueryParameter(MsgTypeConstant.frienduin, item.getFrienduin())
                 .appendQueryParameter(MsgTypeConstant.istroop, item.getIstroop() + "")
                 .appendQueryParameter(MsgTypeConstant.type, item.getType() + "")
                 .appendQueryParameter(MsgTypeConstant.msg, message)
                 .appendQueryParameter(MsgTypeConstant.code, item.getCode() + "")
                 .appendQueryParameter(MsgTypeConstant.extstr, item.getExtstr() + "")
+                .appendQueryParameter(MsgTypeConstant.direction, direction + "")
                 .appendQueryParameter(MsgTypeConstant.extrajson, item.getExtrajson() + "")
                 .appendQueryParameter(MsgTypeConstant.nickname, item.getNickname())
                 .appendQueryParameter(MsgTypeConstant.time, item.getTime() + "")
@@ -320,7 +330,7 @@ public class RobotUtil {
 
     public static String getUniqueKey(IMsgModel item) {
 //        Log.w(TAG1,"UNIKEY "+"[" + item.getSenderuin() + "]" + item.getFrienduin() + "_" + item.getMessage());
-        return "[" + item.getSenderuin() + "]" + item.getFrienduin()+ "_"+item.getIstroop()+ "_" + item.getMessage()+item.getMessageID();
+        return "[" + item.getSenderuin() + "]" + item.getFrienduin() + "_" + item.getIstroop() + "_" + item.getMessage() + item.getMessageID();
     }
 
     public static String isRegxKey(String keyWord) {
@@ -336,6 +346,7 @@ public class RobotUtil {
         }
         return null;
     }
+
     public static String isGlobalReg(String keyWord) {
         if (keyWord.startsWith("greg")) {
             return keyWord.replace("greg", "");

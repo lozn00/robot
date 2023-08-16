@@ -1,33 +1,17 @@
 package cn.qssq666.robot.bean;
-import cn.qssq666.CoreLibrary0;import cn.qssq666.robot.plugin.sdk.interfaces.IMsgModel;
+
+import java.util.Objects;
+
+import cn.qssq666.robot.plugin.sdk.interfaces.IMsgModel;
 import cn.qssq666.robot.utils.DateUtils;
 
 /**
  * Created by luozheng on 2017/3/5.  qssq.space
  */
 
-public class MsgItem implements Cloneable,IMsgModel {
+public class MsgItem implements Cloneable, IMsgModel {
 
     private long messageID;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MsgItem item = (MsgItem) o;
-
-        if (senderuin != null ? !senderuin.equals(item.senderuin) : item.senderuin != null)
-            return false;
-        return frienduin != null ? frienduin.equals(item.frienduin) : item.frienduin == null;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = senderuin != null ? senderuin.hashCode() : 0;
-        result = 31 * result + (frienduin != null ? frienduin.hashCode() : 0);
-        return result;
-    }
 
     public String getNickname() {
         return nickname;
@@ -91,6 +75,20 @@ public class MsgItem implements Cloneable,IMsgModel {
 
     int istroop;
     String senderuin;
+
+    public int getDirection() {
+        return direction;
+    }
+
+    public MsgItem setDirection(int direction) {
+        this.direction = direction;
+        return this;
+    }
+
+    /**
+     * 1 为回复，0 为发送
+     */
+    int direction;
     String frienduin;
     String message;
 
@@ -185,15 +183,18 @@ public class MsgItem implements Cloneable,IMsgModel {
     @Override
     public String toString() {
         return "{" +
-                "昵称='" + nickname + '\'' +
-                ", 群消息类型=" + istroop +
-                ", 发送人='" + senderuin + '\'' +
-                ", 朋友='" + frienduin + '\'' +
-                ", 消息体='" + message + '\'' +
-                ", 自己账号='" + selfuin + '\'' +
-                ", 消息类型=" + type +
-                ", 时间=" + DateUtils.getTime(time) +
-                ", 状态码=" + code +
+                "昵称=" + nickname +
+                ", 是否群消息:" + istroop +
+                ", 发送人:" + senderuin  +
+                ", 朋友:" + frienduin +
+                ", 消息体:" + message  +
+                ", 自己账号:" + selfuin + '\'' +
+                ", 消息类型:" + type +
+                ", 来源类型：" + apptype +
+                ",时间：" + DateUtils.getTime(time) +
+                ",时间数值：" + time+
+                ",方向：" + direction+
+                ",处理指令：" + code +
                 '}';
 
     }
@@ -213,7 +214,20 @@ public class MsgItem implements Cloneable,IMsgModel {
         return obj;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MsgItem msgItem = (MsgItem) o;
+        return messageID == msgItem.messageID && istroop == msgItem.istroop && direction == msgItem.direction && type == msgItem.type && time == msgItem.time && code == msgItem.code && Objects.equals(nickname, msgItem.nickname) && Objects.equals(senderuin, msgItem.senderuin) && Objects.equals(frienduin, msgItem.frienduin) && Objects.equals(message, msgItem.message) && Objects.equals(extrajson, msgItem.extrajson) && Objects.equals(extstr, msgItem.extstr) && Objects.equals(selfuin, msgItem.selfuin) && Objects.equals(version, msgItem.version) && Objects.equals(apptype, msgItem.apptype);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(messageID, nickname, istroop, senderuin, direction, frienduin, message, extrajson, extstr, selfuin, type, version, apptype, time, code);
+    }
+
     public void setMessagID(long id) {
-        this.messageID=id;
+        this.messageID = id;
     }
 }

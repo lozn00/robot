@@ -6,6 +6,7 @@ package cn.qssq666.robot.constants;
 
 public interface ControlCode {
     int SUCC = 0;
+    int ON_RECEIVE_MSG_IGNORE = -8888;
     int FAIL = -1;
     int GAG = -1000;
     int KICK = -1001;

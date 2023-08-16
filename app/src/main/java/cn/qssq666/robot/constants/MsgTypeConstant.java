@@ -61,6 +61,7 @@ public interface MsgTypeConstant {
     String apptype="apptype";
     String extrajson="extrajson";
     String msg = "msg";
+    String direction= "direction";
     int MSG_TYPE_TEXT = -1000;
 
     int MSG_TYPE_PROXY_SEND_TEXT = -99999;

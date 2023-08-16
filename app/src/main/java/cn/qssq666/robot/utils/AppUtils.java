@@ -433,7 +433,9 @@ public class AppUtils {
     }
 
     public static void toQQGroup(Context activity) {
-        if (NetCns.updateBean == null || NetCns.updateBean.getGroup() == null) {
+        Toast.makeText(activity, "telegram 群http://t.me/qsssq666", Toast.LENGTH_SHORT).show();
+        AppUtils.openWebView(activity, "http://t.me/qsssq666");
+      /*  if (NetCns.updateBean == null || NetCns.updateBean.getGroup() == null) {
             Toast.makeText(activity, "服务器不可用,请访问博客获取群号", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -446,7 +448,7 @@ public class AppUtils {
             }
             AppUtils.joinQQGroup(activity, NetCns.updateBean.getGroup());//EncryptUtilN.a7(new int[]{2663,3075,3059,3135,3091,2863,3007,3003,2991,2975,3135,2995,3059,2951,3011,3111,3107,2867,3055,3091,3059,2867,2959,3067,3115,3127,2967,2855,2963,2991})
 
-        }
+        }*/
     }
 
     public static boolean joinQQGroup(Context context, String key) {

@@ -56,6 +56,7 @@ import cn.qssq666.robot.activity.datamanager.QQIgnoresActivity;
 import cn.qssq666.robot.activity.datamanager.QQIgnoresGagActivity;
 import cn.qssq666.robot.activity.datamanager.QQSuperManagerActivity;
 import cn.qssq666.robot.activity.datamanager.VarManagerActivity;
+import cn.qssq666.robot.activity.msg.RecentMsgAct;
 import cn.qssq666.robot.ad.InterstitialAdUtil;
 import cn.qssq666.robot.adapter.HomeMenuAdapter;
 import cn.qssq666.robot.app.AppContext;
@@ -92,7 +93,7 @@ import okhttp3.Response;
 public class MainActivity extends SuperActivity implements View.OnClickListener {//, RadioGroup.OnCheckedChangeListener {
     private static final String TAG = "MainActivityR";
 
-    public static final String TEST = "\n" + "\n\n" + "\n\n" + "测试换行符\n\n你好世界 我擦\n擦擦擦" + "\n" + "===========\n\n\n后面是t\t然后还是t\t逼逼来了\b还有一个bb\b逼逼结束 rn了\r\n";
+    public static final String TEST = "\n" + "\n\n" + "\n\n" + "测试换行符\n\n你好世界 我擦\n擦擦擦" + "\n" + "===========\n\n\n后面是t\tXX\tXX\bXXX\bXX结束 rn了\r\n";
     private static final int REQUEST_PERMISSION = 1;
     private boolean mForceUpdate;
     private ActivityMainBinding binding;
@@ -181,6 +182,7 @@ public class MainActivity extends SuperActivity implements View.OnClickListener 
         List<HomeMenu> homeMenus = new ArrayList<>();
         homeMenus.add(new HomeMenu(R.id.btn_set, "基本配置"));
         homeMenus.add(new HomeMenu(R.id.btn_misc_config, "杂项配置"));
+        homeMenus.add(new HomeMenu(R.id.recent_msg, "消息列表"));
         homeMenus.add(new HomeMenu(R.id.btn_group_white_names, "群白名单维护"));
         homeMenus.add(new HomeMenu(R.id.btn_super_manager, "配置超级管理员"));
         homeMenus.add(new HomeMenu(R.id.btn_group_admin, "配置群管理"));
@@ -608,6 +610,11 @@ public class MainActivity extends SuperActivity implements View.OnClickListener 
             break;
             case R.id.btn_nickname: {
                 Intent intent = new Intent(this, NickNameManagerActivity.class);
+                startActivity(intent);
+            }
+            break;
+            case R.id.recent_msg: {
+                Intent intent = new Intent(this, RecentMsgAct.class);
                 startActivity(intent);
             }
             break;

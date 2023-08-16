@@ -19,6 +19,15 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
                 <TextView
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="====提醒设置===="
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorPrimaryBlack" />
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -278,11 +287,40 @@
                     android:layout_height="wrap_content"
                     android:text="----------------------------------------" />
 
+                <TextView
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:text="====其它设置===="
+                    android:textStyle="bold"
+                    android:textSize="20sp"
+                    android:textColor="@color/colorPrimaryBlack" />
+
                 <CheckBox
                     android:id="@+id/cb_keep_float_window"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="悬浮窗运行(重启生效)" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="记录监控最近消息总数"
+                        android:textSize="11sp">
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/ev_max_record_msg"
+                            android:inputType="numberSigned"
+                            android:text="0"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"

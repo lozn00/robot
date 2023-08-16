@@ -1,6 +1,7 @@
 package cn.qssq666.robot.business;
 
 import android.content.ContentProvider;
+import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -48,6 +49,7 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -102,6 +104,7 @@ import cn.qssq666.robot.constants.AccountType;
 import cn.qssq666.robot.constants.AppConstants;
 import cn.qssq666.robot.constants.CardHelper;
 import cn.qssq666.robot.constants.Cns;
+import cn.qssq666.robot.constants.ControlCode;
 import cn.qssq666.robot.constants.FieldCns;
 import cn.qssq666.robot.constants.IPluginRequestCall;
 import cn.qssq666.robot.constants.MsgTypeConstant;
@@ -162,6 +165,7 @@ import cn.qssq666.robot.utils.ErrorHelper;
 import cn.qssq666.robot.utils.HttpUtilOld;
 import cn.qssq666.robot.utils.InitUtils;
 import cn.qssq666.robot.utils.LogUtil;
+import cn.qssq666.robot.utils.MaxSizeContainer;
 import cn.qssq666.robot.utils.NetQuery;
 import cn.qssq666.robot.utils.NickNameUtils;
 import cn.qssq666.robot.utils.PairFix;
@@ -273,6 +277,8 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
     public List<AccountBean> mIgnoreGagQQs = new ArrayList<>();
     public List<AdminBean> mSuperManagers = new ArrayList<>();
     public List<GagAccountBean> mGagKeyWords = new ArrayList<>();
+    public MaxSizeContainer<MsgItem> _RecentMsgList;
+
     public boolean mCfBaseEnableNetRobotPrivate;
     public boolean mCfBaseEnableNetRobotGroup;
     public String mCfGroupJoinGroupReplyStr;
@@ -818,6 +824,10 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
     private void initConfig() {
         sharedPreferences = AppUtils.getConfigSharePreferences(getProxyContext());
         defaultReplyIndex = sharedPreferences.getInt(Cns.SP_DEFAULT_REPLY_API_INDEX, 2);
+        int recordCount = sharedPreferences.getInt(Cns.SP_RECENT_MSG_RECORD_COUNT, 0);
+        if (recordCount > 0) {
+            _RecentMsgList = new MaxSizeContainer<MsgItem>(recordCount);
+        }
         robotReplyKey = sharedPreferences.getString(AppUtils.getRobotReplyKey(defaultReplyIndex), robotReplyKey);
         robotReplySecret = sharedPreferences.getString(AppUtils.getRobotReplySecret(defaultReplyIndex), "");
         OpenAIBiz.init();
@@ -855,8 +865,12 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
         _miscConfig.redirectProxySendAccount = sharedPreferences.getString(Cns.PROXY_SEND_ACCOUNT, "");//  binding.evEmailContent.getText().toString());
         _miscConfig.redirectProxyAccountIsGroup = sharedPreferences.getBoolean(Cns.PROXY_SEND_ACCOUNT_IS_GROUP, false);//  binding.evEmailContent.getText().toString());
         _miscConfig.chatgpt_api_sercret_key = sharedPreferences.getString(Cns.CHAT_GPT_API_SERCRET, "");//  binding.evEmailContent.getText().toString());
-
-
+        int recordCount = sharedPreferences.getInt(Cns.SP_RECENT_MSG_RECORD_COUNT, 0);
+        if (recordCount > 0) {
+            _RecentMsgList = new MaxSizeContainer<MsgItem>(recordCount);
+        } else {
+            _RecentMsgList = null;
+        }
     }
 
 
@@ -987,8 +1001,22 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 
     @Nullable
     private Uri doOnReceiveMesg(final ContentValues values) {
-
         final MsgItem item = RobotUtil.contentValuesToMsgItem(values);
+        if (_RecentMsgList != null) {
+            int beforeCode = item.getCode();//之前code一般等于0
+            if(beforeCode==ControlCode.ON_RECEIVE_MSG_IGNORE){
+                return getFailUri("what?");
+            }
+            if(item.getDirection()==1){
+                return getFailUri("what repeat reply?");
+            }
+            boolean add = _RecentMsgList.add(item);
+            LogUtil.writeLog("添加结果:"+add+",缓存总数："+_RecentMsgList.getCurrentSize());
+            item.setCode(ControlCode.ON_RECEIVE_MSG_IGNORE);//先设置结果code让其它地方不响应 因为会根据0来执行回复操作的
+            Uri reverseURI=RobotUtil.msgItemToUri(item);
+            AppContext.getInstance().getContentResolver().notifyChange(reverseURI,null);//主要是通知给RecentMSGActivity进行处理 代表收到了消息
+            item.setCode(beforeCode);
+        }
 
 
         if ("proxy_send_msg".equals(item.getApptype())) {
@@ -1183,8 +1211,8 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
             }
 
 
-            this.notifyChange(RobotUtil.msgItemToUri(item), null);
-            return getSuccUri("代理发送消息成功[由其它程序调用]");
+            this.notifyChange(RobotUtil.msgItemToUri(item), null);//把消息通知给监听者，但是本身也是监听者的话，死循环了，这里只能处理非app发的消息
+            return getSuccUri("代理发送消息成功[由其它程序调用]");//返回给类似控制机执行指令。这里模拟发送消息
         } else {
             initSelfAccont(item, false);
 
@@ -3255,8 +3283,8 @@ public class RobotContentProvider extends ContentProvider implements IRobotConte
 //        if(IGnoreConfig.distanceNetHistoryTimeIgnore)
 
         long time = item.getTime();
-        if(String.valueOf(time).length()<String.valueOf(nowTime).length()){
-            time=time*1000;
+        if (String.valueOf(time).length() < String.valueOf(nowTime).length()) {
+            time = time * 1000;
         }
         long nettimeDistance = getTimeDistance(TYPE_SECOND, nowTime, time);
 
@@ -3616,7 +3644,7 @@ System.out.println(m.group());//输出“水货”“正品”
 
                 } else {
 
-                    Toast.makeText(getProxyContext(), "更新失败,内容无改动," + s, Toast.LENGTH_LONG).show();
+                    Toast.makeText(getProxyContext(), "可能更新失败,内容无改动," + s, Toast.LENGTH_LONG).show();
                 }
                 break;
         }
@@ -9815,6 +9843,16 @@ System.out.println(m.group());//输出“水货”“正品”
             return null;
         }
 
+    }
+
+    @Override
+    public List<MsgItem> getRecentMsgs() {
+        if (_RecentMsgList == null) {
+            return null;
+        }
+        List<MsgItem> msgList = _RecentMsgList.getAll();
+        Collections.reverse(msgList);
+        return msgList;
     }
 
     @Override

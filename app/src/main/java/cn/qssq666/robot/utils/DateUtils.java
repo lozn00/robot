@@ -77,8 +77,11 @@ public class DateUtils {
         return new SimpleDateFormat("HH").format(System.currentTimeMillis());
     }
 
-    public static String getTime(long mStatupTime) {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(System.currentTimeMillis());
+    public static String getTime(long time) {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time);
+    }
+    public static String getShortTime(long time) {
+        return new SimpleDateFormat("MM-dd HH:mm:ss").format(time);
     }
 
     public static String getTimeEightFormatStr(Date date) {

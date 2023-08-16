@@ -9,6 +9,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="colorGray">#acaeb0</color>
     <color name="colorRed">#f00</color>
+    <color name="colorGreen">#00bc00</color>
     <color name="itemLineColor">#F0F0F0</color>
     <color name="white">#ffffff</color>
     <color name="selector_gray">#707070</color>
