@@ -907,6 +907,18 @@ public class AppUtils {
         return String.format(Locale.US, "%d.%d.%d.%d", Integer.valueOf(ipAddress & 255), Integer.valueOf((ipAddress >> 8) & 255), Integer.valueOf((ipAddress >> 16) & 255), Integer.valueOf((ipAddress >> 24) & 255));
     }
 
+    public static String getBroadcastIP() {
+        WifiInfo connectionInfo = ((WifiManager) AppContext.getContext().getApplicationContext().getSystemService(Context.WIFI_SERVICE)).getConnectionInfo();
+        if (connectionInfo == null) {
+            return null;
+        }
+        int ipAddress = connectionInfo.getIpAddress();
+        if (ipAddress == 0) {
+            return getIP();
+        }
+        return String.format(Locale.US, "%d.%d.%d.%d", Integer.valueOf(ipAddress & 255), Integer.valueOf((ipAddress >> 8) & 255), Integer.valueOf((ipAddress >> 16) & 255), 255);
+    }
+
 
     public static String getSSID() {
         NetworkInfo activeNetworkInfo = ((ConnectivityManager) AppContext.getContext().getSystemService(Context.CONNECTIVITY_SERVICE)).getActiveNetworkInfo();

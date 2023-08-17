@@ -32,6 +32,9 @@ public class CmdConfig {
     public static final String BROWSER_ACCESS_INNER = "内置浏览器访问";
     @REMARK(id = 1, group = "无线调试", menu = "维护", remark = "开启wifi adb|需要root")
     public static final String WIFI_ADB = "无线调试";
+    @REMARK(id = 1, group = "网络唤醒", menu = "维护", remark = "唤醒主机 ")
+    public static final String AWAKE_HOST = "网络唤醒";
+
     @REMARK(id = 1, group = "替换文件", menu = "维护", remark = "替换文件")
     public static final String REPLACE_FILE = "替换文件";
     @REMARK(id = 1, group = "执行shell", menu = "维护", remark = "替换文件")

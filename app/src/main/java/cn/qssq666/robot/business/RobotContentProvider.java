@@ -189,6 +189,7 @@ import io.reactivex.functions.Action;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
+import lozn.wol.WakeOnLan;
 import okhttp3.Callback;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -8499,11 +8500,9 @@ System.out.println(m.group());//输出“水货”“正品”
                 if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
                     return false;
                 }
-
                 StringBuffer sb = new StringBuffer();
                 String wifiIP = AppUtils.getWifiIP();
                 sb.append("\nIP地址" + wifiIP);
-
                 String cmdContent = item.getMessage().replace(CmdConfig.NAT_TRAVERSE, "").trim();
                 String cmd;
                 if (TextUtils.isEmpty(cmdContent)) {
@@ -8573,6 +8572,57 @@ System.out.println(m.group());//输出“水货”“正品”
                 }).execute(sb);
                 break;
             }
+            case CmdConfig.AWAKE_HOST: {
+                if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
+                    return false;
+                }
+                StringBuffer sb = new StringBuffer();
+                String wifiIP = AppUtils.getWifiIP();
+                sb.append("\n本机IP地址" + wifiIP);
+
+                String broadcastIP;
+                String first = ParamParseUtil.getArgByArgArr(args, ParamParseUtil.sArgFirst);
+                if(TextUtils.isEmpty(first)){
+                    String msg = "支持的参数如下:\n"+CmdConfig.AWAKE_HOST+" 22:06:4C:62:00:7A\n"+CmdConfig.AWAKE_HOST+"192.168.0.0 22:06:4C:62:00:7A\n不传递广播地址则取当前设备广播地址";
+                    sb.append("\n"+msg);
+                    MsgReCallUtil.notifyJoinMsgNoJump(this, "" + msg, item);
+                    return true;
+                }
+                String second = getCurrentArgAndAfter(args, ParamParseUtil.sArgSecond);
+                broadcastIP=TextUtils.isEmpty(second)?AppUtils.getBroadcastIP():first;
+                String madAddress=!TextUtils.isEmpty(second)?second:first;
+                sb.append("\n广播地址:" + broadcastIP);
+                sb.append("\nMAC地址:" + madAddress);
+//                long start = System.currentTimeMillis();
+                new QssqTaskFix<StringBuffer, String>(new QssqTaskFix.ICallBackImp<StringBuffer, String>() {
+                    @Override
+                    public String onRunBackgroundThread(StringBuffer[] params) {
+                        StringBuffer sb = params[0];
+                        boolean[] waiting = {true, true};
+                        try {
+                            WakeOnLan.awake(broadcastIP.trim(),madAddress.trim());
+                            sb.append("唤醒完成");
+                        } catch (Throwable e) {
+                            sb.append("唤醒失败"+e.getMessage());
+                        }
+                        return sb.toString();
+
+                    }
+
+                    @Override
+                    public void onRunFinish(String o) {
+
+
+                        if (o != null) {
+                            item.setMessage(o);
+                            MsgReCallUtil.notifyHasDoWhileReply(RobotContentProvider.getInstance(), o, item);
+
+                        }
+
+                    }
+                }).execute(sb);
+                return true;
+            }
             case CmdConfig.WIFI_ADB: {
                 if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
                     return false;
@@ -8641,6 +8691,8 @@ System.out.println(m.group());//输出“水货”“正品”
                 }).execute(sb);
                 break;
             }
+
+
             case CmdConfig.STATE_INFO: {
                 if (isNeedIgnoreManagerCommand(item, atPair, flag, isManager, isgroupMsg, nameBean)) {
                     return false;
